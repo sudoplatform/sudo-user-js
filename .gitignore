@@ -1,0 +1,9 @@
+.cache
+.yalc
+yalc.lock
+config
+docs
+lib
+node_modules
+src/gen
+yarn-error.log
