@@ -10,9 +10,12 @@ import { Subscriber } from '../core/subscriber'
 import { v4 } from 'uuid'
 import {
   AuthenticationError,
+  NotAuthorizedError,
   SignOutError,
-  RegisterError,
-} from '../errors/errors'
+  ServiceError,
+  FatalError,
+  UserNotConfirmedError,
+} from '@sudoplatform/sudo-common'
 import {
   createResolvablePromise,
   ResolvablePromise,
@@ -55,7 +58,12 @@ export interface AuthUI {
    * @return token expiry.
    */
   getTokenExpiry(): Date | undefined
-
+  /**
+   * Returns the refresh token expiry cached from the last sign-in.
+   *
+   * @return refresh token expiry.
+   */
+  getRefreshTokenExpiry(): Date | undefined
   /**
    * Retrieve ID token, access token, refresh token and token expiry cached from the last sign-in.
    *
@@ -131,6 +139,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   private auth: CognitoAuth
   private idpService: AWSCognitoIdentityServiceProvider
   private tokensRefreshedPromise?: ResolvablePromise<AuthenticationTokens>
+  private refreshTokenLifetime: number
 
   constructor(
     private authenticationStore: AuthenticationStore,
@@ -141,6 +150,10 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     this.authenticationStore.subscribe(this)
     this.auth = this.initCognitoAuthSDK()
     this.idpService = this.initCognitoIdpService()
+
+    const refreshTokenLifetime = this.config.federatedSignIn
+      .refreshTokenLifetime
+    this.refreshTokenLifetime = refreshTokenLifetime ?? 60
   }
 
   private initCognitoIdpService(): AWSCognitoIdentityServiceProvider {
@@ -197,6 +210,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     >()
     this.auth.parseCognitoWebResponse(url)
     const authTokens = await this.tokensRefreshedPromise
+    await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
     return authTokens
   }
   /**
@@ -249,19 +263,32 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     return expiry ? new Date(Number(expiry) * 1000) : undefined
   }
 
+  getRefreshTokenExpiry(): Date | undefined {
+    let expiry = undefined
+    const timeSinceEpoch = this.authenticationStore.getItem(
+      apiKeyNames.refreshTokenExpiry,
+    )
+    if (timeSinceEpoch) {
+      expiry = new Date(Number(timeSinceEpoch))
+    }
+    return expiry
+  }
+
   getUserName(): string | undefined {
     return this.authenticationStore.getItem(apiKeyNames.userId)
   }
 
   async isSignedIn(): Promise<boolean> {
     const authTokens = this.getAuthTokens()
+    const expiry = this.getRefreshTokenExpiry()
     if (
       authTokens &&
       authTokens.idToken &&
       authTokens.accessToken &&
       authTokens.refreshToken &&
-      authTokens.tokenExpiry &&
-      authTokens.tokenExpiry > new Date().getTime()
+      expiry &&
+      // Considered signed in up to 1 hour before the expiry of refresh token.
+      expiry.getTime() > new Date().getTime() + 60 * 60 * 1000
     ) {
       return true
     } else {
@@ -326,20 +353,34 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     uid: string,
     validationData: { Name: string; Value: string }[],
   ): Promise<string> {
-    const response = await this.idpService
-      .signUp({
-        ValidationData: validationData,
-        Username: uid,
-        Password: `@FF57&Z1)123!-${v4()}`,
-        ClientId: this.config.identityService.clientId,
-      })
-      .promise()
+    try {
+      const response = await this.idpService
+        .signUp({
+          ValidationData: validationData,
+          Username: uid,
+          Password: `@FF57&Z1)123!-${v4()}`,
+          ClientId: this.config.identityService.clientId,
+        })
+        .promise()
 
-    if (response.UserConfirmed) {
-      console.log({ uid }, 'User successfully signed up')
-      return uid
-    } else {
-      throw new RegisterError(`Failed to sign up user ${uid}: ${response}`)
+      if (response.UserConfirmed) {
+        console.log({ uid }, 'User successfully signed up')
+        return uid
+      } else {
+        throw new UserNotConfirmedError()
+      }
+    } catch (err) {
+      const errorMsg = err.message
+      if (errorMsg.includes('sudoplatform.ServiceError')) {
+        throw new ServiceError(errorMsg)
+      } else if (
+        errorMsg.includes('sudoplatform.identity.UserValidationFailed') ||
+        errorMsg.includes('sudoplatform.identity.TestRegCheckFailed')
+      ) {
+        throw new NotAuthorizedError(errorMsg)
+      } else {
+        throw new FatalError(errorMsg)
+      }
     }
   }
 
@@ -405,6 +446,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
             refreshToken: refreshToken,
             tokenExpiry: tokenExpiry,
           }
+          await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
           resolve(authTokens)
         } else {
           reject(new AuthenticationError('Authentication tokens not found.'))
@@ -418,5 +460,16 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   presentSignOutUI(): void {
     const signOutUrl = this.auth.getFQDNSignOut()
     this.auth.launchUri(signOutUrl)
+  }
+
+  private async storeRefreshTokenLifetime(
+    refreshTokenLifetime: number,
+  ): Promise<void> {
+    const tokenLifetime =
+      refreshTokenLifetime * 24 * 60 * 60 * 1000 + new Date().getTime()
+    await this.authenticationStore.setItem(
+      apiKeyNames.refreshTokenExpiry,
+      tokenLifetime.toString(),
+    )
   }
 }

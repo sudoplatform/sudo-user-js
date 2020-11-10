@@ -100,6 +100,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#getidtoken" class="tsd-kind-icon">get<wbr>IdToken</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#getlatestauthtoken" class="tsd-kind-icon">get<wbr>Latest<wbr>Auth<wbr>Token</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#getrefreshtoken" class="tsd-kind-icon">get<wbr>Refresh<wbr>Token</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#getrefreshtokenexpiry" class="tsd-kind-icon">get<wbr>Refresh<wbr>Token<wbr>Expiry</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#getsubject" class="tsd-kind-icon">get<wbr>Subject</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#gettokenexpiry" class="tsd-kind-icon">get<wbr>Token<wbr>Expiry</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#getusername" class="tsd-kind-icon">get<wbr>User<wbr>Name</a></li>
@@ -111,6 +112,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#processfederatedsignintokens" class="tsd-kind-icon">process<wbr>Federated<wbr>Sign<wbr>InTokens</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#refreshtokens" class="tsd-kind-icon">refresh<wbr>Tokens</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#registerwithauthenticationprovider" class="tsd-kind-icon">register<wbr>With<wbr>Authentication<wbr>Provider</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#reset" class="tsd-kind-icon">reset</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="sudouserclient.html#signinwithkey" class="tsd-kind-icon">sign<wbr>InWith<wbr>Key</a></li>
 							</ul>
 						</section>
@@ -129,7 +131,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:142</li>
+									<li>Defined in user/user-client.ts:148</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,7 +199,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:94</li>
+									<li>Defined in user/user-client.ts:100</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -234,6 +236,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="getrefreshtokenexpiry" class="tsd-anchor"></a>
+					<h3>get<wbr>Refresh<wbr>Token<wbr>Expiry</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Refresh<wbr>Token<wbr>Expiry<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in user/user-client.ts:80</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the refresh token expiry cached from the last sign-in.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
+							<p>refresh token expiry.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="getsubject" class="tsd-anchor"></a>
 					<h3>get<wbr>Subject</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -243,7 +268,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:108</li>
+									<li>Defined in user/user-client.ts:114</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -290,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:101</li>
+									<li>Defined in user/user-client.ts:107</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -314,7 +339,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:112</li>
+									<li>Defined in user/user-client.ts:118</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -336,7 +361,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:131</li>
+									<li>Defined in user/user-client.ts:137</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -359,7 +384,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:81</li>
+									<li>Defined in user/user-client.ts:87</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -405,7 +430,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:148</li>
+									<li>Defined in user/user-client.ts:154</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -462,7 +487,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:88</li>
+									<li>Defined in user/user-client.ts:94</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -494,7 +519,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:122</li>
+									<li>Defined in user/user-client.ts:128</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -525,6 +550,28 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="reset" class="tsd-anchor"></a>
+					<h3>reset</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in user/user-client.ts:158</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Resets internal state and clears any cached data.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="signinwithkey" class="tsd-anchor"></a>
 					<h3>sign<wbr>InWith<wbr>Key</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -534,7 +581,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/user-client.ts:138</li>
+									<li>Defined in user/user-client.ts:144</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -566,6 +613,9 @@
 					<li class=" tsd-kind-class">
 						<a href="../classes/keymanager.html" class="tsd-kind-icon">Key<wbr>Manager</a>
 					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/testauthenticationprovider.html" class="tsd-kind-icon">TESTAuthentication<wbr>Provider</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
@@ -585,6 +635,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="sudouserclient.html#getrefreshtoken" class="tsd-kind-icon">get<wbr>Refresh<wbr>Token</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="sudouserclient.html#getrefreshtokenexpiry" class="tsd-kind-icon">get<wbr>Refresh<wbr>Token<wbr>Expiry</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="sudouserclient.html#getsubject" class="tsd-kind-icon">get<wbr>Subject</a>
@@ -618,6 +671,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="sudouserclient.html#registerwithauthenticationprovider" class="tsd-kind-icon">register<wbr>With<wbr>Authentication<wbr>Provider</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="sudouserclient.html#reset" class="tsd-kind-icon">reset</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="sudouserclient.html#signinwithkey" class="tsd-kind-icon">sign<wbr>InWith<wbr>Key</a>

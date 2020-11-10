@@ -12,7 +12,7 @@ import {
   RegisterError,
   NotRegisteredError,
   FatalError,
-} from '../errors/errors'
+} from '@sudoplatform/sudo-common'
 import { apiKeyNames } from '../core/api-key-names'
 import { ApiClient } from '../client/apiClient'
 
@@ -72,6 +72,12 @@ export interface SudoUserClient {
    * @return token expiry.
    */
   getTokenExpiry(): Date | undefined
+  /**
+   * Returns the refresh token expiry cached from the last sign-in.
+   *
+   * @return refresh token expiry.
+   */
+  getRefreshTokenExpiry(): Date | undefined
   /**
    * Indicates whether or not this client is signed in with Sudo Platform backend. The client is
    * considered signed in if it cached valid ID, access and refresh tokens.
@@ -146,6 +152,10 @@ export interface SudoUserClient {
    * will be invalidated, but the user is not logged out of Cognito.
    */
   presentSignOutUI(): void
+  /**
+   * Resets internal state and clears any cached data.
+   */
+  reset(): void
 }
 
 export class DefaultSudoUserClient implements SudoUserClient {
@@ -229,6 +239,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   public getTokenExpiry(): Date | undefined {
     return this.authUI.getTokenExpiry()
+  }
+
+  public getRefreshTokenExpiry(): Date | undefined {
+    return this.authUI.getRefreshTokenExpiry()
   }
 
   public getUserName(): string | undefined {
@@ -375,6 +389,12 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   presentSignOutUI(): void {
     this.authUI.presentSignOutUI()
+  }
+
+  reset(): void {
+    this.keyManager.reset()
+    this.apiClient.reset()
+    this.clearAuthenticationTokens()
   }
 
   /**

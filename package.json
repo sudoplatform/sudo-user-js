@@ -13,8 +13,8 @@
     "lint:prettier": "prettier -l \"{bin,test,src}/**/*.{js,json,jsx,ts,tsx}\"",
     "codegen": "graphql-codegen -c codegen.yml",
     "verify": "yarn audit && yarn lint",
-    "unit-test": "jest test/unit",
-    "integration-test": "jest test/integration",
+    "unit-test": "/bin/bash -c 'jest test/unit'",
+    "integration-test": "/bin/bash -c 'jest test/integration'",
     "test": "yarn unit-test && yarn integration-test",
     "build": "yarn codegen && yarn verify && yarn build:transpile && yarn build:declarations && yarn build:docs",
     "build:transpile": "babel src --out-dir lib --extensions '.ts'",
@@ -59,7 +59,7 @@
     "@graphql-typed-document-node/apollo-client-2": "^0.0.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/netinfo": "^5.0.0",
-    "@sudoplatform/sudo-common": "^1.0.5",
+    "@sudoplatform/sudo-common": "^1.0.7",
     "@types/amazon-cognito-auth-js": "^1.2.2",
     "@types/graphql": "^14.5.0",
     "@types/jest": "^26.0.7",
@@ -94,7 +94,7 @@
     "node-fetch": "^2.6.1"
   },
   "peerDependencies": {
-    "@sudoplatform/sudo-common": "^1.0.5",
+    "@sudoplatform/sudo-common": "^1.0.7",
     "io-ts": "^2.2.11"
   }
 }

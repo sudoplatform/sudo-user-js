@@ -1,36 +1,14 @@
 import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { DefaultConfigurationManager } from '@sudoplatform/sudo-common'
 import { TESTAuthenticationProvider } from '../../src/user/auth-provider'
-import privateKeyParam from '../../system-test-config/anonyome_ssm_parameter_register_key.json'
+import privateKeyParam from '../../config/register_key.json'
+import config from '../../config/sudoplatformconfig.json'
 
 const globalAny: any = global
 globalAny.WebSocket = require('ws')
 require('isomorphic-fetch')
 
-const testConfig = {
-  federatedSignIn: {
-    appClientId: '120q904mra9d5l4psmvdbrgm49',
-    signInRedirectUri: 'http://localhost:3000/callback',
-    signOutRedirectUri: 'http://localhost:3000/',
-    webDomain: 'id-dev-fsso-sudoplatform.auth.us-east-1.amazoncognito.com',
-    identityProvider: 'Auth0',
-  },
-  identityService: {
-    region: 'us-east-1',
-    poolId: 'us-east-1_ZiPDToF73',
-    clientId: '120q904mra9d5l4psmvdbrgm49',
-    identityPoolId: 'us-east-1:8fe6d8ed-cd77-4622-b1bb-3f0c147638ad',
-    apiUrl:
-      'https://mqn7cjrzcrd75jpsma3xw4744a.appsync-api.us-east-1.amazonaws.com/graphql',
-    apiKey: 'da2-xejsa343urfifmzkycmz3rqdom',
-    bucket: 'ids-userdata-id-dev-fsso-userdatabucket2d841c35-j9x47k5042fk',
-    transientBucket:
-      'ids-userdata-id-dev-fsso-transientuserdatabucket0-1enoeyoho1sjl',
-    registrationMethods: ['TEST', 'FSSO'],
-  },
-}
-
-DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(testConfig))
+DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(config))
 const userClient = new DefaultSudoUserClient()
 
 describe('SudoUserClient', () => {
@@ -58,12 +36,28 @@ describe('SudoUserClient', () => {
 
       expect(authTokens).toBeDefined()
       expect(authTokens.idToken).toBeDefined()
+      expect(authTokens.idToken).toBe(userClient.getIdToken())
+
+      // Verify refresh token expiry
+      const refreshTokenExpiry = userClient.getRefreshTokenExpiry()
+
+      expect(refreshTokenExpiry).toBeDefined()
+      expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
+        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 - 10000,
+      )
+      expect(refreshTokenExpiry.getTime()).toBeLessThan(
+        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 + 10000,
+      )
 
       expect(await userClient.isSignedIn()).toBeTruthy()
 
       // Deregister
       await userClient.deregister()
       expect(await userClient.isRegistered()).toBeFalsy()
+
+      // Reset the client internal state
+      userClient.reset()
+      expect(await userClient.isSignedIn()).toBeFalsy()
     }, 30000)
   })
 
@@ -105,6 +99,39 @@ describe('SudoUserClient', () => {
       // Deregister
       await userClient.deregister()
       expect(await userClient.isRegistered()).toBeFalsy()
+
+      // Reset the client internal state
+      userClient.reset()
+      expect(await userClient.isSignedIn()).toBeFalsy()
+    }, 30000)
+  })
+
+  describe('testRegisterInvalidKeyId()', () => {
+    it('should fail with test registration error', async () => {
+      // Register
+      const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
+      const params: [1] = privateKeyJson['Parameters']
+      const param = JSON.parse(JSON.stringify(params[0]))
+      const privateKey = param.Value
+
+      const testAuthenticationProvider = new TESTAuthenticationProvider(
+        'SudoUser',
+        privateKey,
+        'invalid_key_id',
+      )
+
+      try {
+        await userClient.registerWithAuthenticationProvider(
+          testAuthenticationProvider,
+          'dummy_rid',
+        )
+        fail('Expected error not thrown.')
+      } catch (err) {
+        expect(err.name).toMatch('NotAuthorizedError')
+      }
+
+      // Reset the client internal state
+      userClient.reset()
     }, 30000)
   })
 })

@@ -2094,10 +2094,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@sudoplatform/sudo-common@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-common/-/sudo-common-1.0.5.tgz#268058cbbf026fd928a9db668efff7a7c5f2b96f"
-  integrity sha512-yvd5PjEyJnwGtr+eeteC0sB2FF68s3pUrAQnGtWMdDcToIja4xxgAiv2AbEQT3ye5wpAyrcjsNvGIOZUdABH6w==
+"@sudoplatform/sudo-common@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-common/-/sudo-common-1.0.7.tgz#e97d958b3a970f821f3fa56de73a15a04936cd1f"
+  integrity sha512-UlxJ5j8lPegixK1f/U/7xLoY2FBzJv3CavmcFNgmpOjYDuCwCHSE9DuNpKYvB1FBhaFrggKOIH+3xJ5qHItv1Q==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"

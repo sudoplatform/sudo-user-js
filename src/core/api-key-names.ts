@@ -3,5 +3,6 @@ export const apiKeyNames = {
   accessToken: 'accessToken',
   refreshToken: 'refreshToken',
   tokenExpiry: 'tokenExpiry',
+  refreshTokenExpiry: 'refreshTokenExpiry',
   userId: 'LastAuthUser',
 }

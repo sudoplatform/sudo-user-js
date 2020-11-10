@@ -21,6 +21,7 @@ const testConfig = {
     signOutRedirectUri: 'http://localhost:3000/',
     webDomain: 'id-dev-fsso-sudoplatform.auth.us-east-1.amazoncognito.com',
     identityProvider: 'Auth0',
+    refreshTokenLifetime: 60,
   },
   identityService: {
     region: 'us-east-1',
@@ -34,6 +35,7 @@ const testConfig = {
     transientBucket:
       'ids-userdata-id-dev-fsso-transientuserdatabucket0-1enoeyoho1sjl',
     registrationMethods: ['TEST', 'FSSO'],
+    refreshTokenLifetime: 30,
   },
 }
 
@@ -286,6 +288,26 @@ describe('SudoUserClient', () => {
       } catch (error) {
         expect(error).toBeDefined()
       }
+    })
+  })
+
+  describe('isSignedIn()', () => {
+    it('should complete successfully', async () => {
+      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      userClient.setAuthUI(authUI)
+
+      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
+        'dummy_id_token',
+      )
+      when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
+        'dummy_access_token',
+      )
+      when(
+        authenticationStoreMock.getItem(apiKeyNames.refreshTokenExpiry),
+      ).thenReturn(
+        Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
+      )
+      expect(userClient.isSignedIn()).toBeTruthy()
     })
   })
 })

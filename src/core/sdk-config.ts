@@ -10,6 +10,7 @@ export const Config = t.type({
     apiKey: t.string,
     bucket: t.string,
     transientBucket: t.string,
+    refreshTokenLifetime: t.number,
     registrationMethods: t.array(t.string),
   }),
   federatedSignIn: t.type({
@@ -18,6 +19,7 @@ export const Config = t.type({
     signOutRedirectUri: t.string,
     webDomain: t.string,
     identityProvider: t.string,
+    refreshTokenLifetime: t.number,
   }),
 })
 
