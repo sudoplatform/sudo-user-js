@@ -8,7 +8,10 @@ import { generateKeyPairSync } from 'crypto'
 import { KeyPairKey, PrivateKey } from '../../src/utils/key-pair'
 import { apiKeyNames } from '../../src/core/api-key-names'
 import { KeyManager } from '../../src/core/key-manager'
-import { DefaultConfigurationManager } from '@sudoplatform/sudo-common'
+import {
+  DefaultConfigurationManager,
+  getLogger,
+} from '@sudoplatform/sudo-common'
 
 const globalAny: any = global
 globalAny.WebSocket = require('ws')
@@ -72,6 +75,7 @@ const config = DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
   Config,
   undefined,
 )
+const logger = getLogger()
 
 afterEach((): void => {
   reset(authUIMock)
@@ -82,7 +86,12 @@ afterEach((): void => {
 describe('SudoUserClient', () => {
   describe('presentFederatedSignInUI()', () => {
     it('should fail with authentication error - default launchUri - attempt to launch UI with window.open', async () => {
-      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      const authUI = new CognitoAuthUI(
+        authenticationStore,
+        keyManager,
+        config,
+        logger,
+      )
       userClient.setAuthUI(authUI)
 
       try {
@@ -98,6 +107,7 @@ describe('SudoUserClient', () => {
         authenticationStore,
         keyManager,
         config,
+        logger,
         customLaunchUriFunction,
       )
       userClient.setAuthUI(authUI)
@@ -167,7 +177,12 @@ describe('SudoUserClient', () => {
 
   describe('getUserName()', () => {
     it('should complete successfully', async () => {
-      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      const authUI = new CognitoAuthUI(
+        authenticationStore,
+        keyManager,
+        config,
+        logger,
+      )
       userClient.setAuthUI(authUI)
 
       when(authenticationStoreMock.getItem(apiKeyNames.userId)).thenReturn(
@@ -210,7 +225,12 @@ describe('SudoUserClient', () => {
 
   describe('getLatestAuthToken()', () => {
     it('should complete successfully', async () => {
-      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      const authUI = new CognitoAuthUI(
+        authenticationStore,
+        keyManager,
+        config,
+        logger,
+      )
       userClient.setAuthUI(authUI)
 
       const tokenExpiry = new Date().getTime() + 3600000
@@ -231,7 +251,12 @@ describe('SudoUserClient', () => {
     })
 
     it('should return empty token - user not signed in', async () => {
-      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      const authUI = new CognitoAuthUI(
+        authenticationStore,
+        keyManager,
+        config,
+        logger,
+      )
       userClient.setAuthUI(authUI)
 
       const empty = ''
@@ -261,7 +286,12 @@ describe('SudoUserClient', () => {
     })
 
     it('should fail with signout error - invalid access token', async () => {
-      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      const authUI = new CognitoAuthUI(
+        authenticationStore,
+        keyManager,
+        config,
+        logger,
+      )
       userClient.setAuthUI(authUI)
 
       when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
@@ -279,7 +309,12 @@ describe('SudoUserClient', () => {
 
   describe('presentSignOutUI()', () => {
     it('should fail trying to invoke signout url - attempt to launch UI with window.open', async () => {
-      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      const authUI = new CognitoAuthUI(
+        authenticationStore,
+        keyManager,
+        config,
+        logger,
+      )
       userClient.setAuthUI(authUI)
 
       try {
@@ -293,7 +328,12 @@ describe('SudoUserClient', () => {
 
   describe('isSignedIn()', () => {
     it('should complete successfully', async () => {
-      const authUI = new CognitoAuthUI(authenticationStore, keyManager, config)
+      const authUI = new CognitoAuthUI(
+        authenticationStore,
+        keyManager,
+        config,
+        logger,
+      )
       userClient.setAuthUI(authUI)
 
       when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(

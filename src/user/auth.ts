@@ -15,6 +15,7 @@ import {
   ServiceError,
   FatalError,
   UserNotConfirmedError,
+  Logger,
 } from '@sudoplatform/sudo-common'
 import {
   createResolvablePromise,
@@ -140,11 +141,13 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   private idpService: AWSCognitoIdentityServiceProvider
   private tokensRefreshedPromise?: ResolvablePromise<AuthenticationTokens>
   private refreshTokenLifetime: number
+  private logger: Logger
 
   constructor(
     private authenticationStore: AuthenticationStore,
     private keyManager: KeyManager,
     private config: Config,
+    logger: Logger,
     private launchUriFn?: (url: string) => void,
   ) {
     this.authenticationStore.subscribe(this)
@@ -154,6 +157,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     const refreshTokenLifetime = this.config.federatedSignIn
       .refreshTokenLifetime
     this.refreshTokenLifetime = refreshTokenLifetime ?? 60
+    this.logger = logger
   }
 
   private initCognitoIdpService(): AWSCognitoIdentityServiceProvider {
@@ -187,12 +191,12 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     auth.useCodeGrantFlow()
 
     auth.userhandler = {
-      onSuccess: function () {
-        console.log('Successfully signed in.')
+      onSuccess: (result) => {
+        this.logger.info({ result }, 'Successfully signed in.')
       },
 
-      onFailure: function (error) {
-        console.log(new AuthenticationError(error))
+      onFailure: (error) => {
+        this.logger.error(new AuthenticationError(error).message)
       },
     }
     return auth
@@ -225,7 +229,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
         this.tokensRefreshedPromise?.resolve(authTokens)
       }
     }
-    console.log('Updated: ', itemName)
+    this.logger.info('Updated: ', itemName)
   }
 
   getAuthTokens(): AuthenticationTokens | undefined {
@@ -324,17 +328,17 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     }
   }
 
-  async globalSignOut(accessToken: string): Promise<void> {
+  public async globalSignOut(accessToken: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const params = {
         AccessToken: accessToken,
       }
-      this.idpService.globalSignOut(params, function (error, data) {
+      this.idpService.globalSignOut(params, (error, data) => {
         if (error) {
-          console.log(error)
+          this.logger.error(error.message)
           reject(new SignOutError(error.message))
         } else {
-          console.log(data)
+          this.logger.info({ data }, 'User successfully signed out.')
           resolve()
         }
       })
@@ -364,7 +368,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
         .promise()
 
       if (response.UserConfirmed) {
-        console.log({ uid }, 'User successfully signed up')
+        this.logger.info({ uid }, 'User successfully signed up.')
         return uid
       } else {
         throw new UserNotConfirmedError()

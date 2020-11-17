@@ -12,6 +12,8 @@ import {
   RegisterError,
   NotRegisteredError,
   FatalError,
+  Logger,
+  getLogger,
 } from '@sudoplatform/sudo-common'
 import { apiKeyNames } from '../core/api-key-names'
 import { ApiClient } from '../client/apiClient'
@@ -164,13 +166,18 @@ export class DefaultSudoUserClient implements SudoUserClient {
   private authenticationStore: AuthenticationStore
   private authUI: AuthUI
   private apiClient: ApiClient
+  private logger: Logger
+
   constructor(
     keyManager?: KeyManager,
     authUI?: AuthUI,
     apiClient?: ApiClient,
     private launchUriFn?: (url: string) => void,
     config?: Config,
+    logger?: Logger,
   ) {
+    this.logger = logger ?? getLogger()
+
     this.config =
       config ??
       DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
@@ -188,6 +195,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
         this.authenticationStore,
         this.keyManager,
         this.config,
+        this.logger,
         this.launchUriFn,
       )
 
@@ -197,6 +205,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
         this.config.identityService.region,
         this.config.identityService.apiUrl,
         this.authUI,
+        this.logger,
       )
   }
 
@@ -204,7 +213,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     try {
       this.authUI.presentFederatedSignInUI()
     } catch (error) {
-      console.log('Failed to launch the federated sign in UI: ', error)
+      this.logger.error({ error }, 'Failed to launch the federated sign in UI.')
       throw new AuthenticationError(error)
     }
   }
@@ -220,7 +229,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
         throw new AuthenticationError('Authentication tokens missing.')
       }
     } catch (error) {
-      console.log('Failed to process the federated sign in redirect: ', error)
+      this.logger.error(
+        { error },
+        'Failed to process the federated sign in redirect.',
+      )
       throw new AuthenticationError(error)
     }
   }
@@ -283,7 +295,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     try {
       idToken = await this.authUI.getLatestAuthToken()
     } catch (err) {
-      console.log(err)
+      this.logger.error(err)
     }
     return idToken
   }
@@ -300,7 +312,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     authenticationProvider: AuthenticationProvider,
     registrationId?: string,
   ): Promise<string> {
-    console.log('Registering using an external authentication provider')
+    this.logger.info('Registering using an external authentication provider.')
 
     if (!(await this.isRegistered())) {
       const authInfo = authenticationProvider.getAuthenticationInfo()
@@ -360,7 +372,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
   }
 
   async signInWithKey(): Promise<AuthenticationTokens> {
-    console.log('Signing in using private key.')
+    this.logger.info('Signing in using private key.')
     const uid = await this.keyManager.getString('userId')
     const userKeyId = await this.keyManager.getString('userKeyId')
 

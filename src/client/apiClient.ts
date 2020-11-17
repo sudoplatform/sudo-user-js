@@ -7,6 +7,7 @@ import {
   ServiceError,
   UnknownGraphQLError,
   AppSyncError,
+  Logger,
 } from '@sudoplatform/sudo-common'
 import { AuthUI } from '../user/auth'
 
@@ -18,11 +19,18 @@ export class ApiClient {
   private region: string
   private graphqlUrl: string
   private authUI: AuthUI
+  private logger: Logger
 
-  public constructor(region: string, graphqlUrl: string, authUI: AuthUI) {
+  public constructor(
+    region: string,
+    graphqlUrl: string,
+    authUI: AuthUI,
+    logger: Logger,
+  ) {
     this.region = region
     this.graphqlUrl = graphqlUrl
     this.authUI = authUI
+    this.logger = logger
 
     this.client = new AWSAppSyncClient({
       url: graphqlUrl,
@@ -81,7 +89,7 @@ export class ApiClient {
   }
 
   private graphQLErrorsToClientError(error: AppSyncError): Error {
-    console.log({ error }, 'GraphQL call failed.')
+    this.logger.error({ error }, 'GraphQL call failed.')
 
     if (error.errorType === 'sudoplatform.ServiceError') {
       return new ServiceError(error.message)
