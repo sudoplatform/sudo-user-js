@@ -1,7 +1,7 @@
 import * as t from 'io-ts'
 
-export const Config = t.type({
-  identityService: t.type({
+const identityService = t.intersection([
+  t.type({
     region: t.string,
     poolId: t.string,
     clientId: t.string,
@@ -10,17 +10,29 @@ export const Config = t.type({
     apiKey: t.string,
     bucket: t.string,
     transientBucket: t.string,
-    refreshTokenLifetime: t.number,
     registrationMethods: t.array(t.string),
   }),
-  federatedSignIn: t.type({
+  t.partial({
+    refreshTokenLifetime: t.number,
+  }),
+])
+
+const federatedSignIn = t.intersection([
+  t.type({
     appClientId: t.string,
     signInRedirectUri: t.string,
     signOutRedirectUri: t.string,
     webDomain: t.string,
+  }),
+  t.partial({
     identityProvider: t.string,
     refreshTokenLifetime: t.number,
   }),
+])
+
+export const Config = t.type({
+  identityService,
+  federatedSignIn,
 })
 
 export type Config = t.TypeOf<typeof Config>

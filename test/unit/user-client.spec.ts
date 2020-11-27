@@ -23,8 +23,6 @@ const testConfig = {
     signInRedirectUri: 'http://localhost:3000/callback',
     signOutRedirectUri: 'http://localhost:3000/',
     webDomain: 'id-dev-fsso-sudoplatform.auth.us-east-1.amazoncognito.com',
-    identityProvider: 'Auth0',
-    refreshTokenLifetime: 60,
   },
   identityService: {
     region: 'us-east-1',
@@ -38,7 +36,6 @@ const testConfig = {
     transientBucket:
       'ids-userdata-id-dev-fsso-transientuserdatabucket0-1enoeyoho1sjl',
     registrationMethods: ['TEST', 'FSSO'],
-    refreshTokenLifetime: 30,
   },
 }
 
