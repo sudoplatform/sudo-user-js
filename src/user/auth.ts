@@ -192,7 +192,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
 
     auth.userhandler = {
       onSuccess: (result) => {
-        this.logger.info({ result }, 'Successfully signed in.')
+        this.logger.info('Successfully signed in.', { result })
       },
 
       onFailure: (error) => {
@@ -229,7 +229,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
         this.tokensRefreshedPromise?.resolve(authTokens)
       }
     }
-    this.logger.info('Updated: ', itemName)
+    this.logger.debug('Updated: ', { itemName })
   }
 
   getAuthTokens(): AuthenticationTokens | undefined {
@@ -338,7 +338,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
           this.logger.error(error.message)
           reject(new SignOutError(error.message))
         } else {
-          this.logger.info({ data }, 'User successfully signed out.')
+          this.logger.info('User successfully signed out.', { data })
           resolve()
         }
       })
@@ -368,7 +368,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
         .promise()
 
       if (response.UserConfirmed) {
-        this.logger.info({ uid }, 'User successfully signed up.')
+        this.logger.info('User successfully signed up.', { uid })
         return uid
       } else {
         throw new UserNotConfirmedError()

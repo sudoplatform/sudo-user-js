@@ -2120,10 +2120,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@sudoplatform/sudo-common@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-common/-/sudo-common-2.0.1.tgz#867259ae1b7fbb635b1d3b9dba4352e17214f1c7"
-  integrity sha512-I8f5o2Ha+pyASPkR3631X2V88Dcm88MLDya1EZHkkggaq5ZeIqw7AHMqPjPaz7LMB0CFkvz9gcCI18uIpIvf+A==
+"@sudoplatform/sudo-common@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-common/-/sudo-common-3.0.0.tgz#d904b1be6ffa8625a4b7cbfe944d93d843e0c527"
+  integrity sha512-CW/h3FqRd1KlllWqlcaunwC8spSdrs0qKnnUeQ7ycb9ZVRz14v/m+Pht4KRp6AtxuZ9z6fTLdkO9Cb++A0qB5g==
   dependencies:
     browser-bunyan "^1.6.3"
 

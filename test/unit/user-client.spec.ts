@@ -10,7 +10,7 @@ import { apiKeyNames } from '../../src/core/api-key-names'
 import { KeyManager } from '../../src/core/key-manager'
 import {
   DefaultConfigurationManager,
-  getLogger,
+  DefaultLogger,
 } from '@sudoplatform/sudo-common'
 
 const globalAny: any = global
@@ -72,7 +72,7 @@ const config = DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
   Config,
   undefined,
 )
-const logger = getLogger()
+const logger = new DefaultLogger()
 
 afterEach((): void => {
   reset(authUIMock)

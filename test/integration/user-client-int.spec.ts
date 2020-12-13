@@ -8,6 +8,9 @@ const globalAny: any = global
 globalAny.WebSocket = require('ws')
 require('isomorphic-fetch')
 
+process.env.LOG_LEVEL = 'info'
+process.env.PROJECT_NAME = 'SudoUser'
+
 DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(config))
 const userClient = new DefaultSudoUserClient()
 

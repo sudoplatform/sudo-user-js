@@ -89,7 +89,7 @@ export class ApiClient {
   }
 
   private graphQLErrorsToClientError(error: AppSyncError): Error {
-    this.logger.error({ error }, 'GraphQL call failed.')
+    this.logger.error('GraphQL call failed.', { error })
 
     if (error.errorType === 'sudoplatform.ServiceError') {
       return new ServiceError(error.message)

@@ -13,7 +13,7 @@ import {
   NotRegisteredError,
   FatalError,
   Logger,
-  getLogger,
+  DefaultLogger,
 } from '@sudoplatform/sudo-common'
 import { apiKeyNames } from '../core/api-key-names'
 import { ApiClient } from '../client/apiClient'
@@ -176,7 +176,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     config?: Config,
     logger?: Logger,
   ) {
-    this.logger = logger ?? getLogger()
+    this.logger = logger ?? new DefaultLogger('SudoUser', 'warn')
 
     this.config =
       config ??
@@ -213,7 +213,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     try {
       this.authUI.presentFederatedSignInUI()
     } catch (error) {
-      this.logger.error({ error }, 'Failed to launch the federated sign in UI.')
+      this.logger.error('Failed to launch the federated sign in UI.', { error })
       throw new AuthenticationError(error)
     }
   }
@@ -229,10 +229,9 @@ export class DefaultSudoUserClient implements SudoUserClient {
         throw new AuthenticationError('Authentication tokens missing.')
       }
     } catch (error) {
-      this.logger.error(
-        { error },
-        'Failed to process the federated sign in redirect.',
-      )
+      this.logger.error('Failed to process the federated sign in redirect.', {
+        error,
+      })
       throw new AuthenticationError(error)
     }
   }
