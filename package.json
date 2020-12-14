@@ -16,7 +16,7 @@
     "verify": "yarn audit-with-suppressions && yarn lint",
     "unit-test": "/bin/bash -c 'jest test/unit'",
     "integration-test": "/bin/bash -c 'jest test/integration'",
-    "test": "yarn unit-test && yarn integration-test",
+    "test": "yarn unit-test",
     "build": "yarn codegen && yarn verify && yarn build:transpile && yarn build:declarations && yarn build:docs",
     "build:transpile": "babel src --out-dir lib --extensions '.ts'",
     "build:declarations": "tsc --emitDeclarationOnly",

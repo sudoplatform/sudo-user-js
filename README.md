@@ -1,47 +1,14 @@
-# Sudo User SDK for Web
+# Sudo User JS SDK
 
-## Project Setup
+## Overview
+The Sudo Platform makes it seamless for developers to integrate Sudo capabilities into their existing applications with minimal effort. For applications that support Open ID Connect, the User SDK enables applications to map their existing users to a Sudo Platform user without the need for end users to create new accounts.
 
-**Cloning this repo**
+Please see the [Sudo Platform Developer Docs](https://sudoplatform.com/docs) for an overview of Sudos in the Sudo Platform.
 
-To clone this repo along with the submodule linkage execute this command:
+## Integration Instructions
+Visit the [Users section](https://sudoplatform.com/docs) of the Sudo Platform Developer Docs for SDK integration instructions.
 
-`git clone --recurse-submodules git@gitlab.tools.anonyome.com:platform/identity/sudo-user-web.git`
+## Questions and Support
+File any issues you find on the project's GitHub repository. Be careful not to share any Personally Identifiable Information (PII) or sensitive account information (API keys, credentials, etc.) when reporting an issue.
 
-**Getting the latest**
-
-`git pull --recurse-submodules`
-
-**Installing Dependencies**
-
-`yarn install`
-
-**Build Solution**
-
-`yarn build`
-
-## Setup integration tests
-
-Visit the [Sudos section](https://sudoplatform.com/docs) of the Sudo Platform Developer Docs for SDK integration instructions.
-
-## Running Unit and Integration tests
-
-`yarn test`
-
-## Release Procedure
-
-**Publish Internal**
-
-For new releases that contain new functionality we should publish internally first before publishing to Github.
-
-To publish a new version of Sudo User SDK for Web for internal consumption:
-
- - Create a new tag from master branch with the following naming `/alpha$/`
-
-**Publish External**
-
-For new releases that contain bug fixes or that have been through a `publish internal` procedure and have been signed off.
-
-To publish a new version of Sudo User SDK for Web to Github for external consumption:
-
- - Create a new tag from master with the release version. ie `1.0.0`
+For general inquiries related to the Sudo Platform, please contact [partners@sudoplatform.com](mailto:partners@sudoplatform.com)
