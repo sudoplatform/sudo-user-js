@@ -40,4 +40,3 @@ if [ -f "${suppressions}" ]; then
 else
   yarn audit
 fi
-
