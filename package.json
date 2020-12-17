@@ -12,8 +12,7 @@
     "lint:eslint": "eslint \"{bin,test,src}/**/*.{ts,tsx}\"",
     "lint:prettier": "prettier -l \"{bin,test,src}/**/*.{js,json,jsx,ts,tsx}\"",
     "codegen": "graphql-codegen -c codegen.yml",
-    "audit-with-suppressions": "bash -c 'utils/yarn-audit-with-suppressions.sh'",
-    "verify": "yarn audit-with-suppressions && yarn lint",
+    "verify": "yarn audit && yarn lint",
     "unit-test": "/bin/bash -c 'jest test/unit'",
     "integration-test": "/bin/bash -c 'jest test/integration'",
     "test": "yarn unit-test",
@@ -92,7 +91,8 @@
   "resolutions": {
     "**/apollo-link": "^1.2.14",
     "aws-appsync/**/apollo-cache-inmemory": "^1.6.6",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "**/ini": "^1.3.6"
   },
   "peerDependencies": {
     "@sudoplatform/sudo-common": "^3.0.0",
