@@ -128,6 +128,21 @@ export interface AuthUI {
    * @return Successful authentication result AuthenticationTokens
    */
   signInWithKey(uid: string, keyId: string): Promise<AuthenticationTokens>
+
+  /**
+   * Sign into the identity provider using a token issued by an external
+   * authentication provider.
+   *
+   * @param uid user ID.
+   * @param token authentication token.
+   * @param type token type.
+   * @return Successful authentication result AuthenticationTokens
+   */
+  signInWithToken(
+    uid: string,
+    token: string,
+    type: string,
+  ): Promise<AuthenticationTokens>
   /**
    * Presents the Cognito hosted UI signout endpoint.
    * When the endpoint is invoked, the hosted web app's cookies
@@ -434,6 +449,63 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
               USERNAME: userId,
               ANSWER: answer,
             },
+          })
+          .promise()
+
+        const authResult = respondToAuthChallengeResult.AuthenticationResult
+        const idToken = authResult?.IdToken
+        const accessToken = authResult?.AccessToken
+        const refreshToken = authResult?.RefreshToken
+        const tokenExpiry = authResult?.ExpiresIn
+
+        if (idToken && accessToken && refreshToken && tokenExpiry) {
+          const authTokens = {
+            idToken: idToken,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            tokenExpiry: tokenExpiry,
+          }
+          await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
+          resolve(authTokens)
+        } else {
+          reject(new AuthenticationError('Authentication tokens not found.'))
+        }
+      } else {
+        reject(new AuthenticationError('Invalid initiate auth result.'))
+      }
+    })
+  }
+
+  async signInWithToken(
+    userId: string,
+    token: string,
+    type: string,
+  ): Promise<AuthenticationTokens> {
+    return new Promise(async (resolve, reject) => {
+      const initiateAuthResult = await this.idpService
+        .initiateAuth({
+          ClientId: this.config.identityService.clientId,
+          AuthFlow: 'CUSTOM_AUTH',
+          AuthParameters: {
+            USERNAME: userId,
+          },
+        })
+        .promise()
+
+      const challengeName = initiateAuthResult.ChallengeName
+      const session = initiateAuthResult.Session
+
+      if (challengeName && session) {
+        const respondToAuthChallengeResult = await this.idpService
+          .respondToAuthChallenge({
+            Session: session,
+            ClientId: this.config.identityService.clientId,
+            ChallengeName: challengeName,
+            ChallengeResponses: {
+              USERNAME: userId,
+              ANSWER: token,
+            },
+            ClientMetadata: { challengeType: type },
           })
           .promise()
 

@@ -2,7 +2,7 @@ import { AuthUI, CognitoAuthUI } from '../../src/user/auth'
 import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { Config } from '../../src/core/sdk-config'
 import { AuthenticationStore } from '../../src/core/auth-store'
-import { mock, instance, when, reset } from 'ts-mockito'
+import { mock, instance, when, reset, anyString } from 'ts-mockito'
 import * as JWT from 'jsonwebtoken'
 import { generateKeyPairSync } from 'crypto'
 import { KeyPairKey, PrivateKey } from '../../src/utils/key-pair'
@@ -12,6 +12,10 @@ import {
   DefaultConfigurationManager,
   DefaultLogger,
 } from '@sudoplatform/sudo-common'
+import { generateKeyPair } from 'crypto'
+import { promisify } from 'util'
+import { LocalAuthenticationProvider } from '../../src/user/auth-provider'
+const generateKeyPairAsync = promisify(generateKeyPair)
 
 const globalAny: any = global
 globalAny.WebSocket = require('ws')
@@ -345,6 +349,69 @@ describe('SudoUserClient', () => {
         Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
       )
       expect(userClient.isSignedIn()).toBeTruthy()
+    })
+  })
+
+  describe('customFSSO()', () => {
+    it('should complete successfully', async () => {
+      const keyPair = await generateKeyPairAsync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: {
+          format: 'pem',
+          type: 'pkcs1',
+        },
+        privateKeyEncoding: {
+          format: 'pem',
+          type: 'pkcs1',
+        },
+      })
+
+      const authenticationProvider = new LocalAuthenticationProvider(
+        'client_system_test_iss',
+        keyPair.privateKey,
+        'dummy_key_id',
+        'dummy_username',
+      )
+
+      const authInfo = authenticationProvider.getAuthenticationInfo()
+      expect(authInfo.isValid()).toBeTruthy()
+      expect(authInfo.getUsername()).toBe('dummy_username')
+
+      const token = authInfo.encode()
+
+      const decoded: any = JWT.decode(token, { complete: true })
+      expect(decoded.header['kid']).toBe('dummy_key_id')
+
+      const verified: any = JWT.verify(token, keyPair.publicKey, {
+        issuer: 'client_system_test_iss',
+        audience: 'identity-service',
+        subject: 'dummy_username',
+        algorithms: ['RS256'],
+      })
+
+      expect(verified).toBeTruthy()
+
+      const authUIMock: CognitoAuthUI = mock()
+      const authUI = instance(authUIMock)
+      userClient.setAuthUI(authUI)
+
+      when(
+        authUIMock.signInWithToken('dummy_username', anyString(), 'FSSO'),
+      ).thenResolve({
+        idToken: 'dummy_id_token',
+        accessToken: 'dummy_access_token',
+        refreshToken: 'dummy_refresh_token',
+        tokenExpiry: 1,
+      })
+
+      const tokens = await userClient.signInWithAuthenticationProvider(
+        authenticationProvider,
+      )
+
+      expect(tokens.idToken).toBe('dummy_id_token')
+      expect(tokens.accessToken).toBe('dummy_access_token')
+      expect(tokens.refreshToken).toBe('dummy_refresh_token')
+      expect(tokens.tokenExpiry).toBe(1)
     })
   })
 })

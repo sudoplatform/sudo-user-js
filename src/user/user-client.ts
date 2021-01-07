@@ -1,4 +1,7 @@
-import { DefaultConfigurationManager } from '@sudoplatform/sudo-common'
+import {
+  DefaultConfigurationManager,
+  NotAuthorizedError,
+} from '@sudoplatform/sudo-common'
 import * as JWT from 'jsonwebtoken'
 import { AuthenticationStore } from '../core/auth-store'
 import { Config } from '../core/sdk-config'
@@ -132,6 +135,17 @@ export interface SudoUserClient {
     registrationId?: string,
   ): Promise<string>
   /**
+   * Sign into the backend using an external authentication provider. Caller must implement
+   * *AuthenticationProvider* interface to return the appropriate authentication token associated with
+   * the external identity registered with *registerWithAuthenticationProvider*.
+   *
+   * @param authenticationProvider authentication provider that provides the authentication token.
+   * @return authentication tokens associated with the successful sign in.
+   */
+  signInWithAuthenticationProvider(
+    authenticationProvider: AuthenticationProvider,
+  ): Promise<AuthenticationTokens>
+  /**
    * Indicates whether or not this client is registered with Sudo Platform backend.
    *
    * @return *true* if the client is registered.
@@ -141,7 +155,7 @@ export interface SudoUserClient {
    * Sign into the backend using a private key. The client must have created a private/public key pair via
    * the *registerWithAuthenticationProvider* method.
    *
-   * @return Successful authentication result AuthenticationTokens
+   * @return authentication tokens associated with the successful sign in.
    */
   signInWithKey(): Promise<AuthenticationTokens>
   /**
@@ -315,6 +329,13 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
     if (!(await this.isRegistered())) {
       const authInfo = authenticationProvider.getAuthenticationInfo()
+
+      if (!authInfo.isValid()) {
+        throw new NotAuthorizedError(
+          'Authentication provider returned invalid authentication info.',
+        )
+      }
+
       const token = authInfo.encode()
       const jwt: any = JWT.decode(token, { complete: true })
       let uid
@@ -353,6 +374,27 @@ export class DefaultSudoUserClient implements SudoUserClient {
     } else {
       throw new RegisterError('Client is already registered')
     }
+  }
+
+  async signInWithAuthenticationProvider(
+    authenticationProvider: AuthenticationProvider,
+  ): Promise<AuthenticationTokens> {
+    this.logger.info('Signing in using external authentication provider.')
+    const authInfo = authenticationProvider.getAuthenticationInfo()
+
+    if (!authInfo.isValid()) {
+      throw new NotAuthorizedError(
+        'Authentication provider returned invalid authentication info.',
+      )
+    }
+
+    const uid = authInfo.getUsername()
+    const token = authInfo.encode()
+    const type = authInfo.type
+
+    const authTokens = await this.authUI.signInWithToken(uid, token, type)
+    await this.storeTokens(uid, authTokens)
+    return authTokens
   }
 
   async isRegistered(): Promise<boolean> {

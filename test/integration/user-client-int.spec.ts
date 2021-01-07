@@ -1,8 +1,14 @@
 import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { DefaultConfigurationManager } from '@sudoplatform/sudo-common'
-import { TESTAuthenticationProvider } from '../../src/user/auth-provider'
+import {
+  LocalAuthenticationProvider,
+  TESTAuthenticationProvider,
+} from '../../src/user/auth-provider'
 import privateKeyParam from '../../config/register_key.json'
 import config from '../../config/sudoplatformconfig.json'
+import { existsSync } from 'fs'
+import { readFileSync } from 'fs'
+import { v4 } from 'uuid'
 
 const globalAny: any = global
 globalAny.WebSocket = require('ws')
@@ -136,5 +142,45 @@ describe('SudoUserClient', () => {
       // Reset the client internal state
       userClient.reset()
     }, 30000)
+  })
+
+  describe('testCustomFSSO()', () => {
+    const keyPath = 'config/fsso.key'
+    const keyIdPath = 'config/fsso.id'
+    if (existsSync(keyPath) && existsSync(keyIdPath)) {
+      it('should complete successfully', async () => {
+        const key = readFileSync(keyPath, 'ascii').trim()
+        const keyId = readFileSync(keyIdPath, 'ascii').trim()
+        const username = `sudouser-fsso-test-${v4()}`
+
+        const authenticationProvider = new LocalAuthenticationProvider(
+          'client_system_test_iss',
+          key,
+          keyId,
+          username,
+        )
+
+        const uid = await userClient.registerWithAuthenticationProvider(
+          authenticationProvider,
+          'dummy_rid',
+        )
+
+        expect(uid).toBe(username)
+
+        await userClient.signInWithAuthenticationProvider(
+          authenticationProvider,
+        )
+
+        expect(userClient.isSignedIn()).toBeTruthy()
+
+        await userClient.deregister()
+      }, 30000)
+    } else {
+      it('skip test.', () => {
+        console.log(
+          'No sudoplatformconfig.json, key and key ID file found. Skipping tests.',
+        )
+      })
+    }
   })
 })

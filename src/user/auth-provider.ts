@@ -26,6 +26,22 @@ export interface AuthenticationInfo {
   getUsername(): string
 }
 
+/* Encapsulates an authentication provider responsible for generating
+ * authentication information required to sign into the backend.
+ */
+export interface AuthenticationProvider {
+  /**
+   * Generates and returns authentication information.
+   *
+   * @return authentication information.
+   */
+  getAuthenticationInfo(): AuthenticationInfo
+  /**
+   * Resets internal state and releases any associated resources.
+   */
+  reset(): void
+}
+
 /**
  * Authentication info consisting of a JWT signed using the TEST registration key.
  */
@@ -45,22 +61,6 @@ export class TESTAuthenticationInfo implements AuthenticationInfo {
   getUsername(): string {
     return ''
   }
-}
-
-/* Encapsulates an authentication provider responsible for generating
- * authentication information required to sign into the backend.
- */
-export interface AuthenticationProvider {
-  /**
-   * Generates and returns authentication information.
-   *
-   * @return authentication information.
-   */
-  getAuthenticationInfo(): AuthenticationInfo
-  /**
-   * Resets internal state and releases any associated resources.
-   */
-  reset(): void
 }
 
 /**
@@ -91,6 +91,62 @@ export class TESTAuthenticationProvider implements AuthenticationProvider {
       algorithm: 'RS256',
     })
     return new TESTAuthenticationInfo(jwt)
+  }
+
+  reset(): void {
+    // Not implemented
+  }
+}
+
+/**
+ * Authentication info consisting of a JWT signed using the locally stored private key.
+ */
+export class LocalAuthenticationInfo implements AuthenticationInfo {
+  readonly type: string = 'FSSO'
+
+  constructor(private jwt: string, private username: string) {}
+
+  isValid(): boolean {
+    return true
+  }
+
+  encode(): string {
+    return this.jwt
+  }
+
+  getUsername(): string {
+    return this.username
+  }
+}
+
+/**
+ * Authentication info consisting of a JWT signed using the locally stored private key.
+ *
+ * @param name provider name. This name will be used to populate JWT iss (issuer).
+ * @param privateKey PEM encoded RSA private key.
+ * @param keyId key ID.
+ * @param username username to be associated with the issued authentication info.
+ */
+export class LocalAuthenticationProvider implements AuthenticationProvider {
+  constructor(
+    private name: string,
+    private privateKey: string,
+    private keyId: string,
+    private username: string,
+  ) {}
+
+  getAuthenticationInfo(): AuthenticationInfo {
+    const jwt = JWT.sign({}, this.privateKey, {
+      jwtid: v4(),
+      audience: 'identity-service',
+      expiresIn: '60s',
+      notBefore: '0m',
+      subject: this.username,
+      issuer: this.name,
+      header: { alg: 'RS256', kid: this.keyId },
+      algorithm: 'RS256',
+    })
+    return new LocalAuthenticationInfo(jwt, this.username)
   }
 
   reset(): void {
