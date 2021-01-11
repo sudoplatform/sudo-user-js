@@ -35,7 +35,7 @@ export interface AuthenticationProvider {
    *
    * @return authentication information.
    */
-  getAuthenticationInfo(): AuthenticationInfo
+  getAuthenticationInfo(): Promise<AuthenticationInfo>
   /**
    * Resets internal state and releases any associated resources.
    */
@@ -79,7 +79,7 @@ export class TESTAuthenticationProvider implements AuthenticationProvider {
     private keyId: string = 'register_key',
   ) {}
 
-  getAuthenticationInfo(): AuthenticationInfo {
+  async getAuthenticationInfo(): Promise<AuthenticationInfo> {
     const jwt = JWT.sign({}, this.privateKey, {
       jwtid: v4(),
       audience: this.testRegistrationAudience,
@@ -135,7 +135,7 @@ export class LocalAuthenticationProvider implements AuthenticationProvider {
     private username: string,
   ) {}
 
-  getAuthenticationInfo(): AuthenticationInfo {
+  async getAuthenticationInfo(): Promise<AuthenticationInfo> {
     const jwt = JWT.sign({}, this.privateKey, {
       jwtid: v4(),
       audience: 'identity-service',

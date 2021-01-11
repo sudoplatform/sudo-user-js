@@ -328,7 +328,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     this.logger.info('Registering using an external authentication provider.')
 
     if (!(await this.isRegistered())) {
-      const authInfo = authenticationProvider.getAuthenticationInfo()
+      const authInfo = await authenticationProvider.getAuthenticationInfo()
 
       if (!authInfo.isValid()) {
         throw new NotAuthorizedError(
@@ -380,7 +380,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     authenticationProvider: AuthenticationProvider,
   ): Promise<AuthenticationTokens> {
     this.logger.info('Signing in using external authentication provider.')
-    const authInfo = authenticationProvider.getAuthenticationInfo()
+    const authInfo = await authenticationProvider.getAuthenticationInfo()
 
     if (!authInfo.isValid()) {
       throw new NotAuthorizedError(

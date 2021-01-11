@@ -373,7 +373,7 @@ describe('SudoUserClient', () => {
         'dummy_username',
       )
 
-      const authInfo = authenticationProvider.getAuthenticationInfo()
+      const authInfo = await authenticationProvider.getAuthenticationInfo()
       expect(authInfo.isValid()).toBeTruthy()
       expect(authInfo.getUsername()).toBe('dummy_username')
 
