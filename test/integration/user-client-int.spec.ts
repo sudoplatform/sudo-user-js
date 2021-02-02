@@ -158,6 +158,7 @@ describe('SudoUserClient', () => {
           key,
           keyId,
           username,
+          { 'custom:entitlementsSet': 'dummy_entitlements_set' },
         )
 
         const uid = await userClient.registerWithAuthenticationProvider(
@@ -165,13 +166,27 @@ describe('SudoUserClient', () => {
           'dummy_rid',
         )
 
+        expect(userClient.isRegistered()).toBeTruthy()
         expect(uid).toBe(username)
+
+        try {
+          await userClient.registerWithAuthenticationProvider(
+            authenticationProvider,
+            'dummy_rid',
+          )
+          fail('Expected error not thrown.')
+        } catch (err) {
+          expect(err.name).toMatch('AlreadyRegisteredError')
+        }
 
         await userClient.signInWithAuthenticationProvider(
           authenticationProvider,
         )
 
         expect(userClient.isSignedIn()).toBeTruthy()
+        expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
+          'dummy_entitlements_set',
+        )
 
         await userClient.deregister()
       }, 30000)

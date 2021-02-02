@@ -20,6 +20,7 @@ import {
 } from '@sudoplatform/sudo-common'
 import { apiKeyNames } from '../core/api-key-names'
 import { ApiClient } from '../client/apiClient'
+import { AlreadyRegisteredError } from './error'
 
 /**
  * Encapsulates the authentication tokens obtained from a successful authentication.
@@ -111,12 +112,24 @@ export interface SudoUserClient {
    */
   getUserName(): string | undefined
   /**
+   * Sets the user name associated with this client.
+   *
+   * @param name user name.
+   */
+  setUserName(name: string): void
+  /**
    * Returns the subject of the user associated with this client.
    * Note: This is an internal method used by other Sudo platform SDKs.
    *
    * @return user subject.
    */
   getSubject(): string | undefined
+  /**
+   * Returns the specified claim associated with the user's identity.
+   *
+   * @param name claim name.
+   */
+  getUserClaim(name: string): any | undefined
   /**
    * Signs out the user from all devices.
    */
@@ -274,16 +287,24 @@ export class DefaultSudoUserClient implements SudoUserClient {
     return this.authUI.getUserName()
   }
 
-  public getSubject(): string | undefined {
-    let sub = undefined
+  public setUserName(name: string): void {
+    this.keyManager.addString('userId', name)
+  }
+
+  getUserClaim(name: string): any | undefined {
+    let claim = undefined
     const idToken = this.getIdToken()
     if (idToken) {
       const decoded: any = JWT.decode(idToken, { complete: true })
       if (decoded) {
-        sub = decoded.payload['sub']
+        claim = decoded.payload[name]
       }
     }
-    return sub
+    return claim
+  }
+
+  public getSubject(): string | undefined {
+    return this.getUserClaim('sub')
   }
 
   public async isSignedIn(): Promise<boolean> {
@@ -366,13 +387,15 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
       const userId = await this.authUI.register(uid, validationData)
       if (userId) {
-        this.keyManager.addString('userId', userId)
+        this.setUserName(userId)
         return userId
       } else {
-        throw new RegisterError('Failed to register user.')
+        throw new RegisterError(
+          'Registration was successful but not user ID was returned.',
+        )
       }
     } else {
-      throw new RegisterError('Client is already registered')
+      throw new AlreadyRegisteredError()
     }
   }
 
@@ -399,17 +422,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   async isRegistered(): Promise<boolean> {
     const uid = await this.keyManager.getString('userId')
-    const userKeyId = await this.keyManager.getString('userKeyId')
-
-    let privateKey
-    let publicKey
-    if (userKeyId) {
-      const keyPair = await this.keyManager.retrieveKeyPair(userKeyId)
-      privateKey = keyPair.privateKey
-      publicKey = keyPair.publicKey
-    }
-
-    return uid && privateKey && publicKey ? true : false
+    return uid ? true : false
   }
 
   async signInWithKey(): Promise<AuthenticationTokens> {

@@ -126,6 +126,7 @@ export class LocalAuthenticationInfo implements AuthenticationInfo {
  * @param privateKey PEM encoded RSA private key.
  * @param keyId key ID.
  * @param username username to be associated with the issued authentication info.
+ * @param attributes additional attributes to be added to the issued authentication info.
  */
 export class LocalAuthenticationProvider implements AuthenticationProvider {
   constructor(
@@ -133,19 +134,24 @@ export class LocalAuthenticationProvider implements AuthenticationProvider {
     private privateKey: string,
     private keyId: string,
     private username: string,
+    private attributes?: Record<string, any>,
   ) {}
 
   async getAuthenticationInfo(): Promise<AuthenticationInfo> {
-    const jwt = JWT.sign({}, this.privateKey, {
-      jwtid: v4(),
-      audience: 'identity-service',
-      expiresIn: '60s',
-      notBefore: '0m',
-      subject: this.username,
-      issuer: this.name,
-      header: { alg: 'RS256', kid: this.keyId },
-      algorithm: 'RS256',
-    })
+    const jwt = JWT.sign(
+      this.attributes ? this.attributes : {},
+      this.privateKey,
+      {
+        jwtid: v4(),
+        audience: 'identity-service',
+        expiresIn: '60s',
+        notBefore: '0m',
+        subject: this.username,
+        issuer: this.name,
+        header: { alg: 'RS256', kid: this.keyId },
+        algorithm: 'RS256',
+      },
+    )
     return new LocalAuthenticationInfo(jwt, this.username)
   }
 

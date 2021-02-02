@@ -87,6 +87,9 @@
 						<dt>param</dt>
 						<dd><p>username to be associated with the issued authentication info.</p>
 						</dd>
+						<dt>param</dt>
+						<dd><p>additional attributes to be added to the issued authentication info.</p>
+						</dd>
 					</dl>
 				</div>
 			</section>
@@ -130,13 +133,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Local<wbr>Authentication<wbr>Provider<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, privateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, keyId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, username<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_user_auth_provider_.localauthenticationprovider.html" class="tsd-signature-type">LocalAuthenticationProvider</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Local<wbr>Authentication<wbr>Provider<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, privateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, keyId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, username<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, attributes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_user_auth_provider_.localauthenticationprovider.html" class="tsd-signature-type">LocalAuthenticationProvider</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in user/auth-provider.ts:130</li>
+									<li>Defined in src/user/auth-provider.ts:131</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -152,6 +155,9 @@
 								</li>
 								<li>
 									<h5>username: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> attributes: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_user_auth_provider_.localauthenticationprovider.html" class="tsd-signature-type">LocalAuthenticationProvider</a></h4>
@@ -172,7 +178,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_user_auth_provider_.authenticationprovider.html">AuthenticationProvider</a>.<a href="../interfaces/_user_auth_provider_.authenticationprovider.html#getauthenticationinfo">getAuthenticationInfo</a></p>
 								<ul>
-									<li>Defined in user/auth-provider.ts:138</li>
+									<li>Defined in src/user/auth-provider.ts:140</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_auth_provider_.authenticationinfo.html" class="tsd-signature-type">AuthenticationInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -190,7 +196,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_user_auth_provider_.authenticationprovider.html">AuthenticationProvider</a>.<a href="../interfaces/_user_auth_provider_.authenticationprovider.html#reset">reset</a></p>
 								<ul>
-									<li>Defined in user/auth-provider.ts:152</li>
+									<li>Defined in src/user/auth-provider.ts:158</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -249,6 +255,9 @@
 					</li>
 					<li class="current tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_auth_provider_.html">&quot;user/auth-<wbr>provider&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/_user_error_.html">&quot;user/error&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_user_client_.html">&quot;user/user-<wbr>client&quot;</a>

@@ -6,3 +6,5 @@ export {
   LocalAuthenticationProvider,
   AuthenticationProvider,
 } from './user/auth-provider'
+
+export { AlreadyRegisteredError } from './user/error'

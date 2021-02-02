@@ -21,6 +21,7 @@ import {
   createResolvablePromise,
   ResolvablePromise,
 } from '../utils/resolvable-promise'
+import { AlreadyRegisteredError } from './error'
 
 export interface AuthUI {
   /**
@@ -397,6 +398,8 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
         errorMsg.includes('sudoplatform.identity.TestRegCheckFailed')
       ) {
         throw new NotAuthorizedError(errorMsg)
+      } else if (errorMsg.includes('sudoplatform.identity.AlreadyRegistered')) {
+        throw new AlreadyRegisteredError()
       } else {
         throw new FatalError(errorMsg)
       }
