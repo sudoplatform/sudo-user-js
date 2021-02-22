@@ -32,6 +32,8 @@ describe('SudoUserClient', () => {
       const testAuthenticationProvider = new TESTAuthenticationProvider(
         'SudoUser',
         privateKey,
+        'register_key',
+        { 'custom:entitlementsSet': 'dummy_entitlements_set' },
       )
 
       await userClient.registerWithAuthenticationProvider(
@@ -59,6 +61,10 @@ describe('SudoUserClient', () => {
       )
 
       expect(await userClient.isSignedIn()).toBeTruthy()
+
+      expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
+        'dummy_entitlements_set',
+      )
 
       // Deregister
       await userClient.deregister()

@@ -69,6 +69,7 @@ export class TESTAuthenticationInfo implements AuthenticationInfo {
  * @param name provider name. This name will be prepended to the generated UUID in JWT sub.
  * @param privateKey PEM encoded RSA private key.
  * @param keyId key ID of the TEST registration key which is obtained from the admin console.
+ * @param attributes additional attributes to be added to the issued authentication info.
  */
 export class TESTAuthenticationProvider implements AuthenticationProvider {
   readonly testRegistrationIssuer: string = 'testRegisterIssuer'
@@ -77,19 +78,24 @@ export class TESTAuthenticationProvider implements AuthenticationProvider {
     private name: string,
     private privateKey: string,
     private keyId: string = 'register_key',
+    private attributes?: Record<string, any>,
   ) {}
 
   async getAuthenticationInfo(): Promise<AuthenticationInfo> {
-    const jwt = JWT.sign({}, this.privateKey, {
-      jwtid: v4(),
-      audience: this.testRegistrationAudience,
-      expiresIn: '60s',
-      notBefore: '0m',
-      subject: `${this.name}-${v4()}`,
-      issuer: this.testRegistrationIssuer,
-      header: { alg: 'RS256', kid: this.keyId },
-      algorithm: 'RS256',
-    })
+    const jwt = JWT.sign(
+      this.attributes ? this.attributes : {},
+      this.privateKey,
+      {
+        jwtid: v4(),
+        audience: this.testRegistrationAudience,
+        expiresIn: '60s',
+        notBefore: '0m',
+        subject: `${this.name}-${v4()}`,
+        issuer: this.testRegistrationIssuer,
+        header: { alg: 'RS256', kid: this.keyId },
+        algorithm: 'RS256',
+      },
+    )
     return new TESTAuthenticationInfo(jwt)
   }
 
