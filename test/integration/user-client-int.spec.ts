@@ -18,7 +18,7 @@ process.env.LOG_LEVEL = 'info'
 process.env.PROJECT_NAME = 'SudoUser'
 
 DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(config))
-const userClient = new DefaultSudoUserClient()
+const userClient = new DefaultSudoUserClient({})
 
 describe('SudoUserClient', () => {
   describe('testRegister()', () => {

@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_user_user_client_.html">&quot;user/user-client&quot;</a>
+					<a href="../modules/_user_user_client_interface_.html">&quot;user/user-client-interface&quot;</a>
 				</li>
 				<li>
-					<a href="_user_user_client_.authenticationtokens.html">AuthenticationTokens</a>
+					<a href="_user_user_client_interface_.authenticationtokens.html">AuthenticationTokens</a>
 				</li>
 			</ul>
 			<h1>Interface AuthenticationTokens</h1>
@@ -105,10 +105,10 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.authenticationtokens.html#accesstoken" class="tsd-kind-icon">access<wbr>Token</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.authenticationtokens.html#idtoken" class="tsd-kind-icon">id<wbr>Token</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.authenticationtokens.html#refreshtoken" class="tsd-kind-icon">refresh<wbr>Token</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.authenticationtokens.html#tokenexpiry" class="tsd-kind-icon">token<wbr>Expiry</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_interface_.authenticationtokens.html#accesstoken" class="tsd-kind-icon">access<wbr>Token</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_interface_.authenticationtokens.html#idtoken" class="tsd-kind-icon">id<wbr>Token</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_interface_.authenticationtokens.html#refreshtoken" class="tsd-kind-icon">refresh<wbr>Token</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_interface_.authenticationtokens.html#tokenexpiry" class="tsd-kind-icon">token<wbr>Expiry</a></li>
 							</ul>
 						</section>
 					</div>
@@ -122,7 +122,7 @@
 					<div class="tsd-signature tsd-kind-icon">access<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/user/user-client.ts:35</li>
+							<li>Defined in src/user/user-client-interface.ts:13</li>
 						</ul>
 					</aside>
 				</section>
@@ -132,7 +132,7 @@
 					<div class="tsd-signature tsd-kind-icon">id<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/user/user-client.ts:34</li>
+							<li>Defined in src/user/user-client-interface.ts:12</li>
 						</ul>
 					</aside>
 				</section>
@@ -142,7 +142,7 @@
 					<div class="tsd-signature tsd-kind-icon">refresh<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/user/user-client.ts:36</li>
+							<li>Defined in src/user/user-client-interface.ts:14</li>
 						</ul>
 					</aside>
 				</section>
@@ -152,7 +152,7 @@
 					<div class="tsd-signature tsd-kind-icon">token<wbr>Expiry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/user/user-client.ts:37</li>
+							<li>Defined in src/user/user-client-interface.ts:15</li>
 						</ul>
 					</aside>
 				</section>
@@ -212,8 +212,14 @@
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_error_.html">&quot;user/error&quot;</a>
 					</li>
-					<li class="current tsd-kind-module tsd-is-external">
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/_user_identity_provider_.html">&quot;user/identity-<wbr>provider&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_user_client_.html">&quot;user/user-<wbr>client&quot;</a>
+					</li>
+					<li class="current tsd-kind-module tsd-is-external">
+						<a href="../modules/_user_user_client_interface_.html">&quot;user/user-<wbr>client-<wbr>interface&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_user_key_names_.html">&quot;user/user-<wbr>key-<wbr>names&quot;</a>
@@ -225,32 +231,29 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
-						<a href="../classes/_user_user_client_.defaultsudouserclient.html" class="tsd-kind-icon">Default<wbr>Sudo<wbr>User<wbr>Client</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="_user_user_client_.authenticationtokens.html" class="tsd-kind-icon">Authentication<wbr>Tokens</a>
+						<a href="_user_user_client_interface_.authenticationtokens.html" class="tsd-kind-icon">Authentication<wbr>Tokens</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_user_user_client_.authenticationtokens.html#accesstoken" class="tsd-kind-icon">access<wbr>Token</a>
+								<a href="_user_user_client_interface_.authenticationtokens.html#accesstoken" class="tsd-kind-icon">access<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_user_user_client_.authenticationtokens.html#idtoken" class="tsd-kind-icon">id<wbr>Token</a>
+								<a href="_user_user_client_interface_.authenticationtokens.html#idtoken" class="tsd-kind-icon">id<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_user_user_client_.authenticationtokens.html#refreshtoken" class="tsd-kind-icon">refresh<wbr>Token</a>
+								<a href="_user_user_client_interface_.authenticationtokens.html#refreshtoken" class="tsd-kind-icon">refresh<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_user_user_client_.authenticationtokens.html#tokenexpiry" class="tsd-kind-icon">token<wbr>Expiry</a>
+								<a href="_user_user_client_interface_.authenticationtokens.html#tokenexpiry" class="tsd-kind-icon">token<wbr>Expiry</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="_user_user_client_.sudouserclient.html" class="tsd-kind-icon">Sudo<wbr>User<wbr>Client</a>
+						<a href="_user_user_client_interface_.sudouserclient.html" class="tsd-kind-icon">Sudo<wbr>User<wbr>Client</a>
 					</li>
 				</ul>
 			</nav>

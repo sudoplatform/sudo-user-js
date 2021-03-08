@@ -80,7 +80,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/_user_user_client_.sudouserclient.html" class="tsd-signature-type">SudoUserClient</a></li>
+					<li><a href="../interfaces/_user_user_client_interface_.sudouserclient.html" class="tsd-signature-type">SudoUserClient</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -117,6 +117,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#registerwithauthenticationprovider" class="tsd-kind-icon">register<wbr>With<wbr>Authentication<wbr>Provider</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#reset" class="tsd-kind-icon">reset</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#setauthui" class="tsd-kind-icon">set<wbr>AuthUI</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#setauthenticationstore" class="tsd-kind-icon">set<wbr>Authentication<wbr>Store</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#setidentityprovider" class="tsd-kind-icon">set<wbr>Identity<wbr>Provider</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#setlaunchurifn" class="tsd-kind-icon">set<wbr>Launch<wbr>Uri<wbr>Fn</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#setusername" class="tsd-kind-icon">set<wbr>User<wbr>Name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="_user_user_client_.defaultsudouserclient.html#signinwithauthenticationprovider" class="tsd-kind-icon">sign<wbr>InWith<wbr>Authentication<wbr>Provider</a></li>
@@ -132,34 +134,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Default<wbr>Sudo<wbr>User<wbr>Client<span class="tsd-signature-symbol">(</span>keyManager<span class="tsd-signature-symbol">?: </span><a href="_core_key_manager_.keymanager.html" class="tsd-signature-type">KeyManager</a>, authUI<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_user_auth_.authui.html" class="tsd-signature-type">AuthUI</a>, apiClient<span class="tsd-signature-symbol">?: </span><a href="_client_apiclient_.apiclient.html" class="tsd-signature-type">ApiClient</a>, launchUriFn<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span>, config<span class="tsd-signature-symbol">?: </span><a href="../modules/_core_sdk_config_.html#config-1" class="tsd-signature-type">Config</a>, logger<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Logger</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_user_user_client_.defaultsudouserclient.html" class="tsd-signature-type">DefaultSudoUserClient</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Default<wbr>Sudo<wbr>User<wbr>Client<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_user_user_client_.sudouseroptions.html" class="tsd-signature-type">SudoUserOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_user_user_client_.defaultsudouserclient.html" class="tsd-signature-type">DefaultSudoUserClient</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/user/user-client.ts:196</li>
+									<li>Defined in src/user/user-client.ts:49</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> keyManager: <a href="_core_key_manager_.keymanager.html" class="tsd-signature-type">KeyManager</a></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> authUI: <a href="../interfaces/_user_auth_.authui.html" class="tsd-signature-type">AuthUI</a></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> apiClient: <a href="_client_apiclient_.apiclient.html" class="tsd-signature-type">ApiClient</a></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> launchUriFn: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> config: <a href="../modules/_core_sdk_config_.html#config-1" class="tsd-signature-type">Config</a></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> logger: <span class="tsd-signature-type">Logger</span></h5>
+									<h5>options: <a href="../interfaces/_user_user_client_.sudouseroptions.html" class="tsd-signature-type">SudoUserOptions</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_user_user_client_.defaultsudouserclient.html" class="tsd-signature-type">DefaultSudoUserClient</a></h4>
@@ -178,9 +165,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#clearauthenticationtokens">clearAuthenticationTokens</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#clearauthenticationtokens">clearAuthenticationTokens</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:452</li>
+									<li>Defined in src/user/user-client.ts:351</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -197,7 +184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/user/user-client.ts:446</li>
+									<li>Defined in src/user/user-client.ts:345</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -213,9 +200,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getaccesstoken">getAccessToken</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getaccesstoken">getAccessToken</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:270</li>
+									<li>Defined in src/user/user-client.ts:130</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -231,9 +218,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getidtoken">getIdToken</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getidtoken">getIdToken</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:266</li>
+									<li>Defined in src/user/user-client.ts:126</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -249,9 +236,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getlatestauthtoken">getLatestAuthToken</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getlatestauthtoken">getLatestAuthToken</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:327</li>
+									<li>Defined in src/user/user-client.ts:210</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -267,9 +254,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getrefreshtoken">getRefreshToken</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getrefreshtoken">getRefreshToken</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:274</li>
+									<li>Defined in src/user/user-client.ts:134</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -285,9 +272,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getrefreshtokenexpiry">getRefreshTokenExpiry</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getrefreshtokenexpiry">getRefreshTokenExpiry</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:282</li>
+									<li>Defined in src/user/user-client.ts:143</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -303,9 +290,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getsubject">getSubject</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getsubject">getSubject</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:306</li>
+									<li>Defined in src/user/user-client.ts:174</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -321,9 +308,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#gettokenexpiry">getTokenExpiry</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#gettokenexpiry">getTokenExpiry</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:278</li>
+									<li>Defined in src/user/user-client.ts:138</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -339,9 +326,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getuserclaim">getUserClaim</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getuserclaim">getUserClaim</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:294</li>
+									<li>Defined in src/user/user-client.ts:162</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -363,9 +350,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#getusername">getUserName</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#getusername">getUserName</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:286</li>
+									<li>Defined in src/user/user-client.ts:154</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -381,9 +368,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#globalsignout">globalSignOut</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#globalsignout">globalSignOut</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:337</li>
+									<li>Defined in src/user/user-client.ts:229</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -399,9 +386,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#isregistered">isRegistered</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#isregistered">isRegistered</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:423</li>
+									<li>Defined in src/user/user-client.ts:319</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -417,9 +404,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#issignedin">isSignedIn</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#issignedin">isSignedIn</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:310</li>
+									<li>Defined in src/user/user-client.ts:178</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -435,9 +422,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#presentfederatedsigninui">presentFederatedSignInUI</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#presentfederatedsigninui">presentFederatedSignInUI</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:239</li>
+									<li>Defined in src/user/user-client.ts:99</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -453,9 +440,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#presentsignoutui">presentSignOutUI</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#presentsignoutui">presentSignOutUI</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:456</li>
+									<li>Defined in src/user/user-client.ts:358</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -466,14 +453,14 @@
 					<a name="processfederatedsignintokens" class="tsd-anchor"></a>
 					<h3>process<wbr>Federated<wbr>Sign<wbr>InTokens</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">process<wbr>Federated<wbr>Sign<wbr>InTokens<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">process<wbr>Federated<wbr>Sign<wbr>InTokens<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#processfederatedsignintokens">processFederatedSignInTokens</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#processfederatedsignintokens">processFederatedSignInTokens</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:248</li>
+									<li>Defined in src/user/user-client.ts:108</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -482,7 +469,7 @@
 									<h5>url: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -490,14 +477,14 @@
 					<a name="refreshtokens" class="tsd-anchor"></a>
 					<h3>refresh<wbr>Tokens</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">refresh<wbr>Tokens<span class="tsd-signature-symbol">(</span>refreshToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">refresh<wbr>Tokens<span class="tsd-signature-symbol">(</span>refreshToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#refreshtokens">refreshTokens</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#refreshtokens">refreshTokens</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:314</li>
+									<li>Defined in src/user/user-client.ts:197</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -506,7 +493,7 @@
 									<h5>refreshToken: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -519,9 +506,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#registerwithauthenticationprovider">registerWithAuthenticationProvider</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#registerwithauthenticationprovider">registerWithAuthenticationProvider</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:345</li>
+									<li>Defined in src/user/user-client.ts:237</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -546,9 +533,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#reset">reset</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#reset">reset</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:460</li>
+									<li>Defined in src/user/user-client.ts:362</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -565,7 +552,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/user/user-client.ts:499</li>
+									<li>Defined in src/user/user-client.ts:419</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -584,6 +571,63 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="setauthenticationstore" class="tsd-anchor"></a>
+					<h3>set<wbr>Authentication<wbr>Store</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Authentication<wbr>Store<span class="tsd-signature-symbol">(</span>authenticationStore<span class="tsd-signature-symbol">: </span><a href="_core_auth_store_.authenticationstore.html" class="tsd-signature-type">AuthenticationStore</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/user/user-client.ts:442</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Provide a custom authentication store.
+									This is mainly used for unit testing (optional).</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>authenticationStore: <a href="_core_auth_store_.authenticationstore.html" class="tsd-signature-type">AuthenticationStore</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="setidentityprovider" class="tsd-anchor"></a>
+					<h3>set<wbr>Identity<wbr>Provider</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Identity<wbr>Provider<span class="tsd-signature-symbol">(</span>identityProvider<span class="tsd-signature-symbol">: </span><a href="../interfaces/_user_identity_provider_.identityprovider.html" class="tsd-signature-type">IdentityProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/user/user-client.ts:426</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Provide a custom identity provider. This is mainly used for unit testing (optional).</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>identityProvider: <a href="../interfaces/_user_identity_provider_.identityprovider.html" class="tsd-signature-type">IdentityProvider</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
 					<a name="setlaunchurifn" class="tsd-anchor"></a>
 					<h3>set<wbr>Launch<wbr>Uri<wbr>Fn</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -593,7 +637,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/user/user-client.ts:507</li>
+									<li>Defined in src/user/user-client.ts:434</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -639,9 +683,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#setusername">setUserName</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#setusername">setUserName</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:290</li>
+									<li>Defined in src/user/user-client.ts:158</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -658,14 +702,14 @@
 					<a name="signinwithauthenticationprovider" class="tsd-anchor"></a>
 					<h3>sign<wbr>InWith<wbr>Authentication<wbr>Provider</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">sign<wbr>InWith<wbr>Authentication<wbr>Provider<span class="tsd-signature-symbol">(</span>authenticationProvider<span class="tsd-signature-symbol">: </span><a href="../interfaces/_user_auth_provider_.authenticationprovider.html" class="tsd-signature-type">AuthenticationProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">sign<wbr>InWith<wbr>Authentication<wbr>Provider<span class="tsd-signature-symbol">(</span>authenticationProvider<span class="tsd-signature-symbol">: </span><a href="../interfaces/_user_auth_provider_.authenticationprovider.html" class="tsd-signature-type">AuthenticationProvider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#signinwithauthenticationprovider">signInWithAuthenticationProvider</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#signinwithauthenticationprovider">signInWithAuthenticationProvider</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:402</li>
+									<li>Defined in src/user/user-client.ts:294</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -674,7 +718,7 @@
 									<h5>authenticationProvider: <a href="../interfaces/_user_auth_provider_.authenticationprovider.html" class="tsd-signature-type">AuthenticationProvider</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -682,17 +726,17 @@
 					<a name="signinwithkey" class="tsd-anchor"></a>
 					<h3>sign<wbr>InWith<wbr>Key</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">sign<wbr>InWith<wbr>Key<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">sign<wbr>InWith<wbr>Key<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_user_user_client_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_.sudouserclient.html#signinwithkey">signInWithKey</a></p>
+								<p>Implementation of <a href="../interfaces/_user_user_client_interface_.sudouserclient.html">SudoUserClient</a>.<a href="../interfaces/_user_user_client_interface_.sudouserclient.html#signinwithkey">signInWithKey</a></p>
 								<ul>
-									<li>Defined in src/user/user-client.ts:428</li>
+									<li>Defined in src/user/user-client.ts:324</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -752,8 +796,14 @@
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_error_.html">&quot;user/error&quot;</a>
 					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/_user_identity_provider_.html">&quot;user/identity-<wbr>provider&quot;</a>
+					</li>
 					<li class="current tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_user_client_.html">&quot;user/user-<wbr>client&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/_user_user_client_interface_.html">&quot;user/user-<wbr>client-<wbr>interface&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_user_key_names_.html">&quot;user/user-<wbr>key-<wbr>names&quot;</a>
@@ -837,6 +887,12 @@
 								<a href="_user_user_client_.defaultsudouserclient.html#setauthui" class="tsd-kind-icon">set<wbr>AuthUI</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="_user_user_client_.defaultsudouserclient.html#setauthenticationstore" class="tsd-kind-icon">set<wbr>Authentication<wbr>Store</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="_user_user_client_.defaultsudouserclient.html#setidentityprovider" class="tsd-kind-icon">set<wbr>Identity<wbr>Provider</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="_user_user_client_.defaultsudouserclient.html#setlaunchurifn" class="tsd-kind-icon">set<wbr>Launch<wbr>Uri<wbr>Fn</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -853,10 +909,7 @@
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="../interfaces/_user_user_client_.authenticationtokens.html" class="tsd-kind-icon">Authentication<wbr>Tokens</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="../interfaces/_user_user_client_.sudouserclient.html" class="tsd-kind-icon">Sudo<wbr>User<wbr>Client</a>
+						<a href="../interfaces/_user_user_client_.sudouseroptions.html" class="tsd-kind-icon">Sudo<wbr>User<wbr>Options</a>
 					</li>
 				</ul>
 			</nav>

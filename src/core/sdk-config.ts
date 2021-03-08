@@ -30,9 +30,14 @@ const federatedSignIn = t.intersection([
   }),
 ])
 
-export const Config = t.type({
-  identityService,
-  federatedSignIn,
-})
+export const Config = t.intersection([
+  t.type({
+    identityService,
+  }),
+  t.partial({
+    federatedSignIn,
+  }),
+])
 
 export type Config = t.TypeOf<typeof Config>
+export type FederatedSignInConfig = t.TypeOf<typeof federatedSignIn>

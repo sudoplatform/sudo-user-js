@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PublicKey | @sudoplatform/sudo-user</title>
+	<title>SudoUserOptions | @sudoplatform/sudo-user</title>
 	<meta name="description" content="Documentation for @sudoplatform/sudo-user">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_core_key_manager_.html">&quot;core/key-manager&quot;</a>
+					<a href="../modules/_user_user_client_.html">&quot;user/user-client&quot;</a>
 				</li>
 				<li>
-					<a href="_core_key_manager_.publickey.html">PublicKey</a>
+					<a href="_user_user_client_.sudouseroptions.html">SudoUserOptions</a>
 				</li>
 			</ul>
-			<h1>Interface PublicKey</h1>
+			<h1>Interface SudoUserOptions</h1>
 		</div>
 	</div>
 </header>
@@ -73,7 +73,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PublicKey</span>
+						<span class="target">SudoUserOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -84,10 +84,14 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_core_key_manager_.publickey.html#algorithm" class="tsd-kind-icon">algorithm</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_core_key_manager_.publickey.html#keyid" class="tsd-kind-icon">key<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_core_key_manager_.publickey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_core_key_manager_.publickey.html#symmetricalgorithm" class="tsd-kind-icon">symmetric<wbr>Algorithm</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#apiclient" class="tsd-kind-icon">api<wbr>Client</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#authui" class="tsd-kind-icon">authUI</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#authenticationstore" class="tsd-kind-icon">authentication<wbr>Store</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#config" class="tsd-kind-icon">config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#identityprovider" class="tsd-kind-icon">identity<wbr>Provider</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#keymanager" class="tsd-kind-icon">key<wbr>Manager</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#launchurifn" class="tsd-kind-icon">launch<wbr>Uri<wbr>Fn</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_user_user_client_.sudouseroptions.html#logger" class="tsd-kind-icon">logger</a></li>
 							</ul>
 						</section>
 					</div>
@@ -96,42 +100,82 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="algorithm" class="tsd-anchor"></a>
-					<h3>algorithm</h3>
-					<div class="tsd-signature tsd-kind-icon">algorithm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="apiclient" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> api<wbr>Client</h3>
+					<div class="tsd-signature tsd-kind-icon">api<wbr>Client<span class="tsd-signature-symbol">:</span> <a href="../classes/_client_apiclient_.apiclient.html" class="tsd-signature-type">ApiClient</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/core/key-manager.ts:22</li>
+							<li>Defined in src/user/user-client.ts:35</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="keyid" class="tsd-anchor"></a>
-					<h3>key<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">key<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="authui" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> authUI</h3>
+					<div class="tsd-signature tsd-kind-icon">authUI<span class="tsd-signature-symbol">:</span> <a href="_user_auth_.authui.html" class="tsd-signature-type">AuthUI</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/core/key-manager.ts:21</li>
+							<li>Defined in src/user/user-client.ts:33</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="publickey" class="tsd-anchor"></a>
-					<h3>public<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="authenticationstore" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> authentication<wbr>Store</h3>
+					<div class="tsd-signature tsd-kind-icon">authentication<wbr>Store<span class="tsd-signature-symbol">:</span> <a href="../classes/_core_auth_store_.authenticationstore.html" class="tsd-signature-type">AuthenticationStore</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/core/key-manager.ts:24</li>
+							<li>Defined in src/user/user-client.ts:31</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="symmetricalgorithm" class="tsd-anchor"></a>
-					<h3>symmetric<wbr>Algorithm</h3>
-					<div class="tsd-signature tsd-kind-icon">symmetric<wbr>Algorithm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="config" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> config</h3>
+					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <a href="../modules/_core_sdk_config_.html#config-1" class="tsd-signature-type">Config</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/core/key-manager.ts:23</li>
+							<li>Defined in src/user/user-client.ts:37</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="identityprovider" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> identity<wbr>Provider</h3>
+					<div class="tsd-signature tsd-kind-icon">identity<wbr>Provider<span class="tsd-signature-symbol">:</span> <a href="_user_identity_provider_.identityprovider.html" class="tsd-signature-type">IdentityProvider</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/user/user-client.ts:34</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="keymanager" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> key<wbr>Manager</h3>
+					<div class="tsd-signature tsd-kind-icon">key<wbr>Manager<span class="tsd-signature-symbol">:</span> <a href="../classes/_core_key_manager_.keymanager.html" class="tsd-signature-type">KeyManager</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/user/user-client.ts:32</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="launchurifn" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> launch<wbr>Uri<wbr>Fn</h3>
+					<div class="tsd-signature tsd-kind-icon">launch<wbr>Uri<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/user/user-client.ts:36</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="logger" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> logger</h3>
+					<div class="tsd-signature tsd-kind-icon">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/user/user-client.ts:38</li>
 						</ul>
 					</aside>
 				</section>
@@ -164,7 +208,7 @@
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_core_crypto_.html">&quot;core/crypto&quot;</a>
 					</li>
-					<li class="current tsd-kind-module tsd-is-external">
+					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_core_key_manager_.html">&quot;core/key-<wbr>manager&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
@@ -194,7 +238,7 @@
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_identity_provider_.html">&quot;user/identity-<wbr>provider&quot;</a>
 					</li>
-					<li class=" tsd-kind-module tsd-is-external">
+					<li class="current tsd-kind-module tsd-is-external">
 						<a href="../modules/_user_user_client_.html">&quot;user/user-<wbr>client&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
@@ -211,32 +255,41 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
-						<a href="../classes/_core_key_manager_.keymanager.html" class="tsd-kind-icon">Key<wbr>Manager</a>
+						<a href="../classes/_user_user_client_.defaultsudouserclient.html" class="tsd-kind-icon">Default<wbr>Sudo<wbr>User<wbr>Client</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-						<a href="_core_key_manager_.publickey.html" class="tsd-kind-icon">Public<wbr>Key</a>
+						<a href="_user_user_client_.sudouseroptions.html" class="tsd-kind-icon">Sudo<wbr>User<wbr>Options</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_core_key_manager_.publickey.html#algorithm" class="tsd-kind-icon">algorithm</a>
+								<a href="_user_user_client_.sudouseroptions.html#apiclient" class="tsd-kind-icon">api<wbr>Client</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_core_key_manager_.publickey.html#keyid" class="tsd-kind-icon">key<wbr>Id</a>
+								<a href="_user_user_client_.sudouseroptions.html#authui" class="tsd-kind-icon">authUI</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_core_key_manager_.publickey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a>
+								<a href="_user_user_client_.sudouseroptions.html#authenticationstore" class="tsd-kind-icon">authentication<wbr>Store</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_core_key_manager_.publickey.html#symmetricalgorithm" class="tsd-kind-icon">symmetric<wbr>Algorithm</a>
+								<a href="_user_user_client_.sudouseroptions.html#config" class="tsd-kind-icon">config</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="_user_user_client_.sudouseroptions.html#identityprovider" class="tsd-kind-icon">identity<wbr>Provider</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="_user_user_client_.sudouseroptions.html#keymanager" class="tsd-kind-icon">key<wbr>Manager</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="_user_user_client_.sudouseroptions.html#launchurifn" class="tsd-kind-icon">launch<wbr>Uri<wbr>Fn</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="_user_user_client_.sudouseroptions.html#logger" class="tsd-kind-icon">logger</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-is-external tsd-is-not-exported">
-						<a href="../modules/_core_key_manager_.html#secret" class="tsd-kind-icon">Secret</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

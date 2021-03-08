@@ -1,4 +1,8 @@
 import { AuthUI, CognitoAuthUI } from '../../src/user/auth'
+import {
+  IdentityProvider,
+  CognitoUserPoolIdentityProvider,
+} from '../../src/user/identity-provider'
 import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { Config } from '../../src/core/sdk-config'
 import { AuthenticationStore } from '../../src/core/auth-store'
@@ -66,12 +70,19 @@ function customLaunchUriFunction(url: string): void {
 
 const authUIMock: AuthUI = mock()
 const authUI = instance(authUIMock)
+const identityProviderMock: IdentityProvider = mock()
+const identityProvider = instance(identityProviderMock)
 const authenticationStoreMock: AuthenticationStore = mock()
 const authenticationStore = instance(authenticationStoreMock)
 const keyManagerMock: KeyManager = mock()
 const keyManager = instance(keyManagerMock)
 DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(testConfig))
-const userClient = new DefaultSudoUserClient(keyManager, authUI)
+const userClient = new DefaultSudoUserClient({
+  authenticationStore,
+  keyManager,
+  authUI,
+  identityProvider,
+})
 const config = DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
   Config,
   undefined,
@@ -81,7 +92,9 @@ const logger = new DefaultLogger()
 afterEach((): void => {
   reset(authUIMock)
   reset(authenticationStoreMock)
+  reset(identityProviderMock)
   userClient.setAuthUI(authUI)
+  userClient.setIdentityProvider(identityProvider)
 })
 
 describe('SudoUserClient', () => {
@@ -89,8 +102,7 @@ describe('SudoUserClient', () => {
     it('should fail with authentication error - default launchUri - attempt to launch UI with window.open', async () => {
       const authUI = new CognitoAuthUI(
         authenticationStore,
-        keyManager,
-        config,
+        config.federatedSignIn,
         logger,
       )
       userClient.setAuthUI(authUI)
@@ -106,8 +118,7 @@ describe('SudoUserClient', () => {
     it('should fail with authentication error - custom launchUri - attempt to launch UI with location.replace(url)', async () => {
       const authUI = new CognitoAuthUI(
         authenticationStore,
-        keyManager,
-        config,
+        config.federatedSignIn,
         logger,
         customLaunchUriFunction,
       )
@@ -170,7 +181,9 @@ describe('SudoUserClient', () => {
     })
 
     it('should complete successfully', async () => {
-      when(authUIMock.getIdToken()).thenReturn(token)
+      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
+        token,
+      )
       const sub = userClient.getSubject()
       expect(sub).toBe('dummy_sub')
     })
@@ -178,14 +191,6 @@ describe('SudoUserClient', () => {
 
   describe('getUserName()', () => {
     it('should complete successfully', async () => {
-      const authUI = new CognitoAuthUI(
-        authenticationStore,
-        keyManager,
-        config,
-        logger,
-      )
-      userClient.setAuthUI(authUI)
-
       when(authenticationStoreMock.getItem(apiKeyNames.userId)).thenReturn(
         'test_user',
       )
@@ -228,8 +233,7 @@ describe('SudoUserClient', () => {
     it('should complete successfully', async () => {
       const authUI = new CognitoAuthUI(
         authenticationStore,
-        keyManager,
-        config,
+        config.federatedSignIn,
         logger,
       )
       userClient.setAuthUI(authUI)
@@ -252,14 +256,6 @@ describe('SudoUserClient', () => {
     })
 
     it('should return empty token - user not signed in', async () => {
-      const authUI = new CognitoAuthUI(
-        authenticationStore,
-        keyManager,
-        config,
-        logger,
-      )
-      userClient.setAuthUI(authUI)
-
       const empty = ''
       when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
         empty,
@@ -279,21 +275,25 @@ describe('SudoUserClient', () => {
   describe('globalSignOut()', () => {
     it('should complete successfully', async () => {
       let isSignedOut = false
-      when(authUIMock.getAccessToken()).thenReturn('dummy_access_token')
-      when(authUIMock.globalSignOut('dummy_access_token')).thenResolve()
+      when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
+        'dummy_access_token',
+      )
+      when(
+        identityProviderMock.globalSignOut('dummy_access_token'),
+      ).thenResolve()
       await userClient.globalSignOut()
       isSignedOut = true
       expect(isSignedOut).toBeTruthy()
     })
 
     it('should fail with signout error - invalid access token', async () => {
-      const authUI = new CognitoAuthUI(
+      const identityProvider = new CognitoUserPoolIdentityProvider(
         authenticationStore,
         keyManager,
         config,
         logger,
       )
-      userClient.setAuthUI(authUI)
+      userClient.setIdentityProvider(identityProvider)
 
       when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
         'invalid_access_token',
@@ -312,8 +312,7 @@ describe('SudoUserClient', () => {
     it('should fail trying to invoke signout url - attempt to launch UI with window.open', async () => {
       const authUI = new CognitoAuthUI(
         authenticationStore,
-        keyManager,
-        config,
+        config.federatedSignIn,
         logger,
       )
       userClient.setAuthUI(authUI)
@@ -329,14 +328,6 @@ describe('SudoUserClient', () => {
 
   describe('isSignedIn()', () => {
     it('should complete successfully', async () => {
-      const authUI = new CognitoAuthUI(
-        authenticationStore,
-        keyManager,
-        config,
-        logger,
-      )
-      userClient.setAuthUI(authUI)
-
       when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
         'dummy_id_token',
       )
@@ -396,7 +387,11 @@ describe('SudoUserClient', () => {
       userClient.setAuthUI(authUI)
 
       when(
-        authUIMock.signInWithToken('dummy_username', anyString(), 'FSSO'),
+        identityProviderMock.signInWithToken(
+          'dummy_username',
+          anyString(),
+          'FSSO',
+        ),
       ).thenResolve({
         idToken: 'dummy_id_token',
         accessToken: 'dummy_access_token',

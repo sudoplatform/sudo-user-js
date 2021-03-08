@@ -9,7 +9,7 @@ import {
   AppSyncError,
   Logger,
 } from '@sudoplatform/sudo-common'
-import { AuthUI } from '../user/auth'
+import { SudoUserClient } from '../user/user-client-interface'
 
 /**
  * AppSync wrapper to use to invoke Identity Service APIs.
@@ -18,18 +18,18 @@ export class ApiClient {
   private client: AWSAppSyncClient<NormalizedCacheObject>
   private region: string
   private graphqlUrl: string
-  private authUI: AuthUI
+  private sudoUserClient: SudoUserClient
   private logger: Logger
 
   public constructor(
     region: string,
     graphqlUrl: string,
-    authUI: AuthUI,
+    sudoUserClient: SudoUserClient,
     logger: Logger,
   ) {
     this.region = region
     this.graphqlUrl = graphqlUrl
-    this.authUI = authUI
+    this.sudoUserClient = sudoUserClient
     this.logger = logger
 
     this.client = new AWSAppSyncClient({
@@ -37,14 +37,14 @@ export class ApiClient {
       region: region,
       auth: {
         type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
-        jwtToken: async () => await authUI.getLatestAuthToken(),
+        jwtToken: async () => await sudoUserClient.getLatestAuthToken(),
       },
       disableOffline: true,
     })
   }
 
   public async deregister(): Promise<{ success: boolean }> {
-    if (!(await this.authUI.isSignedIn())) {
+    if (!(await this.sudoUserClient.isSignedIn())) {
       throw new NotSignedInError()
     }
 
@@ -82,7 +82,7 @@ export class ApiClient {
       region: this.region,
       auth: {
         type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
-        jwtToken: async () => await this.authUI.getLatestAuthToken(),
+        jwtToken: async () => await this.sudoUserClient.getLatestAuthToken(),
       },
       disableOffline: true,
     })
