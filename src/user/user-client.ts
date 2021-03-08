@@ -1,31 +1,29 @@
 import {
-  DefaultConfigurationManager,
-  NotAuthorizedError,
-} from '@sudoplatform/sudo-common'
-import * as JWT from 'jsonwebtoken'
-import { AuthenticationStore } from '../core/auth-store'
-import { Config } from '../core/sdk-config'
-import { AuthUI, CognitoAuthUI } from './auth'
-import { SudoUserClient, AuthenticationTokens } from './user-client-interface'
-import {
-  IdentityProvider,
-  CognitoUserPoolIdentityProvider,
-} from './identity-provider'
-import { AuthenticationProvider } from './auth-provider'
-import { v4 } from 'uuid'
-import { KeyManager, PublicKey } from '../core/key-manager'
-import { userKeyNames } from './user-key-names'
-import {
   AuthenticationError,
-  RegisterError,
-  NotRegisteredError,
+  DefaultConfigurationManager,
+  DefaultLogger,
   FatalError,
   Logger,
-  DefaultLogger,
+  NotAuthorizedError,
+  NotRegisteredError,
+  RegisterError,
 } from '@sudoplatform/sudo-common'
-import { apiKeyNames } from '../core/api-key-names'
+import * as JWT from 'jsonwebtoken'
+import { v4 } from 'uuid'
 import { ApiClient } from '../client/apiClient'
+import { apiKeyNames } from '../core/api-key-names'
+import { AuthenticationStore } from '../core/auth-store'
+import { KeyManager, PublicKey } from '../core/key-manager'
+import { Config } from '../core/sdk-config'
+import { AuthUI, CognitoAuthUI } from './auth'
+import { AuthenticationProvider } from './auth-provider'
 import { AlreadyRegisteredError } from './error'
+import {
+  CognitoUserPoolIdentityProvider,
+  IdentityProvider,
+} from './identity-provider'
+import { AuthenticationTokens, SudoUserClient } from './user-client-interface'
+import { userKeyNames } from './user-key-names'
 
 export interface SudoUserOptions {
   authenticationStore?: AuthenticationStore
@@ -48,25 +46,25 @@ export class DefaultSudoUserClient implements SudoUserClient {
   private authUI?: AuthUI
   private launchUriFn?: (url: string) => void
 
-  constructor(options: SudoUserOptions) {
-    this.logger = options.logger ?? new DefaultLogger('SudoUser', 'warn')
+  constructor(options?: SudoUserOptions) {
+    this.logger = options?.logger ?? new DefaultLogger('SudoUser', 'warn')
 
     this.config =
-      options.config ??
+      options?.config ??
       DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
         Config,
         undefined,
       )
 
     this.authenticationStore =
-      options.authenticationStore ?? new AuthenticationStore()
+      options?.authenticationStore ?? new AuthenticationStore()
 
-    this.keyManager = options.keyManager ?? new KeyManager()
+    this.keyManager = options?.keyManager ?? new KeyManager()
 
-    this.launchUriFn = options.launchUriFn
+    this.launchUriFn = options?.launchUriFn
 
     this.identityProvider =
-      options.identityProvider ??
+      options?.identityProvider ??
       new CognitoUserPoolIdentityProvider(
         this.authenticationStore,
         this.keyManager,
@@ -74,10 +72,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
         this.logger,
       )
 
-    const federatedSignInConfig = options.config?.federatedSignIn
+    const federatedSignInConfig = options?.config?.federatedSignIn
     if (federatedSignInConfig) {
       this.authUI =
-        options.authUI ??
+        options?.authUI ??
         new CognitoAuthUI(
           this.authenticationStore,
           federatedSignInConfig,
@@ -87,7 +85,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
 
     this.apiClient =
-      options.apiClient ??
+      options?.apiClient ??
       new ApiClient(
         this.config.identityService.region,
         this.config.identityService.apiUrl,
