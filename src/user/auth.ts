@@ -1,14 +1,14 @@
+import { AuthenticationError, Logger } from '@sudoplatform/sudo-common'
 import { CognitoAuth } from 'amazon-cognito-auth-js'
-import { FederatedSignInConfig } from '../core/sdk-config'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationStore } from '../core/auth-store'
-import { AuthenticationTokens } from './user-client-interface'
+import { FederatedSignInConfig } from '../core/sdk-config'
 import { Subscriber } from '../core/subscriber'
-import { AuthenticationError, Logger } from '@sudoplatform/sudo-common'
 import {
   createResolvablePromise,
   ResolvablePromise,
 } from '../utils/resolvable-promise'
+import { AuthenticationTokens } from './user-client-interface'
 
 export interface AuthUI {
   /**
@@ -96,9 +96,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   async processFederatedSignInTokens(
     url: string,
   ): Promise<AuthenticationTokens> {
-    this.tokensRefreshedPromise = createResolvablePromise<
-      AuthenticationTokens
-    >()
+    this.tokensRefreshedPromise = createResolvablePromise<AuthenticationTokens>()
     this.auth.parseCognitoWebResponse(url)
     const authTokens = await this.tokensRefreshedPromise
     await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
@@ -120,9 +118,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   }
 
   async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
-    this.tokensRefreshedPromise = createResolvablePromise<
-      AuthenticationTokens
-    >()
+    this.tokensRefreshedPromise = createResolvablePromise<AuthenticationTokens>()
     this.auth.refreshSession(refreshToken)
     const authTokens = await this.tokensRefreshedPromise
     return authTokens

@@ -11,6 +11,7 @@ import { readFileSync } from 'fs'
 import { v4 } from 'uuid'
 
 const globalAny: any = global
+globalAny.crypto = require('isomorphic-webcrypto')
 globalAny.WebSocket = require('ws')
 require('isomorphic-fetch')
 

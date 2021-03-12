@@ -2,11 +2,13 @@ import {
   AuthenticationError,
   DefaultConfigurationManager,
   DefaultLogger,
+  DefaultSudoKeyManager,
   FatalError,
   Logger,
   NotAuthorizedError,
   NotRegisteredError,
   RegisterError,
+  SudoKeyManager,
 } from '@sudoplatform/sudo-common'
 import * as JWT from 'jsonwebtoken'
 import { v4 } from 'uuid'
@@ -27,7 +29,7 @@ import { userKeyNames } from './user-key-names'
 
 export interface SudoUserOptions {
   authenticationStore?: AuthenticationStore
-  keyManager?: KeyManager
+  sudoKeyManager?: SudoKeyManager
   authUI?: AuthUI
   identityProvider?: IdentityProvider
   apiClient?: ApiClient
@@ -39,6 +41,7 @@ export interface SudoUserOptions {
 export class DefaultSudoUserClient implements SudoUserClient {
   private config: Config
   private keyManager: KeyManager
+  private sudoUserKeyManager: SudoKeyManager
   private authenticationStore: AuthenticationStore
   private identityProvider: IdentityProvider
   private apiClient: ApiClient
@@ -59,7 +62,9 @@ export class DefaultSudoUserClient implements SudoUserClient {
     this.authenticationStore =
       options?.authenticationStore ?? new AuthenticationStore()
 
-    this.keyManager = options?.keyManager ?? new KeyManager()
+    this.sudoUserKeyManager =
+      options?.sudoKeyManager ?? new DefaultSudoKeyManager('SudoKeyManager')
+    this.keyManager = new KeyManager(this.sudoUserKeyManager)
 
     this.launchUriFn = options?.launchUriFn
 
@@ -72,7 +77,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
         this.logger,
       )
 
-    const federatedSignInConfig = options?.config?.federatedSignIn
+    const federatedSignInConfig = this.config?.federatedSignIn
     if (federatedSignInConfig) {
       this.authUI =
         options?.authUI ??
@@ -92,6 +97,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
         this,
         this.logger,
       )
+  }
+
+  public get sudoKeyManager(): SudoKeyManager {
+    return this.sudoUserKeyManager
   }
 
   public presentFederatedSignInUI(): void {
@@ -315,8 +324,12 @@ export class DefaultSudoUserClient implements SudoUserClient {
   }
 
   async isRegistered(): Promise<boolean> {
-    const uid = await this.keyManager.getString('userId')
-    return uid ? true : false
+    try {
+      const uid = await this.keyManager.getString('userId')
+      return uid ? true : false
+    } catch (err) {
+      return false
+    }
   }
 
   async signInWithKey(): Promise<AuthenticationTokens> {

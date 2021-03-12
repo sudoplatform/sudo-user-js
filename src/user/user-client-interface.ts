@@ -1,3 +1,4 @@
+import { SudoKeyManager } from '@sudoplatform/sudo-common'
 import { AuthenticationProvider } from './auth-provider'
 
 /**
@@ -163,4 +164,9 @@ export interface SudoUserClient {
    * Resets internal state and clears any cached data.
    */
   reset(): void
+
+  /**
+   * Getter to retrieve the SudoKeyManager
+   */
+  readonly sudoKeyManager: SudoKeyManager
 }

@@ -1,6 +1,6 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'prettier'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint', // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
@@ -12,8 +12,12 @@ module.exports = {
     '@typescript-eslint/array-type': 'off',
     '@typescript-eslint/no-parameter-properties': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
-    quotes: ['error', 'single', {
-      avoidEscape: true
-    }],
+    quotes: [
+      'error',
+      'single',
+      {
+        avoidEscape: true,
+      },
+    ],
   },
 }
