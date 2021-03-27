@@ -24,13 +24,6 @@ export interface AuthUI {
    */
   processFederatedSignInTokens(url: string): Promise<AuthenticationTokens>
   /**
-   * Refresh the access and ID tokens using the refresh token.
-   *
-   * @param refreshToken refresh token used to refresh the access and ID tokens.
-   * @return Successful authentication result AuthenticationTokens containing refreshed tokens
-   */
-  refreshTokens(refreshToken: string): Promise<AuthenticationTokens>
-  /**
    * Resets any internal state.
    */
   reset(): void
@@ -115,13 +108,6 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
       }
     }
     this.logger.debug('Updated: ', { itemName })
-  }
-
-  async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
-    this.tokensRefreshedPromise = createResolvablePromise<AuthenticationTokens>()
-    this.auth.refreshSession(refreshToken)
-    const authTokens = await this.tokensRefreshedPromise
-    return authTokens
   }
 
   reset(): void {

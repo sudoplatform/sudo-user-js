@@ -202,7 +202,7 @@ describe('SudoUserClient', () => {
 
   describe('refreshTokens()', () => {
     it('should complete successfully', async () => {
-      when(authUIMock.refreshTokens('refresh_token')).thenResolve({
+      when(identityProviderMock.refreshTokens('refresh_token')).thenResolve({
         idToken: 'dummy_id_token',
         accessToken: 'dummy_access_token',
         refreshToken: 'dummy_refresh_token',
@@ -218,7 +218,7 @@ describe('SudoUserClient', () => {
     })
 
     it('should fail with authentication error', async () => {
-      when(authUIMock.refreshTokens('refresh_token')).thenReject()
+      when(identityProviderMock.refreshTokens('refresh_token')).thenReject()
 
       try {
         await userClient.refreshTokens('refresh_token')

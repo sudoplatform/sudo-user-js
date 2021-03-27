@@ -58,6 +58,14 @@ export interface IdentityProvider {
     token: string,
     type: string,
   ): Promise<AuthenticationTokens>
+
+  /**
+   * Refresh the access and ID tokens using the refresh token.
+   *
+   * @param refreshToken refresh token used to refresh the access and ID tokens.
+   * @return Successful authentication result AuthenticationTokens containing refreshed tokens
+   */
+  refreshTokens(refreshToken: string): Promise<AuthenticationTokens>
 }
 
 export class CognitoUserPoolIdentityProvider implements IdentityProvider {
@@ -99,6 +107,7 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
       const params = {
         AccessToken: accessToken,
       }
+
       this.idpService.globalSignOut(params, (error, data) => {
         if (error) {
           this.logger.error(error.message)
@@ -274,6 +283,37 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
         }
       } else {
         reject(new AuthenticationError('Invalid initiate auth result.'))
+      }
+    })
+  }
+
+  async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
+    return new Promise(async (resolve, reject) => {
+      const initiateAuthResult = await this.idpService
+        .initiateAuth({
+          ClientId: this.config.identityService.clientId,
+          AuthFlow: 'REFRESH_TOKEN_AUTH',
+          AuthParameters: {
+            REFRESH_TOKEN: refreshToken,
+          },
+        })
+        .promise()
+
+      const idToken = initiateAuthResult.AuthenticationResult?.IdToken
+      const accessToken = initiateAuthResult.AuthenticationResult?.AccessToken
+      const tokenExpiry = initiateAuthResult.AuthenticationResult?.ExpiresIn
+
+      if (idToken && accessToken && tokenExpiry) {
+        const authTokens = {
+          idToken: idToken,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          tokenExpiry: tokenExpiry,
+        }
+        await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
+        resolve(authTokens)
+      } else {
+        reject(new AuthenticationError('Authentication tokens not found.'))
       }
     })
   }

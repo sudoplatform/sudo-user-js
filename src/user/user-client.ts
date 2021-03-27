@@ -203,7 +203,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
     try {
-      const authTokens = await this.authUI?.refreshTokens(refreshToken)
+      const authTokens = await this.identityProvider.refreshTokens(refreshToken)
       if (authTokens) {
         return authTokens
       } else {

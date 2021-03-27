@@ -91,6 +91,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_user_identity_provider_.identityprovider.html#globalsignout" class="tsd-kind-icon">global<wbr>Sign<wbr>Out</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_user_identity_provider_.identityprovider.html#refreshtokens" class="tsd-kind-icon">refresh<wbr>Tokens</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_user_identity_provider_.identityprovider.html#register" class="tsd-kind-icon">register</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_user_identity_provider_.identityprovider.html#signinwithkey" class="tsd-kind-icon">sign<wbr>InWith<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_user_identity_provider_.identityprovider.html#signinwithtoken" class="tsd-kind-icon">sign<wbr>InWith<wbr>Token</a></li>
@@ -129,6 +130,38 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+					<a name="refreshtokens" class="tsd-anchor"></a>
+					<h3>refresh<wbr>Tokens</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">refresh<wbr>Tokens<span class="tsd-signature-symbol">(</span>refreshToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/user/identity-provider.ts:68</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Refresh the access and ID tokens using the refresh token.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>refreshToken: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>refresh token used to refresh the access and ID tokens.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_user_user_client_interface_.authenticationtokens.html" class="tsd-signature-type">AuthenticationTokens</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>Successful authentication result AuthenticationTokens containing refreshed tokens</p>
 						</li>
 					</ul>
 				</section>
@@ -338,6 +371,9 @@
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
 								<a href="_user_identity_provider_.identityprovider.html#globalsignout" class="tsd-kind-icon">global<wbr>Sign<wbr>Out</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+								<a href="_user_identity_provider_.identityprovider.html#refreshtokens" class="tsd-kind-icon">refresh<wbr>Tokens</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
 								<a href="_user_identity_provider_.identityprovider.html#register" class="tsd-kind-icon">register</a>
