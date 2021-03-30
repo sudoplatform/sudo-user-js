@@ -202,6 +202,9 @@ describe('SudoUserClient', () => {
 
   describe('refreshTokens()', () => {
     it('should complete successfully', async () => {
+      when(authenticationStoreMock.getItem(apiKeyNames.userId)).thenReturn(
+        'test_user',
+      )
       when(identityProviderMock.refreshTokens('refresh_token')).thenResolve({
         idToken: 'dummy_id_token',
         accessToken: 'dummy_access_token',
@@ -218,6 +221,9 @@ describe('SudoUserClient', () => {
     })
 
     it('should fail with authentication error', async () => {
+      when(authenticationStoreMock.getItem(apiKeyNames.userId)).thenReturn(
+        'test_user',
+      )
       when(identityProviderMock.refreshTokens('refresh_token')).thenReject()
 
       try {

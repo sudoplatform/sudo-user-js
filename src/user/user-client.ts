@@ -203,11 +203,15 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
     try {
-      const authTokens = await this.identityProvider.refreshTokens(refreshToken)
-      if (authTokens) {
+      const uid = this.getUserName()
+      if (uid) {
+        const authTokens = await this.identityProvider.refreshTokens(
+          refreshToken,
+        )
+        await this.storeTokens(uid, authTokens)
         return authTokens
       } else {
-        throw new AuthenticationError('Authentication tokens not found.')
+        throw new NotRegisteredError('Not registered.')
       }
     } catch (error) {
       throw new AuthenticationError(error)

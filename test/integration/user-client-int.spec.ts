@@ -151,6 +151,68 @@ describe('SudoUserClient', () => {
     }, 30000)
   })
 
+  describe('testRegisterAndRefreshTokens()', () => {
+    it('should complete successfully', async () => {
+      // Register
+      const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
+      const params: [1] = privateKeyJson['Parameters']
+      const param = JSON.parse(JSON.stringify(params[0]))
+      const privateKey = param.Value
+
+      const testAuthenticationProvider = new TESTAuthenticationProvider(
+        'SudoUser',
+        privateKey,
+        'register_key',
+        { 'custom:entitlementsSet': 'dummy_entitlements_set' },
+      )
+
+      await userClient.registerWithAuthenticationProvider(
+        testAuthenticationProvider,
+        'dummy_rid',
+      )
+      expect(await userClient.isRegistered()).toBeTruthy()
+
+      // Sign in using private key
+      const authTokens = await userClient.signInWithKey()
+
+      expect(authTokens).toBeDefined()
+      expect(authTokens.idToken).toBeDefined()
+      expect(authTokens.idToken).toBe(userClient.getIdToken())
+
+      // Verify refresh token expiry
+      const refreshTokenExpiry = userClient.getRefreshTokenExpiry()
+
+      expect(refreshTokenExpiry).toBeDefined()
+      expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
+        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 - 10000,
+      )
+      expect(refreshTokenExpiry.getTime()).toBeLessThan(
+        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 + 10000,
+      )
+
+      expect(await userClient.isSignedIn()).toBeTruthy()
+
+      expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
+        'dummy_entitlements_set',
+      )
+
+      // Refresh the tokens
+      const refreshedTokens = await userClient.refreshTokens(
+        userClient.getRefreshToken(),
+      )
+      const refreshedIdToken = userClient.getIdToken()
+      expect(refreshedIdToken).toBe(refreshedTokens.idToken)
+
+      // Deregister
+      await userClient.deregister()
+      expect(await userClient.isRegistered()).toBeFalsy()
+
+      // Reset the client internal state
+      userClient.reset()
+      expect(await userClient.isSignedIn()).toBeFalsy()
+    }, 30000)
+  })
+
   describe('testCustomFSSO()', () => {
     const keyPath = 'config/fsso.key'
     const keyIdPath = 'config/fsso.id'
