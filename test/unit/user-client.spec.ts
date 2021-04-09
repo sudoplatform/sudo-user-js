@@ -276,6 +276,24 @@ describe('SudoUserClient', () => {
       const idToken = await userClient.getLatestAuthToken()
       expect(idToken).toBe(empty)
     })
+
+    it('should return empty token - error encountered calling refreshTokens', async () => {
+      const empty = ''
+      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
+        'id_token',
+      )
+      when(
+        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
+      ).thenReturn('refresh_token')
+      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
+        '100',
+      )
+
+      when(identityProviderMock.refreshTokens('refresh_token')).thenReject()
+
+      const idToken = await userClient.getLatestAuthToken()
+      expect(idToken).toBe(empty)
+    })
   })
 
   describe('globalSignOut()', () => {

@@ -227,8 +227,17 @@ export class DefaultSudoUserClient implements SudoUserClient {
       if (expiry.getTime() > new Date().getTime() + 600 * 1000) {
         return idToken
       } else {
-        const authTokens = await this.refreshTokens(refreshToken)
-        return authTokens.idToken
+        try {
+          const authTokens = await this.refreshTokens(refreshToken)
+          return authTokens.idToken
+        } catch (error) {
+          this.logger.info(
+            'getLatestAuthToken: Token refresh failed',
+            error.message,
+          )
+          // return an empty id token
+          return ''
+        }
       }
     } else {
       // If tokens are missing then it's likely due to the client not being signed in.

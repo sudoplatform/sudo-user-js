@@ -21,6 +21,51 @@ process.env.PROJECT_NAME = 'SudoUser'
 DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(config))
 const userClient = new DefaultSudoUserClient({})
 
+async function registerAndSignIn() {
+  // Register
+  const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
+  const params: [1] = privateKeyJson['Parameters']
+  const param = JSON.parse(JSON.stringify(params[0]))
+  const privateKey = param.Value
+
+  const testAuthenticationProvider = new TESTAuthenticationProvider(
+    'SudoUser',
+    privateKey,
+    'register_key',
+    { 'custom:entitlementsSet': 'dummy_entitlements_set' },
+  )
+
+  await userClient.registerWithAuthenticationProvider(
+    testAuthenticationProvider,
+    'dummy_rid',
+  )
+  expect(await userClient.isRegistered()).toBeTruthy()
+
+  // Sign in using private key
+  const authTokens = await userClient.signInWithKey()
+
+  expect(authTokens).toBeDefined()
+  expect(authTokens.idToken).toBeDefined()
+  expect(authTokens.idToken).toBe(userClient.getIdToken())
+
+  // Verify refresh token expiry
+  const refreshTokenExpiry = userClient.getRefreshTokenExpiry()
+
+  expect(refreshTokenExpiry).toBeDefined()
+  expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
+    new Date().getTime() + 60 * 24 * 60 * 60 * 1000 - 10000,
+  )
+  expect(refreshTokenExpiry.getTime()).toBeLessThan(
+    new Date().getTime() + 60 * 24 * 60 * 60 * 1000 + 10000,
+  )
+
+  expect(await userClient.isSignedIn()).toBeTruthy()
+
+  expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
+    'dummy_entitlements_set',
+  )
+}
+
 describe('SudoUserClient', () => {
   describe('testRegister()', () => {
     it('should complete successfully', async () => {
@@ -153,48 +198,7 @@ describe('SudoUserClient', () => {
 
   describe('testRegisterAndRefreshTokens()', () => {
     it('should complete successfully', async () => {
-      // Register
-      const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
-      const params: [1] = privateKeyJson['Parameters']
-      const param = JSON.parse(JSON.stringify(params[0]))
-      const privateKey = param.Value
-
-      const testAuthenticationProvider = new TESTAuthenticationProvider(
-        'SudoUser',
-        privateKey,
-        'register_key',
-        { 'custom:entitlementsSet': 'dummy_entitlements_set' },
-      )
-
-      await userClient.registerWithAuthenticationProvider(
-        testAuthenticationProvider,
-        'dummy_rid',
-      )
-      expect(await userClient.isRegistered()).toBeTruthy()
-
-      // Sign in using private key
-      const authTokens = await userClient.signInWithKey()
-
-      expect(authTokens).toBeDefined()
-      expect(authTokens.idToken).toBeDefined()
-      expect(authTokens.idToken).toBe(userClient.getIdToken())
-
-      // Verify refresh token expiry
-      const refreshTokenExpiry = userClient.getRefreshTokenExpiry()
-
-      expect(refreshTokenExpiry).toBeDefined()
-      expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
-        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 - 10000,
-      )
-      expect(refreshTokenExpiry.getTime()).toBeLessThan(
-        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 + 10000,
-      )
-
-      expect(await userClient.isSignedIn()).toBeTruthy()
-
-      expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
-        'dummy_entitlements_set',
-      )
+      await registerAndSignIn()
 
       // Refresh the tokens
       const refreshedTokens = await userClient.refreshTokens(
@@ -202,6 +206,26 @@ describe('SudoUserClient', () => {
       )
       const refreshedIdToken = userClient.getIdToken()
       expect(refreshedIdToken).toBe(refreshedTokens.idToken)
+
+      // Deregister
+      await userClient.deregister()
+      expect(await userClient.isRegistered()).toBeFalsy()
+
+      // Reset the client internal state
+      userClient.reset()
+      expect(await userClient.isSignedIn()).toBeFalsy()
+    }, 30000)
+
+    it('should fail invoking refreshTokens', async () => {
+      await registerAndSignIn()
+
+      // Refresh the tokens
+      try {
+        await userClient.refreshTokens('invalid_token')
+        fail('Expected error not thrown.')
+      } catch (error) {
+        expect(error.name).toMatch('AuthenticationError')
+      }
 
       // Deregister
       await userClient.deregister()

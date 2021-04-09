@@ -289,31 +289,35 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
 
   async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
     return new Promise(async (resolve, reject) => {
-      const initiateAuthResult = await this.idpService
-        .initiateAuth({
-          ClientId: this.config.identityService.clientId,
-          AuthFlow: 'REFRESH_TOKEN_AUTH',
-          AuthParameters: {
-            REFRESH_TOKEN: refreshToken,
-          },
-        })
-        .promise()
+      try {
+        const initiateAuthResult = await this.idpService
+          .initiateAuth({
+            ClientId: this.config.identityService.clientId,
+            AuthFlow: 'REFRESH_TOKEN_AUTH',
+            AuthParameters: {
+              REFRESH_TOKEN: refreshToken,
+            },
+          })
+          .promise()
 
-      const idToken = initiateAuthResult.AuthenticationResult?.IdToken
-      const accessToken = initiateAuthResult.AuthenticationResult?.AccessToken
-      const tokenExpiry = initiateAuthResult.AuthenticationResult?.ExpiresIn
+        const idToken = initiateAuthResult.AuthenticationResult?.IdToken
+        const accessToken = initiateAuthResult.AuthenticationResult?.AccessToken
+        const tokenExpiry = initiateAuthResult.AuthenticationResult?.ExpiresIn
 
-      if (idToken && accessToken && tokenExpiry) {
-        const authTokens = {
-          idToken: idToken,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          tokenExpiry: tokenExpiry,
+        if (idToken && accessToken && tokenExpiry) {
+          const authTokens = {
+            idToken: idToken,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            tokenExpiry: tokenExpiry,
+          }
+          await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
+          resolve(authTokens)
+        } else {
+          reject(new AuthenticationError('Authentication tokens not found.'))
         }
-        await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
-        resolve(authTokens)
-      } else {
-        reject(new AuthenticationError('Authentication tokens not found.'))
+      } catch (error) {
+        reject(new AuthenticationError(error))
       }
     })
   }
