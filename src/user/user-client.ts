@@ -10,15 +10,16 @@ import {
   RegisterError,
   SudoKeyManager,
 } from '@sudoplatform/sudo-common'
+import { WebSudoCryptoProvider } from '@sudoplatform/sudo-web-crypto-provider'
 import * as JWT from 'jsonwebtoken'
 import { v4 } from 'uuid'
+import { AuthenticationProvider } from '..'
 import { ApiClient } from '../client/apiClient'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationStore } from '../core/auth-store'
 import { KeyManager, PublicKey } from '../core/key-manager'
 import { Config } from '../core/sdk-config'
 import { AuthUI, CognitoAuthUI } from './auth'
-import { AuthenticationProvider } from './auth-provider'
 import { AlreadyRegisteredError } from './error'
 import {
   CognitoUserPoolIdentityProvider,
@@ -62,8 +63,15 @@ export class DefaultSudoUserClient implements SudoUserClient {
     this.authenticationStore =
       options?.authenticationStore ?? new AuthenticationStore()
 
-    this.sudoUserKeyManager =
-      options?.sudoKeyManager ?? new DefaultSudoKeyManager('SudoKeyManager')
+    if (options?.sudoKeyManager) {
+      this.sudoUserKeyManager = options?.sudoKeyManager
+    } else {
+      const cryptoProvider = new WebSudoCryptoProvider(
+        'SudoUserClient',
+        'com.sudoplatform.appservicename',
+      )
+      this.sudoUserKeyManager = new DefaultSudoKeyManager(cryptoProvider)
+    }
     this.keyManager = new KeyManager(this.sudoUserKeyManager)
 
     this.launchUriFn = options?.launchUriFn
