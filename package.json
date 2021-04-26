@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "^3.1.0",
+    "@sudoplatform/sudo-web-crypto-provider": "^0.0.1",
     "amazon-cognito-auth-js": "^1.3.3",
     "apollo-cache-inmemory": "^1.6.6",
     "asn1js": "^2.1.1",
@@ -60,7 +61,6 @@
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/netinfo": "^5.0.0",
     "@sudoplatform/sudo-common": "^4.1.0",
-    "@sudoplatform/sudo-web-crypto-provider": "^0.0.1",
     "@types/amazon-cognito-auth-js": "^1.2.2",
     "@types/graphql": "^14.5.0",
     "@types/jest": "^26.0.22",
