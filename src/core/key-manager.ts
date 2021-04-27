@@ -45,7 +45,7 @@ export class KeyManager implements KeyManager {
    */
   public async addString(keyId: string, value: string): Promise<void> {
     await this.sudoKeyManager.addPassword(
-      new TextEncoder().encode(value),
+      new TextEncoder().encode(value).buffer,
       keyId,
     )
   }
