@@ -89,7 +89,8 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   async processFederatedSignInTokens(
     url: string,
   ): Promise<AuthenticationTokens> {
-    this.tokensRefreshedPromise = createResolvablePromise<AuthenticationTokens>()
+    this.tokensRefreshedPromise =
+      createResolvablePromise<AuthenticationTokens>()
     this.auth.parseCognitoWebResponse(url)
     const authTokens = await this.tokensRefreshedPromise
     await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)

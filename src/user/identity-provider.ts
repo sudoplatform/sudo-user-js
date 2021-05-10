@@ -81,8 +81,8 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
   ) {
     this.idpService = this.initCognitoIdpService()
 
-    const refreshTokenLifetime = this.config.identityService
-      .refreshTokenLifetime
+    const refreshTokenLifetime =
+      this.config.identityService.refreshTokenLifetime
     this.refreshTokenLifetime = refreshTokenLifetime ?? 60
     this.logger = logger
   }

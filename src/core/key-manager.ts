@@ -1,6 +1,7 @@
 import {
   DecodeError,
   KeyNotFoundError,
+  PublicKeyFormat,
   SudoKeyManager,
 } from '@sudoplatform/sudo-common'
 import JWT from 'jsonwebtoken'
@@ -12,10 +13,12 @@ export interface PublicKey {
   algorithm: string
   symmetricAlgorithm: string
   publicKey: string
+  keyFormat: PublicKeyFormat
 }
 
 export interface KeyPair {
   publicKey: unknown
+  publicKeyFormat: PublicKeyFormat
   privateKey: unknown
 }
 
@@ -109,29 +112,18 @@ export class KeyManager implements KeyManager {
    * Exports public key in a format for use with SudoPlatform
    */
   public async exportPublicKey(keyId: string): Promise<PublicKey> {
-    const publicKeyBits = await this.sudoKeyManager.getPublicKey(keyId)
-    if (!publicKeyBits) {
+    const publicKey = await this.sudoKeyManager.getPublicKey(keyId)
+    if (!publicKey) {
       throw new Error('Invalid key ID for exportPublicKey')
     }
-    const base64encoded = cryptoProvider.arrayBufferToBase64(publicKeyBits)
-
-    // The public key is PKCS#8 format(the ASN.1 structure of SubjectPublicKeyInfo).
-    // The SudoPlatform expects PKCS#1 format.
-    // The difference is that PKCS#8 contains the algorithm identifier.
-    // The algorithm identifier for RSA encryption is `1.2.840.113549.1.1.1` and the Base64
-    // version of this (for a key with a 2048 bit modulus) is `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A`
-    // Therefore let's remove that from the public key.
-    // Ref: https://stackoverflow.com/questions/8784905/command-line-tool-to-export-rsa-private-key-to-rsapublickey
-    const pkcs1PublicKey = base64encoded.replace(
-      'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A',
-      '',
-    )
+    const base64encoded = cryptoProvider.arrayBufferToBase64(publicKey.keyData)
 
     return {
       keyId,
       algorithm: KeyManager.Constants.publicKeyAlgorithm,
       symmetricAlgorithm: KeyManager.Constants.symmetricAlgorithm,
-      publicKey: pkcs1PublicKey,
+      publicKey: base64encoded,
+      keyFormat: publicKey.keyFormat,
     }
   }
 
@@ -153,7 +145,8 @@ export class KeyManager implements KeyManager {
     }
 
     return {
-      publicKey: cryptoProvider.arrayBufferToBase64(publicKey as ArrayBuffer),
+      publicKey: cryptoProvider.arrayBufferToBase64(publicKey.keyData),
+      publicKeyFormat: publicKey.keyFormat,
       privateKey: cryptoProvider.arrayBufferToBase64(privateKey as ArrayBuffer),
     }
   }

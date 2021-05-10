@@ -7,6 +7,7 @@ import {
   Logger,
   NotAuthorizedError,
   NotRegisteredError,
+  PublicKeyFormat,
   RegisterError,
   SudoKeyManager,
 } from '@sudoplatform/sudo-common'
@@ -292,7 +293,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
         challengeType: authInfo.type,
         answer: token,
         registrationId: registrationId ? registrationId : v4(),
-        publicKey: JSON.stringify(publicKey),
+        publicKey: JSON.stringify(publicKeyToRSAPublicKey(publicKey)),
       }
 
       const validationData = Object.keys(data).map((key): {
@@ -473,5 +474,26 @@ export class DefaultSudoUserClient implements SudoUserClient {
    */
   setAuthenticationStore(authenticationStore: AuthenticationStore): void {
     this.authenticationStore = authenticationStore
+  }
+}
+
+/**
+ * Convert PublicKey of any format to an RSAPublicKey format public key
+ *
+ * @param publicKey PublicKey to convert
+ * @returns RSAPublicKey formatted PublicKey
+ */
+function publicKeyToRSAPublicKey(publicKey: PublicKey): PublicKey {
+  if (publicKey.keyFormat === PublicKeyFormat.RSAPublicKey) {
+    return publicKey
+  }
+
+  return {
+    ...publicKey,
+    publicKey: publicKey.publicKey.replace(
+      'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A',
+      '',
+    ),
+    keyFormat: PublicKeyFormat.RSAPublicKey,
   }
 }

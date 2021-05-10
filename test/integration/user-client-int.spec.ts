@@ -1,14 +1,13 @@
-import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { DefaultConfigurationManager } from '@sudoplatform/sudo-common'
+import { existsSync, readFileSync } from 'fs'
+import { v4 } from 'uuid'
+import privateKeyParam from '../../config/register_key.json'
+import config from '../../config/sudoplatformconfig.json'
 import {
   LocalAuthenticationProvider,
   TESTAuthenticationProvider,
 } from '../../src/user/auth-provider'
-import privateKeyParam from '../../config/register_key.json'
-import config from '../../config/sudoplatformconfig.json'
-import { existsSync } from 'fs'
-import { readFileSync } from 'fs'
-import { v4 } from 'uuid'
+import { DefaultSudoUserClient } from '../../src/user/user-client'
 
 const globalAny: any = global
 globalAny.crypto = require('isomorphic-webcrypto')
