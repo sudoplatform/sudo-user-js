@@ -1,6 +1,12 @@
 import { NormalizedCacheObject } from 'apollo-cache-inmemory'
 import { AWSAppSyncClient, AUTH_TYPE } from 'aws-appsync'
-import { DeregisterMutation, DeregisterDocument } from '../gen/graphql-types'
+import {
+  DeregisterMutation,
+  DeregisterDocument,
+  RegisterFederatedIdMutation,
+  RegisterFederatedIdDocument,
+  RegisterFederatedIdInput,
+} from '../gen/graphql-types'
 import {
   NotSignedInError,
   FatalError,
@@ -8,6 +14,7 @@ import {
   UnknownGraphQLError,
   AppSyncError,
   Logger,
+  NotAuthorizedError,
 } from '@sudoplatform/sudo-common'
 import { SudoUserClient } from '../user/user-client-interface'
 
@@ -75,6 +82,42 @@ export class ApiClient {
     }
   }
 
+  public async registerFederatedId(
+    input: RegisterFederatedIdInput,
+  ): Promise<{ identityId: string }> {
+    let result
+    try {
+      result = await this.client.mutate<RegisterFederatedIdMutation>({
+        mutation: RegisterFederatedIdDocument,
+        variables: { input },
+        fetchPolicy: 'no-cache',
+      })
+    } catch (err) {
+      const error = err.graphQLErrors?.[0]
+      if (error) {
+        throw this.graphQLErrorsToClientError(error)
+      } else {
+        throw new UnknownGraphQLError(err)
+      }
+    }
+
+    const error = result.errors?.[0]
+    if (error) {
+      throw this.graphQLErrorsToClientError(error)
+    }
+
+    const identityId = result.data?.registerFederatedId?.identityId
+    if (identityId) {
+      return {
+        identityId,
+      }
+    } else {
+      throw new FatalError(
+        'registerFederatedId did not return expected result.',
+      )
+    }
+  }
+
   public reset(): void {
     this.client.clearStore()
     this.client = new AWSAppSyncClient({
@@ -93,6 +136,10 @@ export class ApiClient {
 
     if (error.errorType === 'sudoplatform.ServiceError') {
       return new ServiceError(error.message)
+    } else if (
+      error.errorType === 'sudoplatform.identity.TokenValidationError'
+    ) {
+      return new NotAuthorizedError()
     } else {
       return new UnknownGraphQLError(error)
     }

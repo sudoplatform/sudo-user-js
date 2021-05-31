@@ -1,0 +1,5 @@
+mutation registerFederatedId($input: RegisterFederatedIdInput!) {
+  registerFederatedId(input: $input) {
+    identityId
+  }
+}

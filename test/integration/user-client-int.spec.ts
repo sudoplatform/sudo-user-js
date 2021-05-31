@@ -20,6 +20,8 @@ process.env.PROJECT_NAME = 'SudoUser'
 DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(config))
 const userClient = new DefaultSudoUserClient({})
 
+const refreshTokenLifetime: number = config.identityService.refreshTokenLifetime
+
 async function registerAndSignIn() {
   // Register
   const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
@@ -52,10 +54,10 @@ async function registerAndSignIn() {
 
   expect(refreshTokenExpiry).toBeDefined()
   expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
-    new Date().getTime() + 60 * 24 * 60 * 60 * 1000 - 10000,
+    new Date().getTime() + refreshTokenLifetime * 24 * 60 * 60 * 1000 - 10000,
   )
   expect(refreshTokenExpiry.getTime()).toBeLessThan(
-    new Date().getTime() + 60 * 24 * 60 * 60 * 1000 + 10000,
+    new Date().getTime() + refreshTokenLifetime * 24 * 60 * 60 * 1000 + 10000,
   )
 
   expect(await userClient.isSignedIn()).toBeTruthy()
@@ -99,10 +101,14 @@ describe('SudoUserClient', () => {
 
       expect(refreshTokenExpiry).toBeDefined()
       expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
-        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 - 10000,
+        new Date().getTime() +
+          refreshTokenLifetime * 24 * 60 * 60 * 1000 -
+          10000,
       )
       expect(refreshTokenExpiry.getTime()).toBeLessThan(
-        new Date().getTime() + 60 * 24 * 60 * 60 * 1000 + 10000,
+        new Date().getTime() +
+          refreshTokenLifetime * 24 * 60 * 60 * 1000 +
+          10000,
       )
 
       expect(await userClient.isSignedIn()).toBeTruthy()
@@ -110,6 +116,8 @@ describe('SudoUserClient', () => {
       expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
         'dummy_entitlements_set',
       )
+
+      expect(userClient.getUserClaim('custom:identityId')).toBeTruthy()
 
       // Deregister
       await userClient.deregister()
@@ -279,6 +287,7 @@ describe('SudoUserClient', () => {
         expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
           'dummy_entitlements_set',
         )
+        expect(userClient.getUserClaim('custom:identityId')).toBeTruthy()
 
         await userClient.deregister()
       }, 30000)

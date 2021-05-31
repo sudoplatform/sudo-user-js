@@ -336,12 +336,13 @@ export class DefaultSudoUserClient implements SudoUserClient {
     const token = authInfo.encode()
     const type = authInfo.type
 
-    const authTokens = await this.identityProvider.signInWithToken(
+    let authTokens = await this.identityProvider.signInWithToken(
       uid,
       token,
       type,
     )
     await this.storeTokens(uid, authTokens)
+    authTokens = await this.registerFederatedIdAndRefreshTokens(uid, authTokens)
     return authTokens
   }
 
@@ -360,12 +361,13 @@ export class DefaultSudoUserClient implements SudoUserClient {
     const userKeyId = await this.keyManager.getString('userKeyId')
 
     if (uid && userKeyId) {
-      const authTokens = await this.identityProvider.signInWithKey(
-        uid,
-        userKeyId,
-      )
+      let authTokens = await this.identityProvider.signInWithKey(uid, userKeyId)
       if (authTokens) {
         await this.storeTokens(uid, authTokens)
+        authTokens = await this.registerFederatedIdAndRefreshTokens(
+          uid,
+          authTokens,
+        )
         return authTokens
       } else {
         throw new FatalError('Unexpected error. Unable to sign in.')
@@ -419,6 +421,23 @@ export class DefaultSudoUserClient implements SudoUserClient {
       apiKeyNames.refreshToken,
       authTokens.refreshToken,
     )
+  }
+
+  private async registerFederatedIdAndRefreshTokens(
+    uid: string,
+    authTokens: AuthenticationTokens,
+  ): Promise<AuthenticationTokens> {
+    const identityId = this.getUserClaim('custom:identityId')
+    if (identityId) {
+      return authTokens
+    } else {
+      await this.apiClient.registerFederatedId({
+        idToken: authTokens.idToken,
+      })
+      // Refresh the ID token so the identity ID is present as a claim.
+      const newAuthTokens = await this.refreshTokens(authTokens.refreshToken)
+      return newAuthTokens
+    }
   }
 
   private async generateRegistrationData(): Promise<PublicKey> {

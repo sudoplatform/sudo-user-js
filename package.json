@@ -100,6 +100,7 @@
     "@graphql-tools/git-loader": "^6.2.6",
     "marked": "^2.0.3",
     "xmldom": "^0.6.0",
+    "browserslist": "^4.16.5",
     "hosted-git-info": "^2.8.9"
   },
   "peerDependencies": {

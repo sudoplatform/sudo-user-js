@@ -8,6 +8,13 @@ type Deregister {
 type Query {
   notImplemented(dummy: String!): Boolean
 }
+type FederatedId {
+  identityId: String!
+}
+input RegisterFederatedIdInput {
+  idToken: String!
+}
 type Mutation {
   deregister: Deregister
+  registerFederatedId(input: RegisterFederatedIdInput): FederatedId
 }

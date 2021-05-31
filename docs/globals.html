@@ -109,13 +109,18 @@
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#deregistermutation" class="tsd-kind-icon">Deregister<wbr>Mutation</a></li>
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#deregistermutationvariables" class="tsd-kind-icon">Deregister<wbr>Mutation<wbr>Variables</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-external"><a href="globals.html#exact" class="tsd-kind-icon">Exact</a></li>
+								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#federatedid" class="tsd-kind-icon">Federated<wbr>Id</a></li>
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#federatedsigninconfig" class="tsd-kind-icon">Federated<wbr>Sign<wbr>InConfig</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-external"><a href="globals.html#makemaybe" class="tsd-kind-icon">Make<wbr>Maybe</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-external"><a href="globals.html#makeoptional" class="tsd-kind-icon">Make<wbr>Optional</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-external"><a href="globals.html#maybe" class="tsd-kind-icon">Maybe</a></li>
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#mutation" class="tsd-kind-icon">Mutation</a></li>
+								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#mutationregisterfederatedidargs" class="tsd-kind-icon">Mutation<wbr>Register<wbr>Federated<wbr>IdArgs</a></li>
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#query" class="tsd-kind-icon">Query</a></li>
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#querynotimplementedargs" class="tsd-kind-icon">Query<wbr>Not<wbr>Implemented<wbr>Args</a></li>
+								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#registerfederatedidinput" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdInput</a></li>
+								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#registerfederatedidmutation" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdMutation</a></li>
+								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#registerfederatedidmutationvariables" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdMutation<wbr>Variables</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-external"><a href="globals.html#resolvablepromise" class="tsd-kind-icon">Resolvable<wbr>Promise</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-external"><a href="globals.html#resolver" class="tsd-kind-icon">Resolver</a></li>
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#scalars" class="tsd-kind-icon">Scalars</a></li>
@@ -141,6 +146,7 @@
 							<h3>Object literals</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-object-literal tsd-is-external"><a href="globals.html#deregisterdocument" class="tsd-kind-icon">Deregister<wbr>Document</a></li>
+								<li class="tsd-kind-object-literal tsd-is-external"><a href="globals.html#registerfederatediddocument" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdDocument</a></li>
 								<li class="tsd-kind-object-literal tsd-is-external"><a href="globals.html#apikeynames" class="tsd-kind-icon">api<wbr>Key<wbr>Names</a></li>
 								<li class="tsd-kind-object-literal tsd-is-external"><a href="globals.html#cryptoprovider" class="tsd-kind-icon">crypto<wbr>Provider</a></li>
 								<li class="tsd-kind-object-literal tsd-is-external"><a href="globals.html#userkeynames" class="tsd-kind-icon">user<wbr>Key<wbr>Names</a></li>
@@ -188,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">Deregister<wbr>Mutation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>__typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Mutation"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>deregister<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>__typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Deregister"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#deregister" class="tsd-signature-type">Deregister</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"success"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/gen/graphql-types.ts:51</li>
+							<li>Defined in src/gen/graphql-types.ts:65</li>
 						</ul>
 					</aside>
 				</section>
@@ -198,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">Deregister<wbr>Mutation<wbr>Variables<span class="tsd-signature-symbol">:</span> <a href="globals.html#exact" class="tsd-signature-type">Exact</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/gen/graphql-types.ts:49</li>
+							<li>Defined in src/gen/graphql-types.ts:63</li>
 						</ul>
 					</aside>
 				</section>
@@ -220,6 +226,27 @@
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
+					<a name="federatedid" class="tsd-anchor"></a>
+					<h3>Federated<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">Federated<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>__typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"FederatedId"</span><span class="tsd-signature-symbol">; </span>identityId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Scalars</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">"String"</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/gen/graphql-types.ts:44</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> __typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"FederatedId"</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>identity<wbr>Id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Scalars</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">"String"</span><span class="tsd-signature-symbol">]</span></h5>
+							</li>
 						</ul>
 					</div>
 				</section>
@@ -290,10 +317,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
 					<a name="mutation" class="tsd-anchor"></a>
 					<h3>Mutation</h3>
-					<div class="tsd-signature tsd-kind-icon">Mutation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>__typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Mutation"</span><span class="tsd-signature-symbol">; </span>deregister<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#deregister" class="tsd-signature-type">Deregister</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Mutation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>__typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Mutation"</span><span class="tsd-signature-symbol">; </span>deregister<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#deregister" class="tsd-signature-type">Deregister</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>registerFederatedId<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#federatedid" class="tsd-signature-type">FederatedId</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/gen/graphql-types.ts:44</li>
+							<li>Defined in src/gen/graphql-types.ts:53</li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -304,6 +331,27 @@
 							</li>
 							<li class="tsd-parameter">
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> deregister<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#deregister" class="tsd-signature-type">Deregister</a><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> register<wbr>Federated<wbr>Id<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#federatedid" class="tsd-signature-type">FederatedId</a><span class="tsd-signature-symbol">&gt;</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
+					<a name="mutationregisterfederatedidargs" class="tsd-anchor"></a>
+					<h3>Mutation<wbr>Register<wbr>Federated<wbr>IdArgs</h3>
+					<div class="tsd-signature tsd-kind-icon">Mutation<wbr>Register<wbr>Federated<wbr>IdArgs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>input<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#registerfederatedidinput" class="tsd-signature-type">RegisterFederatedIdInput</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/gen/graphql-types.ts:59</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> input<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#registerfederatedidinput" class="tsd-signature-type">RegisterFederatedIdInput</a><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 						</ul>
 					</div>
@@ -346,6 +394,44 @@
 							</li>
 						</ul>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
+					<a name="registerfederatedidinput" class="tsd-anchor"></a>
+					<h3>Register<wbr>Federated<wbr>IdInput</h3>
+					<div class="tsd-signature tsd-kind-icon">Register<wbr>Federated<wbr>IdInput<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>idToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Scalars</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">"String"</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/gen/graphql-types.ts:49</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>id<wbr>Token<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Scalars</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">"String"</span><span class="tsd-signature-symbol">]</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
+					<a name="registerfederatedidmutation" class="tsd-anchor"></a>
+					<h3>Register<wbr>Federated<wbr>IdMutation</h3>
+					<div class="tsd-signature tsd-kind-icon">Register<wbr>Federated<wbr>IdMutation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>__typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"Mutation"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>registerFederatedId<span class="tsd-signature-symbol">?: </span><a href="globals.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>__typename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"FederatedId"</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#federatedid" class="tsd-signature-type">FederatedId</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"identityId"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/gen/graphql-types.ts:75</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
+					<a name="registerfederatedidmutationvariables" class="tsd-anchor"></a>
+					<h3>Register<wbr>Federated<wbr>IdMutation<wbr>Variables</h3>
+					<div class="tsd-signature tsd-kind-icon">Register<wbr>Federated<wbr>IdMutation<wbr>Variables<span class="tsd-signature-symbol">:</span> <a href="globals.html#exact" class="tsd-signature-type">Exact</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{ </span>input<span class="tsd-signature-symbol">: </span><a href="globals.html#registerfederatedidinput" class="tsd-signature-type">RegisterFederatedIdInput</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/gen/graphql-types.ts:71</li>
+						</ul>
+					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
 					<a name="resolvablepromise" class="tsd-anchor"></a>
@@ -557,7 +643,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/user/user-client.ts:486</li>
+									<li>Defined in src/user/user-client.ts:505</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -588,7 +674,7 @@
 					<div class="tsd-signature tsd-kind-icon">Deregister<wbr>Document<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/gen/graphql-types.ts:57</li>
+							<li>Defined in src/gen/graphql-types.ts:81</li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-external">
@@ -597,7 +683,7 @@
 						<div class="tsd-signature tsd-kind-icon">definitions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"OperationDefinition"</span><span class="tsd-signature-symbol">; </span>operation<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"mutation"</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">; </span>selectionSet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = [{kind: &#x27;OperationDefinition&#x27;,operation: &#x27;mutation&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;deregister&#x27; },selectionSet: {kind: &#x27;SelectionSet&#x27;,selections: [{kind: &#x27;Field&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;deregister&#x27; },selectionSet: {kind: &#x27;SelectionSet&#x27;,selections: [{ kind: &#x27;Field&#x27;, name: { kind: &#x27;Name&#x27;, value: &#x27;success&#x27; } },],},},],},},]</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/gen/graphql-types.ts:62</li>
+								<li>Defined in src/gen/graphql-types.ts:86</li>
 							</ul>
 						</aside>
 					</section>
@@ -607,7 +693,37 @@
 						<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"Document"</span><span class="tsd-signature-symbol"> = &quot;Document&quot;</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/gen/graphql-types.ts:61</li>
+								<li>Defined in src/gen/graphql-types.ts:85</li>
+							</ul>
+						</aside>
+					</section>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-is-external">
+					<a name="registerfederatediddocument" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> Register<wbr>Federated<wbr>IdDocument</h3>
+					<div class="tsd-signature tsd-kind-icon">Register<wbr>Federated<wbr>IdDocument<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/gen/graphql-types.ts:109</li>
+						</ul>
+					</aside>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-external">
+						<a name="registerfederatediddocument.definitions" class="tsd-anchor"></a>
+						<h3>definitions</h3>
+						<div class="tsd-signature tsd-kind-icon">definitions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"OperationDefinition"</span><span class="tsd-signature-symbol">; </span>operation<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"mutation"</span><span class="tsd-signature-symbol">; </span>variableDefinitions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"VariableDefinition"</span><span class="tsd-signature-symbol">; </span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">; </span>variable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">; </span>selectionSet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = [{kind: &#x27;OperationDefinition&#x27;,operation: &#x27;mutation&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;registerFederatedId&#x27; },variableDefinitions: [{kind: &#x27;VariableDefinition&#x27;,variable: {kind: &#x27;Variable&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;input&#x27; },},type: {kind: &#x27;NonNullType&#x27;,type: {kind: &#x27;NamedType&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;RegisterFederatedIdInput&#x27; },},},},],selectionSet: {kind: &#x27;SelectionSet&#x27;,selections: [{kind: &#x27;Field&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;registerFederatedId&#x27; },arguments: [{kind: &#x27;Argument&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;input&#x27; },value: {kind: &#x27;Variable&#x27;,name: { kind: &#x27;Name&#x27;, value: &#x27;input&#x27; },},},],selectionSet: {kind: &#x27;SelectionSet&#x27;,selections: [{ kind: &#x27;Field&#x27;, name: { kind: &#x27;Name&#x27;, value: &#x27;identityId&#x27; } },],},},],},},]</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/gen/graphql-types.ts:114</li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-external">
+						<a name="registerfederatediddocument.kind" class="tsd-anchor"></a>
+						<h3>kind</h3>
+						<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"Document"</span><span class="tsd-signature-symbol"> = &quot;Document&quot;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/gen/graphql-types.ts:113</li>
 							</ul>
 						</aside>
 					</section>
@@ -865,6 +981,9 @@
 						<a href="globals.html#exact" class="tsd-kind-icon">Exact</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
+						<a href="globals.html#federatedid" class="tsd-kind-icon">Federated<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="globals.html#federatedsigninconfig" class="tsd-kind-icon">Federated<wbr>Sign<wbr>InConfig</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
@@ -880,10 +999,22 @@
 						<a href="globals.html#mutation" class="tsd-kind-icon">Mutation</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
+						<a href="globals.html#mutationregisterfederatedidargs" class="tsd-kind-icon">Mutation<wbr>Register<wbr>Federated<wbr>IdArgs</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="globals.html#query" class="tsd-kind-icon">Query</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="globals.html#querynotimplementedargs" class="tsd-kind-icon">Query<wbr>Not<wbr>Implemented<wbr>Args</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-external">
+						<a href="globals.html#registerfederatedidinput" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdInput</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-external">
+						<a href="globals.html#registerfederatedidmutation" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdMutation</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-is-external">
+						<a href="globals.html#registerfederatedidmutationvariables" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdMutation<wbr>Variables</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
 						<a href="globals.html#resolvablepromise" class="tsd-kind-icon">Resolvable<wbr>Promise</a>
@@ -914,6 +1045,9 @@
 					</li>
 					<li class=" tsd-kind-object-literal tsd-is-external">
 						<a href="globals.html#deregisterdocument" class="tsd-kind-icon">Deregister<wbr>Document</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-is-external">
+						<a href="globals.html#registerfederatediddocument" class="tsd-kind-icon">Register<wbr>Federated<wbr>IdDocument</a>
 					</li>
 					<li class=" tsd-kind-object-literal tsd-is-external">
 						<a href="globals.html#apikeynames" class="tsd-kind-icon">api<wbr>Key<wbr>Names</a>
