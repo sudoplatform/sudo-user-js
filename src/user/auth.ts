@@ -112,7 +112,6 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   }
 
   reset(): void {
-    this.authenticationStore.reset()
     const cognitoAuthAny = this.auth as any
     cognitoAuthAny.clearCachedTokensScopes()
     cognitoAuthAny.signInUserSession = null

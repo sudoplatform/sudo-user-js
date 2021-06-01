@@ -299,4 +299,11 @@ describe('SudoUserClient', () => {
       })
     }
   })
+
+  describe('globalSignOut()', () => {
+    it('should complete successfully', async () => {
+      await registerAndSignIn()
+      await userClient.globalSignOut()
+    }, 30000)
+  })
 })

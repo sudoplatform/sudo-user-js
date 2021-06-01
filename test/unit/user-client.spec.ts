@@ -1,8 +1,5 @@
 import { AuthUI, CognitoAuthUI } from '../../src/user/auth'
-import {
-  IdentityProvider,
-  CognitoUserPoolIdentityProvider,
-} from '../../src/user/identity-provider'
+import { IdentityProvider } from '../../src/user/identity-provider'
 import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { Config } from '../../src/core/sdk-config'
 import { AuthenticationStore } from '../../src/core/auth-store'
@@ -11,7 +8,6 @@ import * as JWT from 'jsonwebtoken'
 import { generateKeyPairSync } from 'crypto'
 import { KeyPairKey, PrivateKey } from '../../src/utils/key-pair'
 import { apiKeyNames } from '../../src/core/api-key-names'
-import { KeyManager } from '../../src/core/key-manager'
 import {
   DefaultConfigurationManager,
   DefaultLogger,
@@ -19,6 +15,7 @@ import {
 import { generateKeyPair } from 'crypto'
 import { promisify } from 'util'
 import { LocalAuthenticationProvider } from '../../src/user/auth-provider'
+import { ApiClient } from '../../src/client/apiClient'
 const generateKeyPairAsync = promisify(generateKeyPair)
 
 const globalAny: any = global
@@ -74,15 +71,16 @@ const identityProviderMock: IdentityProvider = mock()
 const identityProvider = instance(identityProviderMock)
 const authenticationStoreMock: AuthenticationStore = mock()
 const authenticationStore = instance(authenticationStoreMock)
-const keyManagerMock: KeyManager = mock()
-const keyManager = instance(keyManagerMock)
+const apiClientMock: ApiClient = mock()
+const apiClient = instance(apiClientMock)
 DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(testConfig))
 const userClient = new DefaultSudoUserClient({
   authenticationStore,
-  keyManager,
+  apiClient,
   authUI,
   identityProvider,
 })
+
 const config = DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
   Config,
   undefined,
@@ -299,35 +297,34 @@ describe('SudoUserClient', () => {
   describe('globalSignOut()', () => {
     it('should complete successfully', async () => {
       let isSignedOut = false
+      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
+        'dummy_id_token',
+      )
       when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
         'dummy_access_token',
       )
       when(
-        identityProviderMock.globalSignOut('dummy_access_token'),
-      ).thenResolve()
+        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
+      ).thenReturn('dummy_refresh_token')
+      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
+        Number(new Date().getTime() + 60 * 1000).toString(),
+      )
+      when(
+        authenticationStoreMock.getItem(apiKeyNames.refreshTokenExpiry),
+      ).thenReturn(
+        Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
+      )
       await userClient.globalSignOut()
       isSignedOut = true
       expect(isSignedOut).toBeTruthy()
     })
 
-    it('should fail with signout error - invalid access token', async () => {
-      const identityProvider = new CognitoUserPoolIdentityProvider(
-        authenticationStore,
-        keyManager,
-        config,
-        logger,
-      )
-      userClient.setIdentityProvider(identityProvider)
-
-      when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
-        'invalid_access_token',
-      )
-
+    it('should fail if not signed in', async () => {
       try {
         await userClient.globalSignOut()
         fail('Expected error not thrown.')
       } catch (error) {
-        expect(error.name).toMatch('SignOutError')
+        expect(error.name).toMatch('NotSignedInError')
       }
     })
   })
@@ -359,11 +356,17 @@ describe('SudoUserClient', () => {
         'dummy_access_token',
       )
       when(
+        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
+      ).thenReturn('dummy_refresh_token')
+      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
+        Number(new Date().getTime() + 60 * 1000).toString(),
+      )
+      when(
         authenticationStoreMock.getItem(apiKeyNames.refreshTokenExpiry),
       ).thenReturn(
         Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
       )
-      expect(userClient.isSignedIn()).toBeTruthy()
+      expect(await userClient.isSignedIn()).toBeTruthy()
     })
   })
 

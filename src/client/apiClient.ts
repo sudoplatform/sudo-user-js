@@ -6,6 +6,8 @@ import {
   RegisterFederatedIdMutation,
   RegisterFederatedIdDocument,
   RegisterFederatedIdInput,
+  GlobalSignOutMutation,
+  GlobalSignOutDocument,
 } from '../gen/graphql-types'
 import {
   NotSignedInError,
@@ -79,6 +81,38 @@ export class ApiClient {
       return { success: result.data.deregister?.success ? true : false }
     } else {
       throw new FatalError('deregister did not return any result.')
+    }
+  }
+
+  public async globalSignOut(): Promise<{ success: boolean }> {
+    if (!(await this.sudoUserClient.isSignedIn())) {
+      throw new NotSignedInError()
+    }
+
+    let result
+    try {
+      result = await this.client.mutate<GlobalSignOutMutation>({
+        mutation: GlobalSignOutDocument,
+        fetchPolicy: 'no-cache',
+      })
+    } catch (err) {
+      const error = err.graphQLErrors?.[0]
+      if (error) {
+        throw this.graphQLErrorsToClientError(error)
+      } else {
+        throw new UnknownGraphQLError(err)
+      }
+    }
+
+    const error = result.errors?.[0]
+    if (error) {
+      throw this.graphQLErrorsToClientError(error)
+    }
+
+    if (result.data) {
+      return { success: result.data.globalSignOut?.success ? true : false }
+    } else {
+      throw new FatalError('globalSignOut did not return any result.')
     }
   }
 

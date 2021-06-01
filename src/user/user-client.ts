@@ -7,6 +7,7 @@ import {
   Logger,
   NotAuthorizedError,
   NotRegisteredError,
+  NotSignedInError,
   PublicKeyFormat,
   RegisterError,
   SudoKeyManager,
@@ -32,9 +33,9 @@ import { userKeyNames } from './user-key-names'
 export interface SudoUserOptions {
   authenticationStore?: AuthenticationStore
   sudoKeyManager?: SudoKeyManager
+  apiClient?: ApiClient
   authUI?: AuthUI
   identityProvider?: IdentityProvider
-  apiClient?: ApiClient
   launchUriFn?: (url: string) => void
   config?: Config
   logger?: Logger
@@ -205,7 +206,6 @@ export class DefaultSudoUserClient implements SudoUserClient {
     ) {
       return true
     } else {
-      this.authenticationStore.reset()
       return false
     }
   }
@@ -256,11 +256,11 @@ export class DefaultSudoUserClient implements SudoUserClient {
   }
 
   async globalSignOut(): Promise<void> {
-    const accessToken = this.getAccessToken()
-    if (accessToken) {
-      await this.identityProvider.globalSignOut(accessToken)
-      this.clearAuthenticationTokens()
+    if (!(await this.isSignedIn())) {
+      throw new NotSignedInError()
     }
+    await this.apiClient.globalSignOut()
+    this.clearAuthenticationTokens()
   }
 
   async registerWithAuthenticationProvider(
@@ -384,7 +384,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
   }
 
   clearAuthenticationTokens(): void {
-    this.authenticationStore.reset()
+    this.authenticationStore.removeItem(apiKeyNames.idToken)
+    this.authenticationStore.removeItem(apiKeyNames.accessToken)
+    this.authenticationStore.removeItem(apiKeyNames.refreshToken)
+
     if (this.authUI) {
       this.authUI.reset()
     }
