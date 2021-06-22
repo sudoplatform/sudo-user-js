@@ -296,15 +296,19 @@ export class DefaultSudoUserClient implements SudoUserClient {
         publicKey: JSON.stringify(publicKeyToRSAPublicKey(publicKey)),
       }
 
-      const validationData = Object.keys(data).map((key): {
-        Name: string
-        Value: string
-      } => {
-        return {
-          Name: key,
-          Value: (data as any)[key],
-        }
-      })
+      const validationData = Object.keys(data).map(
+        (
+          key,
+        ): {
+          Name: string
+          Value: string
+        } => {
+          return {
+            Name: key,
+            Value: (data as any)[key],
+          }
+        },
+      )
 
       const userId = await this.identityProvider.register(uid, validationData)
       if (userId) {
