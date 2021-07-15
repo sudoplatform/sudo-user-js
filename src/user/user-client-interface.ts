@@ -38,31 +38,31 @@ export interface SudoUserClient {
    *
    * @return ID token.
    */
-  getIdToken(): string | undefined
+  getIdToken(): Promise<string | undefined>
   /**
    * Returns the access token cached from the last sign-in.
    *
    * @return access token.
    */
-  getAccessToken(): string | undefined
+  getAccessToken(): Promise<string | undefined>
   /**
    * Returns the refresh token cached from the last sign-in.
    *
    * @return refresh token.
    */
-  getRefreshToken(): string | undefined
+  getRefreshToken(): Promise<string | undefined>
   /**
    * Returns the ID and access token expiry cached from the last sign-in.
    *
    * @return token expiry.
    */
-  getTokenExpiry(): Date | undefined
+  getTokenExpiry(): Promise<Date | undefined>
   /**
    * Returns the refresh token expiry cached from the last sign-in.
    *
    * @return refresh token expiry.
    */
-  getRefreshTokenExpiry(): Date | undefined
+  getRefreshTokenExpiry(): Promise<Date | undefined>
   /**
    * Indicates whether or not this client is signed in with Sudo Platform backend. The client is
    * considered signed in if it cached valid ID, access and refresh tokens.
@@ -89,26 +89,26 @@ export interface SudoUserClient {
    *
    * @return user name.
    */
-  getUserName(): string | undefined
+  getUserName(): Promise<string | undefined>
   /**
    * Sets the user name associated with this client.
    *
    * @param name user name.
    */
-  setUserName(name: string): void
+  setUserName(name: string): Promise<void>
   /**
    * Returns the subject of the user associated with this client.
    * Note: This is an internal method used by other Sudo platform SDKs.
    *
    * @return user subject.
    */
-  getSubject(): string | undefined
+  getSubject(): Promise<string | undefined>
   /**
    * Returns the specified claim associated with the user's identity.
    *
    * @param name claim name.
    */
-  getUserClaim(name: string): any | undefined
+  getUserClaim(name: string): Promise<any | undefined>
   /**
    * Signs out the user from all devices.
    */
@@ -153,7 +153,7 @@ export interface SudoUserClient {
   /**
    * Clears cached authentication tokens.
    */
-  clearAuthenticationTokens(): void
+  clearAuthenticationTokens(): Promise<void>
   /**
    * Presents the Cognito hosted UI signout endpoint.
    * When the endpoint is invoked, the hosted web app's cookies

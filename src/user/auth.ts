@@ -2,6 +2,7 @@ import { AuthenticationError, Logger } from '@sudoplatform/sudo-common'
 import { CognitoAuth } from 'amazon-cognito-auth-js'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationStore } from '../core/auth-store'
+import { KeyManager } from '../core/key-manager'
 import { FederatedSignInConfig } from '../core/sdk-config'
 import { Subscriber } from '../core/subscriber'
 import {
@@ -9,6 +10,13 @@ import {
   ResolvablePromise,
 } from '../utils/resolvable-promise'
 import { AuthenticationTokens } from './user-client-interface'
+import * as JWT from 'jsonwebtoken'
+import { userKeyNames } from './user-key-names'
+
+export interface AuthenticationDetails {
+  authenticationTokens: AuthenticationTokens
+  userId: string
+}
 
 export interface AuthUI {
   /**
@@ -37,13 +45,14 @@ export interface AuthUI {
 
 export class CognitoAuthUI implements AuthUI, Subscriber {
   private auth: CognitoAuth
-  private tokensRefreshedPromise?: ResolvablePromise<AuthenticationTokens>
+  private tokensRefreshedPromise?: ResolvablePromise<AuthenticationDetails>
   private refreshTokenLifetime: number
   private logger: Logger
 
   constructor(
     private authenticationStore: AuthenticationStore,
     private federatedSignInConfig: FederatedSignInConfig,
+    private keyManager: KeyManager,
     logger: Logger,
     private launchUriFn?: (url: string) => void,
   ) {
@@ -90,22 +99,26 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     url: string,
   ): Promise<AuthenticationTokens> {
     this.tokensRefreshedPromise =
-      createResolvablePromise<AuthenticationTokens>()
+      createResolvablePromise<AuthenticationDetails>()
     this.auth.parseCognitoWebResponse(url)
-    const authTokens = await this.tokensRefreshedPromise
-    await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
-    return authTokens
+    const authDetails = await this.tokensRefreshedPromise
+    await this.storeTokensInKeyManager(authDetails)
+    return authDetails.authenticationTokens
   }
   /**
-   * This function is called when the key manager notifies subscribers of an item update.
+   * This function is called when the authentication store notifies subscribers of an item update.
    *
    * @param itemName the name of the item being updated
    */
   update(itemName: string): void {
     if (itemName === 'idToken') {
       const authTokens = this.getAuthTokens()
-      if (authTokens) {
-        this.tokensRefreshedPromise?.resolve(authTokens)
+      const userId = this.authenticationStore.getItem(apiKeyNames.userId)
+      if (authTokens && userId) {
+        this.tokensRefreshedPromise?.resolve({
+          authenticationTokens: authTokens,
+          userId,
+        })
       }
     }
     this.logger.debug('Updated: ', { itemName })
@@ -128,7 +141,8 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   ): Promise<void> {
     const tokenLifetime =
       refreshTokenLifetime * 24 * 60 * 60 * 1000 + new Date().getTime()
-    await this.authenticationStore.setItem(
+    await this.keyManager.removeItem(apiKeyNames.refreshTokenExpiry)
+    await this.keyManager.addString(
       apiKeyNames.refreshTokenExpiry,
       tokenLifetime.toString(),
     )
@@ -159,5 +173,37 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   private getTokenExpiry(): Date | undefined {
     const expiry = this.authenticationStore.getItem(apiKeyNames.tokenExpiry)
     return expiry ? new Date(Number(expiry) * 1000) : undefined
+  }
+
+  /**
+   * Store the authentication tokens and user id of the signed in user in the key manager.
+   */
+  private async storeTokensInKeyManager(
+    authDetails: AuthenticationDetails,
+  ): Promise<void> {
+    await this.keyManager.removeItem(userKeyNames.userId)
+    await this.keyManager.removeItem(apiKeyNames.idToken)
+    await this.keyManager.removeItem(apiKeyNames.accessToken)
+    await this.keyManager.removeItem(apiKeyNames.refreshToken)
+    await this.keyManager.removeItem(apiKeyNames.tokenExpiry)
+
+    const authTokens = authDetails.authenticationTokens
+    await this.keyManager.addString(userKeyNames.userId, authDetails.userId)
+    await this.keyManager.addString(apiKeyNames.idToken, authTokens.idToken)
+    await this.keyManager.addString(
+      apiKeyNames.accessToken,
+      authTokens.accessToken,
+    )
+    await this.keyManager.addString(
+      apiKeyNames.refreshToken,
+      authTokens.refreshToken,
+    )
+
+    const decoded: any = JWT.decode(authTokens.idToken, { complete: true })
+    if (decoded) {
+      const tokenExpiry = decoded.payload['exp']
+      await this.keyManager.addString(apiKeyNames.tokenExpiry, tokenExpiry)
+    }
+    await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
   }
 }

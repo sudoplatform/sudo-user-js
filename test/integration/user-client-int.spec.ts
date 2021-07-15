@@ -22,6 +22,10 @@ const userClient = new DefaultSudoUserClient({})
 
 const refreshTokenLifetime: number = config.identityService.refreshTokenLifetime
 
+afterEach(async () => {
+  await userClient.sudoKeyManager.removeAllKeys()
+})
+
 async function registerAndSignIn() {
   // Register
   const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
@@ -47,10 +51,10 @@ async function registerAndSignIn() {
 
   expect(authTokens).toBeDefined()
   expect(authTokens.idToken).toBeDefined()
-  expect(authTokens.idToken).toBe(userClient.getIdToken())
+  expect(authTokens.idToken).toBe(await userClient.getIdToken())
 
   // Verify refresh token expiry
-  const refreshTokenExpiry = userClient.getRefreshTokenExpiry()
+  const refreshTokenExpiry = await userClient.getRefreshTokenExpiry()
 
   expect(refreshTokenExpiry).toBeDefined()
   expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
@@ -62,7 +66,7 @@ async function registerAndSignIn() {
 
   expect(await userClient.isSignedIn()).toBeTruthy()
 
-  expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
+  expect(await userClient.getUserClaim('custom:entitlementsSet')).toBe(
     'dummy_entitlements_set',
   )
 }
@@ -94,10 +98,10 @@ describe('SudoUserClient', () => {
 
       expect(authTokens).toBeDefined()
       expect(authTokens.idToken).toBeDefined()
-      expect(authTokens.idToken).toBe(userClient.getIdToken())
+      expect(authTokens.idToken).toBe(await userClient.getIdToken())
 
       // Verify refresh token expiry
-      const refreshTokenExpiry = userClient.getRefreshTokenExpiry()
+      const refreshTokenExpiry = await userClient.getRefreshTokenExpiry()
 
       expect(refreshTokenExpiry).toBeDefined()
       expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
@@ -113,11 +117,11 @@ describe('SudoUserClient', () => {
 
       expect(await userClient.isSignedIn()).toBeTruthy()
 
-      expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
+      expect(await userClient.getUserClaim('custom:entitlementsSet')).toBe(
         'dummy_entitlements_set',
       )
 
-      expect(userClient.getUserClaim('custom:identityId')).toBeTruthy()
+      expect(await userClient.getUserClaim('custom:identityId')).toBeTruthy()
 
       // Deregister
       await userClient.deregister()
@@ -157,7 +161,7 @@ describe('SudoUserClient', () => {
       expect(await userClient.isSignedIn()).toBeTruthy()
 
       // clear auth tokens (local sign out)
-      userClient.clearAuthenticationTokens()
+      await userClient.clearAuthenticationTokens()
       expect(await userClient.isSignedIn()).toBeFalsy()
 
       // Sign in again so we can call deregister
@@ -209,9 +213,9 @@ describe('SudoUserClient', () => {
 
       // Refresh the tokens
       const refreshedTokens = await userClient.refreshTokens(
-        userClient.getRefreshToken(),
+        await userClient.getRefreshToken(),
       )
-      const refreshedIdToken = userClient.getIdToken()
+      const refreshedIdToken = await userClient.getIdToken()
       expect(refreshedIdToken).toBe(refreshedTokens.idToken)
 
       // Deregister

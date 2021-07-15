@@ -2,7 +2,6 @@ import AWSCore from 'aws-sdk/lib/core'
 import AWSCognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider'
 import { Config } from '../core/sdk-config'
 import { apiKeyNames } from '../core/api-key-names'
-import { AuthenticationStore } from '../core/auth-store'
 import { AuthenticationTokens } from './user-client-interface'
 import { KeyManager } from '../core/key-manager'
 import { v4 } from 'uuid'
@@ -74,7 +73,6 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
   private logger: Logger
 
   constructor(
-    private authenticationStore: AuthenticationStore,
     private keyManager: KeyManager,
     private config: Config,
     logger: Logger,
@@ -327,7 +325,8 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
   ): Promise<void> {
     const tokenLifetime =
       refreshTokenLifetime * 24 * 60 * 60 * 1000 + new Date().getTime()
-    await this.authenticationStore.setItem(
+    await this.keyManager.removeItem(apiKeyNames.refreshTokenExpiry)
+    await this.keyManager.addString(
       apiKeyNames.refreshTokenExpiry,
       tokenLifetime.toString(),
     )

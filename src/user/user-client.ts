@@ -81,7 +81,6 @@ export class DefaultSudoUserClient implements SudoUserClient {
     this.identityProvider =
       options?.identityProvider ??
       new CognitoUserPoolIdentityProvider(
-        this.authenticationStore,
         this.keyManager,
         this.config,
         this.logger,
@@ -94,6 +93,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
         new CognitoAuthUI(
           this.authenticationStore,
           federatedSignInConfig,
+          this.keyManager,
           this.logger,
           this.launchUriFn,
         )
@@ -140,26 +140,26 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  public getIdToken(): string | undefined {
-    return this.authenticationStore.getItem(apiKeyNames.idToken)
+  public async getIdToken(): Promise<string | undefined> {
+    return await this.keyManager.getString(apiKeyNames.idToken)
   }
 
-  public getAccessToken(): string | undefined {
-    return this.authenticationStore.getItem(apiKeyNames.accessToken)
+  public async getAccessToken(): Promise<string | undefined> {
+    return await this.keyManager.getString(apiKeyNames.accessToken)
   }
 
-  public getRefreshToken(): string | undefined {
-    return this.authenticationStore.getItem(apiKeyNames.refreshToken)
+  public async getRefreshToken(): Promise<string | undefined> {
+    return await this.keyManager.getString(apiKeyNames.refreshToken)
   }
 
-  public getTokenExpiry(): Date | undefined {
-    const expiry = this.authenticationStore.getItem(apiKeyNames.tokenExpiry)
+  public async getTokenExpiry(): Promise<Date | undefined> {
+    const expiry = await this.keyManager.getString(apiKeyNames.tokenExpiry)
     return expiry ? new Date(Number(expiry) * 1000) : undefined
   }
 
-  public getRefreshTokenExpiry(): Date | undefined {
+  public async getRefreshTokenExpiry(): Promise<Date | undefined> {
     let expiry = undefined
-    const timeSinceEpoch = this.authenticationStore.getItem(
+    const timeSinceEpoch = await this.keyManager.getString(
       apiKeyNames.refreshTokenExpiry,
     )
     if (timeSinceEpoch) {
@@ -168,17 +168,22 @@ export class DefaultSudoUserClient implements SudoUserClient {
     return expiry
   }
 
-  public getUserName(): string | undefined {
-    return this.authenticationStore.getItem(apiKeyNames.userId)
+  public async getUserName(): Promise<string | undefined> {
+    try {
+      return await this.keyManager.getString(userKeyNames.userId)
+    } catch {
+      return undefined
+    }
   }
 
-  public setUserName(name: string): void {
-    this.keyManager.addString('userId', name)
+  public async setUserName(name: string): Promise<void> {
+    await this.keyManager.removeItem(userKeyNames.userId)
+    await this.keyManager.addString(userKeyNames.userId, name)
   }
 
-  getUserClaim(name: string): any | undefined {
+  async getUserClaim(name: string): Promise<any | undefined> {
     let claim = undefined
-    const idToken = this.getIdToken()
+    const idToken = await this.getIdToken()
     if (idToken) {
       const decoded: any = JWT.decode(idToken, { complete: true })
       if (decoded) {
@@ -188,31 +193,37 @@ export class DefaultSudoUserClient implements SudoUserClient {
     return claim
   }
 
-  public getSubject(): string | undefined {
-    return this.getUserClaim('sub')
+  public async getSubject(): Promise<string | undefined> {
+    return await this.getUserClaim('sub')
   }
 
   public async isSignedIn(): Promise<boolean> {
-    const authTokens = this.getAuthTokens()
-    const expiry = this.getRefreshTokenExpiry()
-    if (
-      authTokens &&
-      authTokens.idToken &&
-      authTokens.accessToken &&
-      authTokens.refreshToken &&
-      expiry &&
-      // Considered signed in up to 1 hour before the expiry of refresh token.
-      expiry.getTime() > new Date().getTime() + 60 * 60 * 1000
-    ) {
-      return true
-    } else {
+    try {
+      const authTokens = await this.getAuthTokens()
+      const expiry = await this.getRefreshTokenExpiry()
+      if (
+        authTokens &&
+        authTokens.idToken &&
+        authTokens.accessToken &&
+        authTokens.refreshToken &&
+        expiry &&
+        // Considered signed in up to 1 hour before the expiry of refresh token.
+        expiry.getTime() > new Date().getTime() + 60 * 60 * 1000
+      ) {
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      // The key manager throws a KeyNotFoundError if an item is not found
+      // in which case we want to indicate that the user is not signed in.
       return false
     }
   }
 
   async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
     try {
-      const uid = this.getUserName()
+      const uid = await this.getUserName()
       if (uid) {
         const authTokens = await this.identityProvider.refreshTokens(
           refreshToken,
@@ -228,29 +239,36 @@ export class DefaultSudoUserClient implements SudoUserClient {
   }
 
   async getLatestAuthToken(): Promise<string> {
-    const idToken = this.getIdToken()
-    const refreshToken = this.getRefreshToken()
-    const expiry = this.getTokenExpiry()
+    try {
+      const idToken = await this.getIdToken()
+      const refreshToken = await this.getRefreshToken()
+      const expiry = await this.getTokenExpiry()
 
-    if (idToken && refreshToken && expiry) {
-      if (expiry.getTime() > new Date().getTime() + 600 * 1000) {
-        return idToken
-      } else {
-        try {
-          const authTokens = await this.refreshTokens(refreshToken)
-          return authTokens.idToken
-        } catch (error) {
-          this.logger.info(
-            'getLatestAuthToken: Token refresh failed',
-            error.message,
-          )
-          // return an empty id token
-          return ''
+      if (idToken && refreshToken && expiry) {
+        if (expiry.getTime() > new Date().getTime() + 600 * 1000) {
+          return idToken
+        } else {
+          try {
+            const authTokens = await this.refreshTokens(refreshToken)
+            return authTokens.idToken
+          } catch (error) {
+            this.logger.info(
+              'getLatestAuthToken: Token refresh failed',
+              error.message,
+            )
+            // return an empty id token
+            return ''
+          }
         }
+      } else {
+        // If tokens are missing then it's likely due to the client not being signed in.
+        // Return an empty id token.
+        return ''
       }
-    } else {
-      // If tokens are missing then it's likely due to the client not being signed in.
-      // Return an empty id token
+    } catch (err) {
+      // The key manager throws a KeyNotFoundError if an item is not found
+      // which would indicate that the client is likely not signed in.
+      // Return an empty id token.
       return ''
     }
   }
@@ -312,7 +330,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
       const userId = await this.identityProvider.register(uid, validationData)
       if (userId) {
-        this.setUserName(userId)
+        await this.setUserName(userId)
         return userId
       } else {
         throw new RegisterError(
@@ -346,13 +364,13 @@ export class DefaultSudoUserClient implements SudoUserClient {
       type,
     )
     await this.storeTokens(uid, authTokens)
-    authTokens = await this.registerFederatedIdAndRefreshTokens(uid, authTokens)
+    authTokens = await this.registerFederatedIdAndRefreshTokens(authTokens)
     return authTokens
   }
 
   async isRegistered(): Promise<boolean> {
     try {
-      const uid = await this.keyManager.getString('userId')
+      const uid = await this.getUserName()
       return uid ? true : false
     } catch (err) {
       return false
@@ -361,17 +379,14 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   async signInWithKey(): Promise<AuthenticationTokens> {
     this.logger.info('Signing in using private key.')
-    const uid = await this.keyManager.getString('userId')
+    const uid = await this.getUserName()
     const userKeyId = await this.keyManager.getString('userKeyId')
 
     if (uid && userKeyId) {
       let authTokens = await this.identityProvider.signInWithKey(uid, userKeyId)
       if (authTokens) {
         await this.storeTokens(uid, authTokens)
-        authTokens = await this.registerFederatedIdAndRefreshTokens(
-          uid,
-          authTokens,
-        )
+        authTokens = await this.registerFederatedIdAndRefreshTokens(authTokens)
         return authTokens
       } else {
         throw new FatalError('Unexpected error. Unable to sign in.')
@@ -383,14 +398,17 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   async deregister(): Promise<void> {
     await this.apiClient.deregister()
-    this.keyManager.reset()
+    await this.keyManager.reset()
     this.clearAuthenticationTokens()
   }
 
-  clearAuthenticationTokens(): void {
-    this.authenticationStore.removeItem(apiKeyNames.idToken)
-    this.authenticationStore.removeItem(apiKeyNames.accessToken)
-    this.authenticationStore.removeItem(apiKeyNames.refreshToken)
+  async clearAuthenticationTokens(): Promise<void> {
+    await this.keyManager.removeItem(apiKeyNames.idToken)
+    await this.keyManager.removeItem(apiKeyNames.accessToken)
+    await this.keyManager.removeItem(apiKeyNames.refreshToken)
+    await this.keyManager.removeItem(apiKeyNames.tokenExpiry)
+
+    this.authenticationStore.reset()
 
     if (this.authUI) {
       this.authUI.reset()
@@ -415,26 +433,33 @@ export class DefaultSudoUserClient implements SudoUserClient {
     uid: string,
     authTokens: AuthenticationTokens,
   ): Promise<void> {
-    await this.authenticationStore.setItem(apiKeyNames.userId, uid)
-    await this.authenticationStore.setItem(
-      apiKeyNames.idToken,
-      authTokens.idToken,
-    )
-    await this.authenticationStore.setItem(
+    await this.keyManager.removeItem(userKeyNames.userId)
+    await this.keyManager.removeItem(apiKeyNames.idToken)
+    await this.keyManager.removeItem(apiKeyNames.accessToken)
+    await this.keyManager.removeItem(apiKeyNames.refreshToken)
+    await this.keyManager.removeItem(apiKeyNames.tokenExpiry)
+
+    await this.keyManager.addString(userKeyNames.userId, uid)
+    await this.keyManager.addString(apiKeyNames.idToken, authTokens.idToken)
+    await this.keyManager.addString(
       apiKeyNames.accessToken,
       authTokens.accessToken,
     )
-    await this.authenticationStore.setItem(
+    await this.keyManager.addString(
       apiKeyNames.refreshToken,
       authTokens.refreshToken,
     )
+    const decoded: any = JWT.decode(authTokens.idToken, { complete: true })
+    if (decoded) {
+      const tokenExpiry = decoded.payload['exp']
+      await this.keyManager.addString(apiKeyNames.tokenExpiry, tokenExpiry)
+    }
   }
 
   private async registerFederatedIdAndRefreshTokens(
-    uid: string,
     authTokens: AuthenticationTokens,
   ): Promise<AuthenticationTokens> {
-    const identityId = this.getUserClaim('custom:identityId')
+    const identityId = await this.getUserClaim('custom:identityId')
     if (identityId) {
       return authTokens
     } else {
@@ -449,16 +474,17 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   private async generateRegistrationData(): Promise<PublicKey> {
     const keyId = await this.keyManager.generateKeyPair()
+    await this.keyManager.removeItem(userKeyNames.userKeyId)
     await this.keyManager.addString(userKeyNames.userKeyId, keyId)
     const publicKey = await this.keyManager.exportPublicKey(keyId)
     return publicKey
   }
 
-  private getAuthTokens(): AuthenticationTokens | undefined {
-    const idToken = this.getIdToken()
-    const accessToken = this.getAccessToken()
-    const refreshToken = this.getRefreshToken()
-    const tokenExpiry = this.getTokenExpiry()
+  private async getAuthTokens(): Promise<AuthenticationTokens | undefined> {
+    const idToken = await this.getIdToken()
+    const accessToken = await this.getAccessToken()
+    const refreshToken = await this.getRefreshToken()
+    const tokenExpiry = await this.getTokenExpiry()
 
     if (idToken && accessToken && refreshToken && tokenExpiry) {
       return {

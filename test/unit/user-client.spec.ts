@@ -11,11 +11,14 @@ import { apiKeyNames } from '../../src/core/api-key-names'
 import {
   DefaultConfigurationManager,
   DefaultLogger,
+  SudoKeyManager,
 } from '@sudoplatform/sudo-common'
 import { generateKeyPair } from 'crypto'
 import { promisify } from 'util'
 import { LocalAuthenticationProvider } from '../../src/user/auth-provider'
 import { ApiClient } from '../../src/client/apiClient'
+import { KeyManager } from '../../src/core/key-manager'
+import { userKeyNames } from '../../src/user/user-key-names'
 const generateKeyPairAsync = promisify(generateKeyPair)
 
 const globalAny: any = global
@@ -65,12 +68,20 @@ function customLaunchUriFunction(url: string): void {
   location.replace(url)
 }
 
+function toArrayBuffer(value: string): ArrayBuffer {
+  return new TextEncoder().encode(value).buffer
+}
+
 const authUIMock: AuthUI = mock()
 const authUI = instance(authUIMock)
 const identityProviderMock: IdentityProvider = mock()
 const identityProvider = instance(identityProviderMock)
 const authenticationStoreMock: AuthenticationStore = mock()
 const authenticationStore = instance(authenticationStoreMock)
+const keyManagerMock: KeyManager = mock()
+const keyManager = instance(keyManagerMock)
+const sudoKeyManagerMock: SudoKeyManager = mock()
+const sudoKeyManager = instance(sudoKeyManagerMock)
 const apiClientMock: ApiClient = mock()
 const apiClient = instance(apiClientMock)
 DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(testConfig))
@@ -79,6 +90,7 @@ const userClient = new DefaultSudoUserClient({
   apiClient,
   authUI,
   identityProvider,
+  sudoKeyManager,
 })
 
 const config = DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
@@ -90,6 +102,8 @@ const logger = new DefaultLogger()
 afterEach((): void => {
   reset(authUIMock)
   reset(authenticationStoreMock)
+  reset(keyManagerMock)
+  reset(sudoKeyManagerMock)
   reset(identityProviderMock)
   userClient.setAuthUI(authUI)
   userClient.setIdentityProvider(identityProvider)
@@ -101,6 +115,7 @@ describe('SudoUserClient', () => {
       const authUI = new CognitoAuthUI(
         authenticationStore,
         config.federatedSignIn,
+        keyManager,
         logger,
       )
       userClient.setAuthUI(authUI)
@@ -117,6 +132,7 @@ describe('SudoUserClient', () => {
       const authUI = new CognitoAuthUI(
         authenticationStore,
         config.federatedSignIn,
+        keyManager,
         logger,
         customLaunchUriFunction,
       )
@@ -179,29 +195,28 @@ describe('SudoUserClient', () => {
     })
 
     it('should complete successfully', async () => {
-      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
-        token,
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
+        toArrayBuffer(token),
       )
-      const sub = userClient.getSubject()
+      const sub = await userClient.getSubject()
       expect(sub).toBe('dummy_sub')
     })
   })
 
   describe('getUserName()', () => {
     it('should complete successfully', async () => {
-      when(authenticationStoreMock.getItem(apiKeyNames.userId)).thenReturn(
-        'test_user',
+      when(sudoKeyManagerMock.getPassword(userKeyNames.userId)).thenResolve(
+        toArrayBuffer('test_user'),
       )
-
-      const userName = userClient.getUserName()
+      const userName = await userClient.getUserName()
       expect(userName).toBe('test_user')
     })
   })
 
   describe('refreshTokens()', () => {
     it('should complete successfully', async () => {
-      when(authenticationStoreMock.getItem(apiKeyNames.userId)).thenReturn(
-        'test_user',
+      when(sudoKeyManagerMock.getPassword(userKeyNames.userId)).thenResolve(
+        toArrayBuffer('test_user'),
       )
       when(identityProviderMock.refreshTokens('refresh_token')).thenResolve({
         idToken: 'dummy_id_token',
@@ -219,8 +234,8 @@ describe('SudoUserClient', () => {
     })
 
     it('should fail with authentication error', async () => {
-      when(authenticationStoreMock.getItem(apiKeyNames.userId)).thenReturn(
-        'test_user',
+      when(sudoKeyManagerMock.getPassword(userKeyNames.userId)).thenResolve(
+        toArrayBuffer('test_user'),
       )
       when(identityProviderMock.refreshTokens('refresh_token')).thenReject()
 
@@ -235,24 +250,18 @@ describe('SudoUserClient', () => {
 
   describe('getLatestAuthToken()', () => {
     it('should complete successfully', async () => {
-      const authUI = new CognitoAuthUI(
-        authenticationStore,
-        config.federatedSignIn,
-        logger,
-      )
-      userClient.setAuthUI(authUI)
-
       const tokenExpiry = new Date().getTime() + 3600000
       const validTokenExpiry = tokenExpiry / 1000
 
-      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
-        'dummy_id_token',
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
+        toArrayBuffer('dummy_id_token'),
       )
+
       when(
-        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
-      ).thenReturn('dummy_refresh_token')
-      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
-        validTokenExpiry.toString(),
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshToken),
+      ).thenResolve(toArrayBuffer('dummy_refresh_token'))
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.tokenExpiry)).thenResolve(
+        toArrayBuffer(validTokenExpiry.toString()),
       )
 
       const idToken = await userClient.getLatestAuthToken()
@@ -260,35 +269,32 @@ describe('SudoUserClient', () => {
     })
 
     it('should return empty token - user not signed in', async () => {
-      const empty = ''
-      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
-        empty,
-      )
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve()
       when(
-        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
-      ).thenReturn(empty)
-      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
-        empty,
-      )
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshToken),
+      ).thenResolve()
+      when(
+        sudoKeyManagerMock.getPassword(apiKeyNames.tokenExpiry),
+      ).thenResolve()
 
+      const empty = ''
       const idToken = await userClient.getLatestAuthToken()
       expect(idToken).toBe(empty)
     })
 
     it('should return empty token - error encountered calling refreshTokens', async () => {
-      const empty = ''
-      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
-        'id_token',
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
+        toArrayBuffer('id_token'),
       )
       when(
-        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
-      ).thenReturn('refresh_token')
-      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
-        '100',
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshToken),
+      ).thenResolve(toArrayBuffer('refresh_token'))
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.tokenExpiry)).thenResolve(
+        toArrayBuffer('100'),
       )
-
       when(identityProviderMock.refreshTokens('refresh_token')).thenReject()
 
+      const empty = ''
       const idToken = await userClient.getLatestAuthToken()
       expect(idToken).toBe(empty)
     })
@@ -297,22 +303,24 @@ describe('SudoUserClient', () => {
   describe('globalSignOut()', () => {
     it('should complete successfully', async () => {
       let isSignedOut = false
-      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
-        'dummy_id_token',
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
+        toArrayBuffer('dummy_id_token'),
       )
-      when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
-        'dummy_access_token',
-      )
-      when(
-        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
-      ).thenReturn('dummy_refresh_token')
-      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
-        Number(new Date().getTime() + 60 * 1000).toString(),
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.accessToken)).thenResolve(
+        toArrayBuffer('dummy_access_token'),
       )
       when(
-        authenticationStoreMock.getItem(apiKeyNames.refreshTokenExpiry),
-      ).thenReturn(
-        Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshToken),
+      ).thenResolve(toArrayBuffer('dummy_refresh_token'))
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.tokenExpiry)).thenResolve(
+        toArrayBuffer(Number(new Date().getTime() + 60 * 1000).toString()),
+      )
+      when(
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshTokenExpiry),
+      ).thenResolve(
+        toArrayBuffer(
+          Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
+        ),
       )
       await userClient.globalSignOut()
       isSignedOut = true
@@ -334,6 +342,7 @@ describe('SudoUserClient', () => {
       const authUI = new CognitoAuthUI(
         authenticationStore,
         config.federatedSignIn,
+        keyManager,
         logger,
       )
       userClient.setAuthUI(authUI)
@@ -349,22 +358,24 @@ describe('SudoUserClient', () => {
 
   describe('isSignedIn()', () => {
     it('should complete successfully', async () => {
-      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
-        'dummy_id_token',
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
+        toArrayBuffer('dummy_id_token'),
       )
-      when(authenticationStoreMock.getItem(apiKeyNames.accessToken)).thenReturn(
-        'dummy_access_token',
-      )
-      when(
-        authenticationStoreMock.getItem(apiKeyNames.refreshToken),
-      ).thenReturn('dummy_refresh_token')
-      when(authenticationStoreMock.getItem(apiKeyNames.tokenExpiry)).thenReturn(
-        Number(new Date().getTime() + 60 * 1000).toString(),
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.accessToken)).thenResolve(
+        toArrayBuffer('dummy_access_token'),
       )
       when(
-        authenticationStoreMock.getItem(apiKeyNames.refreshTokenExpiry),
-      ).thenReturn(
-        Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshToken),
+      ).thenResolve(toArrayBuffer('dummy_refresh_token'))
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.tokenExpiry)).thenResolve(
+        toArrayBuffer(Number(new Date().getTime() + 60 * 1000).toString()),
+      )
+      when(
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshTokenExpiry),
+      ).thenResolve(
+        toArrayBuffer(
+          Number(new Date().getTime() + 60 * 60 * 1000 + 10000).toString(),
+        ),
       )
       expect(await userClient.isSignedIn()).toBeTruthy()
     })
@@ -428,8 +439,9 @@ describe('SudoUserClient', () => {
         tokenExpiry: 1,
       })
 
-      when(authenticationStoreMock.getItem(apiKeyNames.idToken)).thenReturn(
-        idToken,
+      when(keyManagerMock.getString(apiKeyNames.idToken)).thenResolve(idToken)
+      when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
+        toArrayBuffer(idToken),
       )
 
       const tokens = await userClient.signInWithAuthenticationProvider(
@@ -440,7 +452,7 @@ describe('SudoUserClient', () => {
       expect(tokens.accessToken).toBe('dummy_access_token')
       expect(tokens.refreshToken).toBe('dummy_refresh_token')
       expect(tokens.tokenExpiry).toBe(1)
-      expect(userClient.getUserClaim('custom:identityId')).toBeTruthy()
+      expect(await userClient.getUserClaim('custom:identityId')).toBeTruthy()
     })
   })
 })

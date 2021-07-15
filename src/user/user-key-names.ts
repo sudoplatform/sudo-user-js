@@ -1,6 +1,6 @@
 export const userKeyNames = {
   symmetricKeyId: 'symmetricKeyId',
-  userId: 'userId',
   userKeyId: 'userKeyId',
+  userId: 'userId',
   identityId: 'identityId',
 }

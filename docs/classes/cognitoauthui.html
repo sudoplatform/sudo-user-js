@@ -110,13 +110,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Cognito<wbr>AuthUI<span class="tsd-signature-symbol">(</span>authenticationStore<span class="tsd-signature-symbol">: </span><a href="authenticationstore.html" class="tsd-signature-type">AuthenticationStore</a>, federatedSignInConfig<span class="tsd-signature-symbol">: </span><a href="../globals.html#federatedsigninconfig" class="tsd-signature-type">FederatedSignInConfig</a>, logger<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Logger</span>, launchUriFn<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="cognitoauthui.html" class="tsd-signature-type">CognitoAuthUI</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Cognito<wbr>AuthUI<span class="tsd-signature-symbol">(</span>authenticationStore<span class="tsd-signature-symbol">: </span><a href="authenticationstore.html" class="tsd-signature-type">AuthenticationStore</a>, federatedSignInConfig<span class="tsd-signature-symbol">: </span><a href="../globals.html#federatedsigninconfig" class="tsd-signature-type">FederatedSignInConfig</a>, keyManager<span class="tsd-signature-symbol">: </span><a href="keymanager.html" class="tsd-signature-type">KeyManager</a>, logger<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Logger</span>, launchUriFn<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="cognitoauthui.html" class="tsd-signature-type">CognitoAuthUI</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/user/auth.ts:42</li>
+									<li>Defined in src/user/auth.ts:50</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -126,6 +126,9 @@
 								</li>
 								<li>
 									<h5>federatedSignInConfig: <a href="../globals.html#federatedsigninconfig" class="tsd-signature-type">FederatedSignInConfig</a></h5>
+								</li>
+								<li>
+									<h5>keyManager: <a href="keymanager.html" class="tsd-signature-type">KeyManager</a></h5>
 								</li>
 								<li>
 									<h5>logger: <span class="tsd-signature-type">Logger</span></h5>
@@ -152,7 +155,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/authui.html">AuthUI</a>.<a href="../interfaces/authui.html#presentfederatedsigninui">presentFederatedSignInUI</a></p>
 								<ul>
-									<li>Defined in src/user/auth.ts:85</li>
+									<li>Defined in src/user/auth.ts:94</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -170,7 +173,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/authui.html">AuthUI</a>.<a href="../interfaces/authui.html#presentsignoutui">presentSignOutUI</a></p>
 								<ul>
-									<li>Defined in src/user/auth.ts:121</li>
+									<li>Defined in src/user/auth.ts:134</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -188,7 +191,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/authui.html">AuthUI</a>.<a href="../interfaces/authui.html#processfederatedsignintokens">processFederatedSignInTokens</a></p>
 								<ul>
-									<li>Defined in src/user/auth.ts:89</li>
+									<li>Defined in src/user/auth.ts:98</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -212,7 +215,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/authui.html">AuthUI</a>.<a href="../interfaces/authui.html#reset">reset</a></p>
 								<ul>
-									<li>Defined in src/user/auth.ts:114</li>
+									<li>Defined in src/user/auth.ts:127</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -230,12 +233,12 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/subscriber.html">Subscriber</a>.<a href="../interfaces/subscriber.html#update">update</a></p>
 								<ul>
-									<li>Defined in src/user/auth.ts:104</li>
+									<li>Defined in src/user/auth.ts:113</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>This function is called when the key manager notifies subscribers of an item update.</p>
+									<p>This function is called when the authentication store notifies subscribers of an item update.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
