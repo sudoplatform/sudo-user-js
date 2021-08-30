@@ -270,7 +270,7 @@ describe('SudoUserClient', () => {
           'dummy_rid',
         )
 
-        expect(userClient.isRegistered()).toBeTruthy()
+        await expect(userClient.isRegistered()).resolves.toBeTruthy()
         expect(uid).toBe(username)
 
         try {
@@ -287,11 +287,13 @@ describe('SudoUserClient', () => {
           authenticationProvider,
         )
 
-        expect(userClient.isSignedIn()).toBeTruthy()
-        expect(userClient.getUserClaim('custom:entitlementsSet')).toBe(
-          'dummy_entitlements_set',
-        )
-        expect(userClient.getUserClaim('custom:identityId')).toBeTruthy()
+        await expect(userClient.isSignedIn()).resolves.toBeTruthy()
+        await expect(
+          userClient.getUserClaim('custom:entitlementsSet'),
+        ).resolves.toBe('dummy_entitlements_set')
+        await expect(
+          userClient.getUserClaim('custom:identityId'),
+        ).resolves.toBeTruthy()
 
         await userClient.deregister()
       }, 30000)

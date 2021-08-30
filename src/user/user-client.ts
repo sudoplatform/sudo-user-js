@@ -126,8 +126,9 @@ export class DefaultSudoUserClient implements SudoUserClient {
     url: string,
   ): Promise<AuthenticationTokens> {
     try {
-      const authTokens = await this.authUI?.processFederatedSignInTokens(url)
+      let authTokens = await this.authUI?.processFederatedSignInTokens(url)
       if (authTokens) {
+        authTokens = await this.registerFederatedIdAndRefreshTokens(authTokens)
         return authTokens
       } else {
         throw new AuthenticationError('Authentication tokens missing.')
@@ -181,16 +182,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
     await this.keyManager.addString(userKeyNames.userId, name)
   }
 
-  async getUserClaim(name: string): Promise<any | undefined> {
-    let claim = undefined
+  public async getUserClaim(name: string): Promise<any | undefined> {
     const idToken = await this.getIdToken()
-    if (idToken) {
-      const decoded: any = JWT.decode(idToken, { complete: true })
-      if (decoded) {
-        claim = decoded.payload[name]
-      }
-    }
-    return claim
+    if (!idToken) return undefined
+    return this.getTokenClaim(idToken, name)
   }
 
   public async getSubject(): Promise<string | undefined> {
@@ -221,7 +216,9 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
+  public async refreshTokens(
+    refreshToken: string,
+  ): Promise<AuthenticationTokens> {
     try {
       const uid = await this.getUserName()
       if (uid) {
@@ -238,7 +235,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  async getLatestAuthToken(): Promise<string> {
+  public async getLatestAuthToken(): Promise<string> {
     try {
       const idToken = await this.getIdToken()
       const refreshToken = await this.getRefreshToken()
@@ -273,7 +270,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  async globalSignOut(): Promise<void> {
+  public async globalSignOut(): Promise<void> {
     if (!(await this.isSignedIn())) {
       throw new NotSignedInError()
     }
@@ -281,7 +278,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     this.clearAuthenticationTokens()
   }
 
-  async registerWithAuthenticationProvider(
+  public async registerWithAuthenticationProvider(
     authenticationProvider: AuthenticationProvider,
     registrationId?: string,
   ): Promise<string> {
@@ -342,7 +339,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  async signInWithAuthenticationProvider(
+  public async signInWithAuthenticationProvider(
     authenticationProvider: AuthenticationProvider,
   ): Promise<AuthenticationTokens> {
     this.logger.info('Signing in using external authentication provider.')
@@ -368,7 +365,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     return authTokens
   }
 
-  async isRegistered(): Promise<boolean> {
+  public async isRegistered(): Promise<boolean> {
     try {
       const uid = await this.getUserName()
       return uid ? true : false
@@ -377,7 +374,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  async signInWithKey(): Promise<AuthenticationTokens> {
+  public async signInWithKey(): Promise<AuthenticationTokens> {
     this.logger.info('Signing in using private key.')
     const uid = await this.getUserName()
     const userKeyId = await this.keyManager.getString('userKeyId')
@@ -396,13 +393,13 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  async deregister(): Promise<void> {
+  public async deregister(): Promise<void> {
     await this.apiClient.deregister()
     await this.keyManager.reset()
     this.clearAuthenticationTokens()
   }
 
-  async clearAuthenticationTokens(): Promise<void> {
+  public async clearAuthenticationTokens(): Promise<void> {
     await this.keyManager.removeItem(apiKeyNames.idToken)
     await this.keyManager.removeItem(apiKeyNames.accessToken)
     await this.keyManager.removeItem(apiKeyNames.refreshToken)
@@ -415,14 +412,23 @@ export class DefaultSudoUserClient implements SudoUserClient {
     }
   }
 
-  presentSignOutUI(): void {
+  public presentSignOutUI(): void {
     this.authUI?.presentSignOutUI()
   }
 
-  reset(): void {
+  public reset(): void {
     this.keyManager.reset()
     this.apiClient.reset()
     this.clearAuthenticationTokens()
+  }
+
+  private getTokenClaim(token: string, name: string): string | undefined {
+    let claim = undefined
+    const decoded: any = JWT.decode(token, { complete: true })
+    if (decoded) {
+      claim = decoded.payload[name]
+    }
+    return claim
   }
 
   /**
@@ -459,7 +465,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
   private async registerFederatedIdAndRefreshTokens(
     authTokens: AuthenticationTokens,
   ): Promise<AuthenticationTokens> {
-    const identityId = await this.getUserClaim('custom:identityId')
+    const identityId = this.getTokenClaim(
+      authTokens.idToken,
+      'custom:identityId',
+    )
     if (identityId) {
       return authTokens
     } else {

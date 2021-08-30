@@ -64,6 +64,9 @@ const testKey: PrivateKey & KeyPairKey = {
   }).privateKey,
 }
 
+const mockIdToken =
+  'eyJraWQiOiJ3YzlaekU1eDJMT1BvZVV1XC9cL1JPWnZCV3ozbU1Zem15bXJDTFhYTmRvcms9IiwiYWxnIjoiUlMyNTYifQ.eyJjdXN0b206b2dfaWRlbnRpdHlJZCI6InVzLWVhc3QtMTo4MzE3MThmNC00MzFlLTQ0MDgtYjM0Yi02YmM3MWZjNDJmZmIiLCJzdWIiOiIxMzA4MGI0OS1jMjc3LTQ4M2QtOGQ0Zi0yZGVmZGIyNjE0ZDQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9aaVBEVG9GNzMiLCJjb2duaXRvOnVzZXJuYW1lIjoiU3Vkb1VzZXItMGNhZmYzNzEtMjc4Zi00ODE0LWE4NjQtN2NhMTdmYWU2ODg1IiwiY3VzdG9tOnVzZXJUeXBlIjoiVEVTVCIsImF1ZCI6IjEyMHE5MDRtcmE5ZDVsNHBzbXZkYnJnbTQ5IiwiY3VzdG9tOmVudGl0bGVtZW50c1NldCI6ImR1bW15X2VudGl0bGVtZW50c19zZXQiLCJldmVudF9pZCI6Ijg2YzFhZDFkLTMwNDItNDFjMC05OTVmLTQ3ZTM0NWNjMjUxZCIsImN1c3RvbTpvZ19zdWIiOiIxMzA4MGI0OS1jMjc3LTQ4M2QtOGQ0Zi0yZGVmZGIyNjE0ZDQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTYyMjQyNzA5NywiY3VzdG9tOmlkZW50aXR5SWQiOiJ1cy1lYXN0LTE6ODMxNzE4ZjQtNDMxZS00NDA4LWIzNGItNmJjNzFmYzQyZmZiIiwiZXhwIjoxNjIyNDMwNzAyLCJpYXQiOjE2MjI0MjcxMDJ9.WfhwPvhZn9STh4BSMI_w9PIx9YmAKqEyCJYuJ8NDJCfbATtwSt3QRyYILMjx6mY8IYgnEwyfoDu3Lz5-fb2tBCANz4lykW5lzS7-FxCZ2Ba4Ywr89b2cCayp3Aw3dVSHwwPtFu7-odwnHR9tpZd7jHeIVBlKQIn0WLppRTU9H1AIJh8Pq9FS6YK7uIFaOmNZxe_S18HlT8GQJNwqPZk4P8QEVyazKN9fKidO8EcQVrJoCZnJHCPP9hzum7yo2HJWvWhhlN2Si-VnqfCwDG4hpig9NcCUkGbrOYKCpDjCRZhBhcnpec310X8Lf3Qya8wZEFs1IcYHnhdKpfX4A1DYLQ'
+
 function customLaunchUriFunction(url: string): void {
   location.replace(url)
 }
@@ -155,19 +158,26 @@ describe('SudoUserClient', () => {
         refreshToken: 'dummy_refresh_token',
         tokenExpiry: 12345,
       })
+      when(sudoKeyManagerMock.getPassword(userKeyNames.userId)).thenResolve(
+        toArrayBuffer('dummy_username'),
+      )
+      when(
+        identityProviderMock.refreshTokens('dummy_refresh_token'),
+      ).thenResolve({
+        idToken: mockIdToken,
+        accessToken: 'dummy_access_token',
+        refreshToken: 'dummy_refresh_token',
+        tokenExpiry: 12345,
+      })
 
-      try {
-        const authTokens = await userClient.processFederatedSignInTokens(
-          'dummy_url',
-        )
+      const authTokens = await userClient.processFederatedSignInTokens(
+        'dummy_url',
+      )
 
-        expect(authTokens.idToken).toBe('dummy_id_token')
-        expect(authTokens.accessToken).toBe('dummy_access_token')
-        expect(authTokens.refreshToken).toBe('dummy_refresh_token')
-        expect(authTokens.tokenExpiry).toBe(12345)
-      } catch (error) {
-        fail('Should not have thrown an error')
-      }
+      expect(authTokens.idToken).toBe(mockIdToken)
+      expect(authTokens.accessToken).toBe('dummy_access_token')
+      expect(authTokens.refreshToken).toBe('dummy_refresh_token')
+      expect(authTokens.tokenExpiry).toBe(12345)
     })
 
     it('should fail with authentication error', async () => {
@@ -424,8 +434,6 @@ describe('SudoUserClient', () => {
       const authUI = instance(authUIMock)
       userClient.setAuthUI(authUI)
 
-      const idToken =
-        'eyJraWQiOiJ3YzlaekU1eDJMT1BvZVV1XC9cL1JPWnZCV3ozbU1Zem15bXJDTFhYTmRvcms9IiwiYWxnIjoiUlMyNTYifQ.eyJjdXN0b206b2dfaWRlbnRpdHlJZCI6InVzLWVhc3QtMTo4MzE3MThmNC00MzFlLTQ0MDgtYjM0Yi02YmM3MWZjNDJmZmIiLCJzdWIiOiIxMzA4MGI0OS1jMjc3LTQ4M2QtOGQ0Zi0yZGVmZGIyNjE0ZDQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9aaVBEVG9GNzMiLCJjb2duaXRvOnVzZXJuYW1lIjoiU3Vkb1VzZXItMGNhZmYzNzEtMjc4Zi00ODE0LWE4NjQtN2NhMTdmYWU2ODg1IiwiY3VzdG9tOnVzZXJUeXBlIjoiVEVTVCIsImF1ZCI6IjEyMHE5MDRtcmE5ZDVsNHBzbXZkYnJnbTQ5IiwiY3VzdG9tOmVudGl0bGVtZW50c1NldCI6ImR1bW15X2VudGl0bGVtZW50c19zZXQiLCJldmVudF9pZCI6Ijg2YzFhZDFkLTMwNDItNDFjMC05OTVmLTQ3ZTM0NWNjMjUxZCIsImN1c3RvbTpvZ19zdWIiOiIxMzA4MGI0OS1jMjc3LTQ4M2QtOGQ0Zi0yZGVmZGIyNjE0ZDQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTYyMjQyNzA5NywiY3VzdG9tOmlkZW50aXR5SWQiOiJ1cy1lYXN0LTE6ODMxNzE4ZjQtNDMxZS00NDA4LWIzNGItNmJjNzFmYzQyZmZiIiwiZXhwIjoxNjIyNDMwNzAyLCJpYXQiOjE2MjI0MjcxMDJ9.WfhwPvhZn9STh4BSMI_w9PIx9YmAKqEyCJYuJ8NDJCfbATtwSt3QRyYILMjx6mY8IYgnEwyfoDu3Lz5-fb2tBCANz4lykW5lzS7-FxCZ2Ba4Ywr89b2cCayp3Aw3dVSHwwPtFu7-odwnHR9tpZd7jHeIVBlKQIn0WLppRTU9H1AIJh8Pq9FS6YK7uIFaOmNZxe_S18HlT8GQJNwqPZk4P8QEVyazKN9fKidO8EcQVrJoCZnJHCPP9hzum7yo2HJWvWhhlN2Si-VnqfCwDG4hpig9NcCUkGbrOYKCpDjCRZhBhcnpec310X8Lf3Qya8wZEFs1IcYHnhdKpfX4A1DYLQ'
       when(
         identityProviderMock.signInWithToken(
           'dummy_username',
@@ -433,22 +441,24 @@ describe('SudoUserClient', () => {
           'FSSO',
         ),
       ).thenResolve({
-        idToken,
+        idToken: mockIdToken,
         accessToken: 'dummy_access_token',
         refreshToken: 'dummy_refresh_token',
         tokenExpiry: 1,
       })
 
-      when(keyManagerMock.getString(apiKeyNames.idToken)).thenResolve(idToken)
+      when(keyManagerMock.getString(apiKeyNames.idToken)).thenResolve(
+        mockIdToken,
+      )
       when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
-        toArrayBuffer(idToken),
+        toArrayBuffer(mockIdToken),
       )
 
       const tokens = await userClient.signInWithAuthenticationProvider(
         authenticationProvider,
       )
 
-      expect(tokens.idToken).toBe(idToken)
+      expect(tokens.idToken).toBe(mockIdToken)
       expect(tokens.accessToken).toBe('dummy_access_token')
       expect(tokens.refreshToken).toBe('dummy_refresh_token')
       expect(tokens.tokenExpiry).toBe(1)
