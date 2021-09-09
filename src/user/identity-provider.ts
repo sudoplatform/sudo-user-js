@@ -1,5 +1,10 @@
-import AWSCore from 'aws-sdk/lib/core'
-import AWSCognitoIdentityServiceProvider from 'aws-sdk/clients/cognitoidentityserviceprovider'
+import {
+  CognitoIdentityProviderClient,
+  GlobalSignOutCommand,
+  InitiateAuthCommand,
+  RespondToAuthChallengeCommand,
+  SignUpCommand,
+} from '@aws-sdk/client-cognito-identity-provider'
 import { Config } from '../core/sdk-config'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationTokens } from './user-client-interface'
@@ -68,7 +73,7 @@ export interface IdentityProvider {
 }
 
 export class CognitoUserPoolIdentityProvider implements IdentityProvider {
-  private idpService: AWSCognitoIdentityServiceProvider
+  private idpService: CognitoIdentityProviderClient
   private refreshTokenLifetime: number
   private logger: Logger
 
@@ -85,16 +90,9 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
     this.logger = logger
   }
 
-  private initCognitoIdpService(): AWSCognitoIdentityServiceProvider {
-    /** AWS credentials must be supplied to SDK, but are not actually used` */
-    const awsBlankCredentials = {
-      accessKeyId: '',
-      secretAccessKey: '',
-    }
-
-    const idpService = new AWSCognitoIdentityServiceProvider({
+  private initCognitoIdpService(): CognitoIdentityProviderClient {
+    const idpService = new CognitoIdentityProviderClient({
       region: this.config.identityService.region,
-      credentials: new AWSCore.Credentials(awsBlankCredentials),
     })
 
     return idpService
@@ -106,7 +104,8 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
         AccessToken: accessToken,
       }
 
-      this.idpService.globalSignOut(params, (error, data) => {
+      const globalSignOut = new GlobalSignOutCommand(params)
+      this.idpService.send(globalSignOut, (error, data) => {
         if (error) {
           this.logger.error(error.message)
           reject(new SignOutError(error.message))
@@ -123,14 +122,13 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
     validationData: { Name: string; Value: string }[],
   ): Promise<string> {
     try {
-      const response = await this.idpService
-        .signUp({
-          ValidationData: validationData,
-          Username: uid,
-          Password: `@FF57&Z1)123!-${v4()}`,
-          ClientId: this.config.identityService.clientId,
-        })
-        .promise()
+      const signUp = new SignUpCommand({
+        ValidationData: validationData,
+        Username: uid,
+        Password: `@FF57&Z1)123!-${v4()}`,
+        ClientId: this.config.identityService.clientId,
+      })
+      const response = await this.idpService.send(signUp)
 
       if (response.UserConfirmed) {
         this.logger.info('User successfully signed up.', { uid })
@@ -160,15 +158,14 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
     keyId: string,
   ): Promise<AuthenticationTokens> {
     return new Promise(async (resolve, reject) => {
-      const initiateAuthResult = await this.idpService
-        .initiateAuth({
-          ClientId: this.config.identityService.clientId,
-          AuthFlow: 'CUSTOM_AUTH',
-          AuthParameters: {
-            USERNAME: userId,
-          },
-        })
-        .promise()
+      const initiateAuthCommand = new InitiateAuthCommand({
+        ClientId: this.config.identityService.clientId,
+        AuthFlow: 'CUSTOM_AUTH',
+        AuthParameters: {
+          USERNAME: userId,
+        },
+      })
+      const initiateAuthResult = await this.idpService.send(initiateAuthCommand)
 
       const challengeName = initiateAuthResult.ChallengeName
       const session = initiateAuthResult.Session
@@ -192,17 +189,18 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
           exp: Math.floor(+new Date() / 1000) + 300,
         })
 
-        const respondToAuthChallengeResult = await this.idpService
-          .respondToAuthChallenge({
-            Session: session,
-            ClientId: this.config.identityService.clientId,
-            ChallengeName: challengeName,
-            ChallengeResponses: {
-              USERNAME: userId,
-              ANSWER: answer,
-            },
-          })
-          .promise()
+        const respondToAuthChallenge = new RespondToAuthChallengeCommand({
+          Session: session,
+          ClientId: this.config.identityService.clientId,
+          ChallengeName: challengeName,
+          ChallengeResponses: {
+            USERNAME: userId,
+            ANSWER: answer,
+          },
+        })
+        const respondToAuthChallengeResult = await this.idpService.send(
+          respondToAuthChallenge,
+        )
 
         const authResult = respondToAuthChallengeResult.AuthenticationResult
         const idToken = authResult?.IdToken
@@ -234,32 +232,32 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
     type: string,
   ): Promise<AuthenticationTokens> {
     return new Promise(async (resolve, reject) => {
-      const initiateAuthResult = await this.idpService
-        .initiateAuth({
-          ClientId: this.config.identityService.clientId,
-          AuthFlow: 'CUSTOM_AUTH',
-          AuthParameters: {
-            USERNAME: userId,
-          },
-        })
-        .promise()
+      const initiateAuth = new InitiateAuthCommand({
+        ClientId: this.config.identityService.clientId,
+        AuthFlow: 'CUSTOM_AUTH',
+        AuthParameters: {
+          USERNAME: userId,
+        },
+      })
+      const initiateAuthResult = await this.idpService.send(initiateAuth)
 
       const challengeName = initiateAuthResult.ChallengeName
       const session = initiateAuthResult.Session
 
       if (challengeName && session) {
-        const respondToAuthChallengeResult = await this.idpService
-          .respondToAuthChallenge({
-            Session: session,
-            ClientId: this.config.identityService.clientId,
-            ChallengeName: challengeName,
-            ChallengeResponses: {
-              USERNAME: userId,
-              ANSWER: token,
-            },
-            ClientMetadata: { challengeType: type },
-          })
-          .promise()
+        const respondToAuthChallenge = new RespondToAuthChallengeCommand({
+          Session: session,
+          ClientId: this.config.identityService.clientId,
+          ChallengeName: challengeName,
+          ChallengeResponses: {
+            USERNAME: userId,
+            ANSWER: token,
+          },
+          ClientMetadata: { challengeType: type },
+        })
+        const respondToAuthChallengeResult = await this.idpService.send(
+          respondToAuthChallenge,
+        )
 
         const authResult = respondToAuthChallengeResult.AuthenticationResult
         const idToken = authResult?.IdToken
@@ -288,15 +286,14 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
   async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
     return new Promise(async (resolve, reject) => {
       try {
-        const initiateAuthResult = await this.idpService
-          .initiateAuth({
-            ClientId: this.config.identityService.clientId,
-            AuthFlow: 'REFRESH_TOKEN_AUTH',
-            AuthParameters: {
-              REFRESH_TOKEN: refreshToken,
-            },
-          })
-          .promise()
+        const initiateAuth = new InitiateAuthCommand({
+          ClientId: this.config.identityService.clientId,
+          AuthFlow: 'REFRESH_TOKEN_AUTH',
+          AuthParameters: {
+            REFRESH_TOKEN: refreshToken,
+          },
+        })
+        const initiateAuthResult = await this.idpService.send(initiateAuth)
 
         const idToken = initiateAuthResult.AuthenticationResult?.IdToken
         const accessToken = initiateAuthResult.AuthenticationResult?.AccessToken
