@@ -2307,17 +2307,21 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@sudoplatform/sudo-common@^5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-common/-/sudo-common-5.0.2.tgz#f3bb3cf762f96782aa1fcdc05ec4a7d58ff255f1"
-  integrity sha512-k5Ev483gYdRRvI6m1jtSFbe5l7nx2kwGoQ8inPzxM2i00J6ssEnR115EhHC2LNOWgQ/woCMzGD6d4MiWpSrsgQ==
+"@sudoplatform/sudo-common@^5.7.0":
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-common/-/sudo-common-5.7.0.tgz#dba58a8659d3c700c3a9513b24b5cf5f672ecd9f"
+  integrity sha512-FvvGItHYCHru7IkJJ0Bt+rUi6ecQKlieaE8CxoEpcrNkmPHgWLV61MCfOULvWkRVvgNjebx7pMR/9yr4UQVJQw==
   dependencies:
+    apollo-client "^2.6.10"
     browser-bunyan "^1.6.3"
+    fflate "^0.7.1"
 
-"@sudoplatform/sudo-web-crypto-provider@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-web-crypto-provider/-/sudo-web-crypto-provider-1.0.2.tgz#b0d6838721c8e00bd90133e11e8f2293ff2d605a"
-  integrity sha512-3qxauV+mwnQquLKS06a+PQ0mJh0iLHt/RIL6cN7Ap8BAHDFiwZCSXJJzHjW0N6iICDxPvQLfEO4z2FX0YFuZDw==
+"@sudoplatform/sudo-web-crypto-provider@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@sudoplatform/sudo-web-crypto-provider/-/sudo-web-crypto-provider-2.1.0.tgz#d8e095835319c61a902a3b762e97ef4eaf88d761"
+  integrity sha512-czqlUFJJsDD456AY9dsppc+aFYEr4Mr6zHNcKdLMJYoxAv8RD0iUBG6JUAXQNLv8560cA/ykQ0DLNfCmMj328Q==
+  dependencies:
+    tslib "^2.3.1"
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -4508,6 +4512,11 @@ fbjs@^3.0.0:
     promise "^7.1.1"
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.18"
+
+fflate@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.7.1.tgz#56e87e87c3f2fe01b025fbb1c4ea835990c02fa2"
+  integrity sha512-VYM2Xy1gSA5MerKzCnmmuV2XljkpKwgJBKezW+495TTnTCh1x5HcYa1aH8wRU/MfTGhW4ziXqgwprgQUVl3Ohw==
 
 figures@^1.7.0:
   version "1.7.0"
@@ -8144,6 +8153,11 @@ tslib@^2, tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0, tslib@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+
+tslib@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 tslib@~2.0.1:
   version "2.0.3"
