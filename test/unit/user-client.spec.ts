@@ -6,11 +6,12 @@ import { AuthenticationStore } from '../../src/core/auth-store'
 import { mock, instance, when, reset, anyString } from 'ts-mockito'
 import * as JWT from 'jsonwebtoken'
 import { generateKeyPairSync } from 'crypto'
-import { KeyPairKey, PrivateKey } from '../../src/utils/key-pair'
 import { apiKeyNames } from '../../src/core/api-key-names'
 import {
+  AuthenticationError,
   DefaultConfigurationManager,
   DefaultLogger,
+  NotSignedInError,
   SudoKeyManager,
 } from '@sudoplatform/sudo-common'
 import { generateKeyPair } from 'crypto'
@@ -47,22 +48,18 @@ const testConfig = {
   },
 }
 
-const testKey: PrivateKey & KeyPairKey = {
-  kid: 'test',
-  provider: 'provider',
-  type: 'type',
-  privateKey: generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: {
-      format: 'pem',
-      type: 'pkcs1',
-    },
-    privateKeyEncoding: {
-      format: 'pem',
-      type: 'pkcs1',
-    },
-  }).privateKey,
-}
+const privateKey = generateKeyPairSync('rsa', {
+  modulusLength: 2048,
+  publicKeyEncoding: {
+    format: 'pem',
+    type: 'pkcs1',
+  },
+  privateKeyEncoding: {
+    format: 'pem',
+    type: 'pkcs1',
+  },
+}).privateKey
+const kid = 'test'
 
 const mockIdToken =
   'eyJraWQiOiJ3YzlaekU1eDJMT1BvZVV1XC9cL1JPWnZCV3ozbU1Zem15bXJDTFhYTmRvcms9IiwiYWxnIjoiUlMyNTYifQ.eyJjdXN0b206b2dfaWRlbnRpdHlJZCI6InVzLWVhc3QtMTo4MzE3MThmNC00MzFlLTQ0MDgtYjM0Yi02YmM3MWZjNDJmZmIiLCJzdWIiOiIxMzA4MGI0OS1jMjc3LTQ4M2QtOGQ0Zi0yZGVmZGIyNjE0ZDQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9aaVBEVG9GNzMiLCJjb2duaXRvOnVzZXJuYW1lIjoiU3Vkb1VzZXItMGNhZmYzNzEtMjc4Zi00ODE0LWE4NjQtN2NhMTdmYWU2ODg1IiwiY3VzdG9tOnVzZXJUeXBlIjoiVEVTVCIsImF1ZCI6IjEyMHE5MDRtcmE5ZDVsNHBzbXZkYnJnbTQ5IiwiY3VzdG9tOmVudGl0bGVtZW50c1NldCI6ImR1bW15X2VudGl0bGVtZW50c19zZXQiLCJldmVudF9pZCI6Ijg2YzFhZDFkLTMwNDItNDFjMC05OTVmLTQ3ZTM0NWNjMjUxZCIsImN1c3RvbTpvZ19zdWIiOiIxMzA4MGI0OS1jMjc3LTQ4M2QtOGQ0Zi0yZGVmZGIyNjE0ZDQiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTYyMjQyNzA5NywiY3VzdG9tOmlkZW50aXR5SWQiOiJ1cy1lYXN0LTE6ODMxNzE4ZjQtNDMxZS00NDA4LWIzNGItNmJjNzFmYzQyZmZiIiwiZXhwIjoxNjIyNDMwNzAyLCJpYXQiOjE2MjI0MjcxMDJ9.WfhwPvhZn9STh4BSMI_w9PIx9YmAKqEyCJYuJ8NDJCfbATtwSt3QRyYILMjx6mY8IYgnEwyfoDu3Lz5-fb2tBCANz4lykW5lzS7-FxCZ2Ba4Ywr89b2cCayp3Aw3dVSHwwPtFu7-odwnHR9tpZd7jHeIVBlKQIn0WLppRTU9H1AIJh8Pq9FS6YK7uIFaOmNZxe_S18HlT8GQJNwqPZk4P8QEVyazKN9fKidO8EcQVrJoCZnJHCPP9hzum7yo2HJWvWhhlN2Si-VnqfCwDG4hpig9NcCUkGbrOYKCpDjCRZhBhcnpec310X8Lf3Qya8wZEFs1IcYHnhdKpfX4A1DYLQ'
@@ -115,6 +112,10 @@ afterEach((): void => {
 describe('SudoUserClient', () => {
   describe('presentFederatedSignInUI()', () => {
     it('should fail with authentication error - default launchUri - attempt to launch UI with window.open', async () => {
+      if (!config.federatedSignIn) {
+        fail('federatedSignIn unexpectedly falsy')
+      }
+
       const authUI = new CognitoAuthUI(
         authenticationStore,
         config.federatedSignIn,
@@ -123,15 +124,16 @@ describe('SudoUserClient', () => {
       )
       userClient.setAuthUI(authUI)
 
-      try {
-        userClient.presentFederatedSignInUI()
-        fail('Expected error not thrown.')
-      } catch (error) {
-        expect(error.name).toMatch('AuthenticationError')
-      }
+      expect(() => userClient.presentFederatedSignInUI()).toThrowError(
+        AuthenticationError,
+      )
     })
 
     it('should fail with authentication error - custom launchUri - attempt to launch UI with location.replace(url)', async () => {
+      if (!config.federatedSignIn) {
+        fail('federatedSignIn unexpectedly falsy')
+      }
+
       const authUI = new CognitoAuthUI(
         authenticationStore,
         config.federatedSignIn,
@@ -141,12 +143,9 @@ describe('SudoUserClient', () => {
       )
       userClient.setAuthUI(authUI)
 
-      try {
-        userClient.presentFederatedSignInUI()
-        fail('Expected error not thrown.')
-      } catch (error) {
-        expect(error.name).toMatch('AuthenticationError')
-      }
+      expect(() => userClient.presentFederatedSignInUI()).toThrowError(
+        AuthenticationError,
+      )
     })
   })
 
@@ -183,24 +182,21 @@ describe('SudoUserClient', () => {
     it('should fail with authentication error', async () => {
       when(authUIMock.processFederatedSignInTokens('dummy_url')).thenReject()
 
-      try {
-        await userClient.processFederatedSignInTokens('dummy_url')
-        fail('Expected error not thrown.')
-      } catch (error) {
-        expect(error.name).toMatch('AuthenticationError')
-      }
+      await expect(
+        userClient.processFederatedSignInTokens('dummy_url'),
+      ).rejects.toThrowError(AuthenticationError)
     })
   })
 
   describe('getSubject()', () => {
-    const token = JWT.sign({}, testKey.privateKey, {
+    const token = JWT.sign({}, privateKey, {
       jwtid: '123',
       audience: 'testAudience',
       expiresIn: '10s',
       notBefore: '0m',
       subject: 'dummy_sub',
       issuer: 'https://test.sudoplatform.com',
-      header: { alg: 'RS256', kid: testKey.kid },
+      header: { alg: 'RS256', kid },
       algorithm: 'RS256',
     })
 
@@ -249,12 +245,9 @@ describe('SudoUserClient', () => {
       )
       when(identityProviderMock.refreshTokens('refresh_token')).thenReject()
 
-      try {
-        await userClient.refreshTokens('refresh_token')
-        fail('Expected error not thrown.')
-      } catch (error) {
-        expect(error.name).toMatch('AuthenticationError')
-      }
+      await expect(
+        userClient.refreshTokens('refresh_token'),
+      ).rejects.toThrowError(AuthenticationError)
     })
   })
 
@@ -338,17 +331,18 @@ describe('SudoUserClient', () => {
     })
 
     it('should fail if not signed in', async () => {
-      try {
-        await userClient.globalSignOut()
-        fail('Expected error not thrown.')
-      } catch (error) {
-        expect(error.name).toMatch('NotSignedInError')
-      }
+      await expect(userClient.globalSignOut()).rejects.toThrowError(
+        NotSignedInError,
+      )
     })
   })
 
   describe('presentSignOutUI()', () => {
     it('should fail trying to invoke signout url - attempt to launch UI with window.open', async () => {
+      if (!config.federatedSignIn) {
+        fail('federatedSignIn unexpectedly falsy')
+      }
+
       const authUI = new CognitoAuthUI(
         authenticationStore,
         config.federatedSignIn,
@@ -357,12 +351,9 @@ describe('SudoUserClient', () => {
       )
       userClient.setAuthUI(authUI)
 
-      try {
-        userClient.presentSignOutUI()
-        fail('Expected error not thrown.')
-      } catch (error) {
-        expect(error).toBeDefined()
-      }
+      expect(() => userClient.presentSignOutUI()).toThrowError(
+        new Error('window is not defined'),
+      )
     })
   })
 

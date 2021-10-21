@@ -1,6 +1,5 @@
 import {
   AuthenticationError,
-  DefaultConfigurationManager,
   DefaultLogger,
   DefaultSudoKeyManager,
   FatalError,
@@ -20,7 +19,7 @@ import { ApiClient } from '../client/apiClient'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationStore } from '../core/auth-store'
 import { KeyManager, PublicKey } from '../core/key-manager'
-import { Config } from '../core/sdk-config'
+import { Config, getIdentityServiceConfig } from '../core/sdk-config'
 import { AuthUI, CognitoAuthUI } from './auth'
 import { AlreadyRegisteredError } from './error'
 import {
@@ -55,12 +54,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
   constructor(options?: SudoUserOptions) {
     this.logger = options?.logger ?? new DefaultLogger('SudoUser', 'warn')
 
-    this.config =
-      options?.config ??
-      DefaultConfigurationManager.getInstance().bindConfigSet<Config>(
-        Config,
-        undefined,
-      )
+    this.config = options?.config ?? getIdentityServiceConfig()
 
     this.authenticationStore =
       options?.authenticationStore ?? new AuthenticationStore()
@@ -116,9 +110,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
   public presentFederatedSignInUI(): void {
     try {
       this.authUI?.presentFederatedSignInUI()
-    } catch (error) {
+    } catch (err) {
+      const error = err as Error
       this.logger.error('Failed to launch the federated sign in UI.', { error })
-      throw new AuthenticationError(error)
+      throw new AuthenticationError(error.message)
     }
   }
 
@@ -133,11 +128,12 @@ export class DefaultSudoUserClient implements SudoUserClient {
       } else {
         throw new AuthenticationError('Authentication tokens missing.')
       }
-    } catch (error) {
+    } catch (err) {
+      const error = err as Error
       this.logger.error('Failed to process the federated sign in redirect.', {
         error,
       })
-      throw new AuthenticationError(error)
+      throw new AuthenticationError(error.message)
     }
   }
 
@@ -230,8 +226,9 @@ export class DefaultSudoUserClient implements SudoUserClient {
       } else {
         throw new NotRegisteredError('Not registered.')
       }
-    } catch (error) {
-      throw new AuthenticationError(error)
+    } catch (err) {
+      const error = err as Error
+      throw new AuthenticationError(error.message)
     }
   }
 
@@ -249,10 +246,9 @@ export class DefaultSudoUserClient implements SudoUserClient {
             const authTokens = await this.refreshTokens(refreshToken)
             return authTokens.idToken
           } catch (error) {
-            this.logger.info(
-              'getLatestAuthToken: Token refresh failed',
-              error.message,
-            )
+            this.logger.info('getLatestAuthToken: Token refresh failed', {
+              error,
+            })
             // return an empty id token
             return ''
           }

@@ -7,4 +7,4 @@ export {
   AuthenticationProvider,
 } from './user/auth-provider'
 
-export { AlreadyRegisteredError } from './user/error'
+export * from './user/error'

@@ -19,6 +19,7 @@ import {
   NotAuthorizedError,
 } from '@sudoplatform/sudo-common'
 import { SudoUserClient } from '../user/user-client-interface'
+import { ApolloError } from 'apollo-client'
 
 /**
  * AppSync wrapper to use to invoke Identity Service APIs.
@@ -64,7 +65,8 @@ export class ApiClient {
         fetchPolicy: 'no-cache',
       })
     } catch (err) {
-      const error = err.graphQLErrors?.[0]
+      const apolloError = err as ApolloError
+      const error = apolloError.graphQLErrors?.[0]
       if (error) {
         throw this.graphQLErrorsToClientError(error)
       } else {
@@ -96,7 +98,8 @@ export class ApiClient {
         fetchPolicy: 'no-cache',
       })
     } catch (err) {
-      const error = err.graphQLErrors?.[0]
+      const apolloError = err as ApolloError
+      const error = apolloError.graphQLErrors?.[0]
       if (error) {
         throw this.graphQLErrorsToClientError(error)
       } else {
@@ -127,7 +130,8 @@ export class ApiClient {
         fetchPolicy: 'no-cache',
       })
     } catch (err) {
-      const error = err.graphQLErrors?.[0]
+      const apolloError = err as ApolloError
+      const error = apolloError.graphQLErrors?.[0]
       if (error) {
         throw this.graphQLErrorsToClientError(error)
       } else {

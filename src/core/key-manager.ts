@@ -64,7 +64,8 @@ export class KeyManager implements KeyManager {
     try {
       return new TextDecoder('utf-8', { fatal: true }).decode(passwordBuffer)
     } catch (err) {
-      throw new DecodeError(err.message)
+      const error = err as Error
+      throw new DecodeError(error.message)
     }
   }
 

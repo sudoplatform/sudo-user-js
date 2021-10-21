@@ -43,6 +43,8 @@ export interface AuthUI {
   presentSignOutUI(): void
 }
 
+export const DefaultRefreshTokenLifetime = 60
+
 export class CognitoAuthUI implements AuthUI, Subscriber {
   private auth: CognitoAuth
   private tokensRefreshedPromise?: ResolvablePromise<AuthenticationDetails>
@@ -60,7 +62,8 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
     this.auth = this.initCognitoAuthSDK()
 
     const refreshTokenLifetime = this.federatedSignInConfig.refreshTokenLifetime
-    this.refreshTokenLifetime = refreshTokenLifetime ?? 60
+    this.refreshTokenLifetime =
+      refreshTokenLifetime ?? DefaultRefreshTokenLifetime
     this.logger = logger
   }
 

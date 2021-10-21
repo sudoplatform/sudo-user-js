@@ -137,7 +137,8 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
         throw new UserNotConfirmedError()
       }
     } catch (err) {
-      const errorMsg = err.message
+      const error = err as Error
+      const errorMsg = error.message
       if (errorMsg.includes('sudoplatform.ServiceError')) {
         throw new ServiceError(errorMsg)
       } else if (
@@ -311,8 +312,9 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
         } else {
           reject(new AuthenticationError('Authentication tokens not found.'))
         }
-      } catch (error) {
-        reject(new AuthenticationError(error))
+      } catch (err) {
+        const error = err as Error
+        reject(new AuthenticationError(error.message))
       }
     })
   }

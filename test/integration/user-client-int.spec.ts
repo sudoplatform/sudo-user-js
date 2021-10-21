@@ -1,13 +1,19 @@
-import { DefaultConfigurationManager } from '@sudoplatform/sudo-common'
+import {
+  AuthenticationError,
+  DefaultConfigurationManager,
+  NotAuthorizedError,
+} from '@sudoplatform/sudo-common'
 import { existsSync, readFileSync } from 'fs'
 import { v4 } from 'uuid'
-import privateKeyParam from '../../config/register_key.json'
-import config from '../../config/sudoplatformconfig.json'
 import {
   LocalAuthenticationProvider,
   TESTAuthenticationProvider,
 } from '../../src/user/auth-provider'
+import { AlreadyRegisteredError } from '../../src/user/error'
 import { DefaultSudoUserClient } from '../../src/user/user-client'
+import fs from 'fs'
+import { Config } from '../../src/core/sdk-config'
+import { DefaultRefreshTokenLifetime } from '../../src/user/auth'
 
 const globalAny: any = global
 globalAny.crypto = require('isomorphic-webcrypto')
@@ -17,26 +23,41 @@ require('isomorphic-fetch')
 process.env.LOG_LEVEL = 'info'
 process.env.PROJECT_NAME = 'SudoUser'
 
-DefaultConfigurationManager.getInstance().setConfig(JSON.stringify(config))
+const registerPrivateKey = fs
+  .readFileSync(`${__dirname}/../../config/register_key.private`)
+  .toString('utf-8')
+  .trim()
+
+const registerKeyId = fs
+  .readFileSync(`${__dirname}/../../config/register_key.id`)
+  .toString('utf-8')
+  .trim()
+
+const configFileContents = fs
+  .readFileSync(`${__dirname}/../../config/sudoplatformconfig.json`)
+  .toString('utf-8')
+  .trim()
+
+DefaultConfigurationManager.getInstance().setConfig(configFileContents)
+const config = DefaultConfigurationManager.getInstance().bindConfigSet(
+  Config,
+  undefined,
+) as Config
+
 const userClient = new DefaultSudoUserClient({})
 
-const refreshTokenLifetime: number = config.identityService.refreshTokenLifetime
+const refreshTokenLifetime =
+  config.identityService.refreshTokenLifetime ?? DefaultRefreshTokenLifetime
 
 afterEach(async () => {
   await userClient.sudoKeyManager.removeAllKeys()
 })
 
 async function registerAndSignIn() {
-  // Register
-  const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
-  const params: [1] = privateKeyJson['Parameters']
-  const param = JSON.parse(JSON.stringify(params[0]))
-  const privateKey = param.Value
-
   const testAuthenticationProvider = new TESTAuthenticationProvider(
     'SudoUser',
-    privateKey,
-    'register_key',
+    registerPrivateKey,
+    registerKeyId,
     { 'custom:entitlementsSet': 'dummy_entitlements_set' },
   )
 
@@ -57,10 +78,10 @@ async function registerAndSignIn() {
   const refreshTokenExpiry = await userClient.getRefreshTokenExpiry()
 
   expect(refreshTokenExpiry).toBeDefined()
-  expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
+  expect(refreshTokenExpiry?.getTime()).toBeGreaterThan(
     new Date().getTime() + refreshTokenLifetime * 24 * 60 * 60 * 1000 - 10000,
   )
-  expect(refreshTokenExpiry.getTime()).toBeLessThan(
+  expect(refreshTokenExpiry?.getTime()).toBeLessThan(
     new Date().getTime() + refreshTokenLifetime * 24 * 60 * 60 * 1000 + 10000,
   )
 
@@ -75,15 +96,10 @@ describe('SudoUserClient', () => {
   describe('testRegister()', () => {
     it('should complete successfully', async () => {
       // Register
-      const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
-      const params: [1] = privateKeyJson['Parameters']
-      const param = JSON.parse(JSON.stringify(params[0]))
-      const privateKey = param.Value
-
       const testAuthenticationProvider = new TESTAuthenticationProvider(
         'SudoUser',
-        privateKey,
-        'register_key',
+        registerPrivateKey,
+        registerKeyId,
         { 'custom:entitlementsSet': 'dummy_entitlements_set' },
       )
 
@@ -104,12 +120,12 @@ describe('SudoUserClient', () => {
       const refreshTokenExpiry = await userClient.getRefreshTokenExpiry()
 
       expect(refreshTokenExpiry).toBeDefined()
-      expect(refreshTokenExpiry.getTime()).toBeGreaterThan(
+      expect(refreshTokenExpiry?.getTime()).toBeGreaterThan(
         new Date().getTime() +
           refreshTokenLifetime * 24 * 60 * 60 * 1000 -
           10000,
       )
-      expect(refreshTokenExpiry.getTime()).toBeLessThan(
+      expect(refreshTokenExpiry?.getTime()).toBeLessThan(
         new Date().getTime() +
           refreshTokenLifetime * 24 * 60 * 60 * 1000 +
           10000,
@@ -136,14 +152,10 @@ describe('SudoUserClient', () => {
   describe('testRegisterAndClearAuthTokens()', () => {
     it('should complete successfully', async () => {
       // Register
-      const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
-      const params: [1] = privateKeyJson['Parameters']
-      const param = JSON.parse(JSON.stringify(params[0]))
-      const privateKey = param.Value
-
       const testAuthenticationProvider = new TESTAuthenticationProvider(
         'SudoUser',
-        privateKey,
+        registerPrivateKey,
+        registerKeyId,
       )
 
       await userClient.registerWithAuthenticationProvider(
@@ -181,26 +193,18 @@ describe('SudoUserClient', () => {
   describe('testRegisterInvalidKeyId()', () => {
     it('should fail with test registration error', async () => {
       // Register
-      const privateKeyJson = JSON.parse(JSON.stringify(privateKeyParam))
-      const params: [1] = privateKeyJson['Parameters']
-      const param = JSON.parse(JSON.stringify(params[0]))
-      const privateKey = param.Value
-
       const testAuthenticationProvider = new TESTAuthenticationProvider(
         'SudoUser',
-        privateKey,
+        registerPrivateKey,
         'invalid_key_id',
       )
 
-      try {
-        await userClient.registerWithAuthenticationProvider(
+      await expect(
+        userClient.registerWithAuthenticationProvider(
           testAuthenticationProvider,
           'dummy_rid',
-        )
-        fail('Expected error not thrown.')
-      } catch (err) {
-        expect(err.name).toMatch('NotAuthorizedError')
-      }
+        ),
+      ).rejects.toThrow(NotAuthorizedError)
 
       // Reset the client internal state
       userClient.reset()
@@ -212,9 +216,11 @@ describe('SudoUserClient', () => {
       await registerAndSignIn()
 
       // Refresh the tokens
-      const refreshedTokens = await userClient.refreshTokens(
-        await userClient.getRefreshToken(),
-      )
+      const refreshToken = await userClient.getRefreshToken()
+      if (!refreshToken) {
+        fail('refreshToken undefined')
+      }
+      const refreshedTokens = await userClient.refreshTokens(refreshToken)
       const refreshedIdToken = await userClient.getIdToken()
       expect(refreshedIdToken).toBe(refreshedTokens.idToken)
 
@@ -231,12 +237,9 @@ describe('SudoUserClient', () => {
       await registerAndSignIn()
 
       // Refresh the tokens
-      try {
-        await userClient.refreshTokens('invalid_token')
-        fail('Expected error not thrown.')
-      } catch (error) {
-        expect(error.name).toMatch('AuthenticationError')
-      }
+      await expect(
+        userClient.refreshTokens('invalid_token'),
+      ).rejects.toThrowError(AuthenticationError)
 
       // Deregister
       await userClient.deregister()
@@ -273,15 +276,12 @@ describe('SudoUserClient', () => {
         await expect(userClient.isRegistered()).resolves.toBeTruthy()
         expect(uid).toBe(username)
 
-        try {
-          await userClient.registerWithAuthenticationProvider(
+        await expect(
+          userClient.registerWithAuthenticationProvider(
             authenticationProvider,
             'dummy_rid',
-          )
-          fail('Expected error not thrown.')
-        } catch (err) {
-          expect(err.name).toMatch('AlreadyRegisteredError')
-        }
+          ),
+        ).rejects.toThrowError(AlreadyRegisteredError)
 
         await userClient.signInWithAuthenticationProvider(
           authenticationProvider,
