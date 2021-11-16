@@ -20,6 +20,18 @@ globalAny.crypto = require('isomorphic-webcrypto')
 globalAny.WebSocket = require('ws')
 require('isomorphic-fetch')
 
+if (typeof btoa === 'undefined') {
+  global.btoa = function (b) {
+    return Buffer.from(b, 'binary').toString('base64')
+  }
+}
+
+if (typeof atob === 'undefined') {
+  global.atob = function (a) {
+    return Buffer.from(a, 'base64').toString('binary')
+  }
+}
+
 process.env.LOG_LEVEL = 'info'
 process.env.PROJECT_NAME = 'SudoUser'
 
