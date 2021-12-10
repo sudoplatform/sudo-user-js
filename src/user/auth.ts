@@ -74,7 +74,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
       IdentityProvider: this.federatedSignInConfig.identityProvider,
       RedirectUriSignIn: this.federatedSignInConfig.signInRedirectUri,
       RedirectUriSignOut: this.federatedSignInConfig.signOutRedirectUri,
-      TokenScopesArray: ['openid', 'aws.cognito.signin.user.admin'],
+      TokenScopesArray: ['openid'],
       Storage: this.authenticationStore,
       LaunchUri: this.launchUriFn,
     }
