@@ -3,6 +3,7 @@ import {
   GlobalSignOutCommand,
   InitiateAuthCommand,
   RespondToAuthChallengeCommand,
+  RevokeTokenCommand,
   SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { Config } from '../core/sdk-config'
@@ -70,6 +71,13 @@ export interface IdentityProvider {
    * @return Successful authentication result AuthenticationTokens containing refreshed tokens
    */
   refreshTokens(refreshToken: string): Promise<AuthenticationTokens>
+
+  /**
+   * Signs out the user from this device.
+   *
+   * @param refreshToken refresh token to revoke to sign out this device.
+   */
+  signOut(refreshToken: string): Promise<void>
 }
 
 export class CognitoUserPoolIdentityProvider implements IdentityProvider {
@@ -316,6 +324,26 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
         const error = err as Error
         reject(new AuthenticationError(error.message))
       }
+    })
+  }
+
+  async signOut(refreshToken: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const params = {
+        Token: refreshToken,
+        ClientId: this.config.identityService.clientId,
+      }
+
+      const revokeToken = new RevokeTokenCommand(params)
+      this.idpService.send(revokeToken, (error, data) => {
+        if (error) {
+          this.logger.error(error.message)
+          reject(new SignOutError(error.message))
+        } else {
+          this.logger.info('User successfully signed out.', { data })
+          resolve()
+        }
+      })
     })
   }
 

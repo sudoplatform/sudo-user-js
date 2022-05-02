@@ -318,6 +318,20 @@ describe('SudoUserClient', () => {
     }
   })
 
+  describe('signOut()', () => {
+    it('should complete successfully', async () => {
+      await registerAndSignIn()
+      const refreshToken = await userClient.getRefreshToken()
+      if (!refreshToken) {
+        fail('Refresh token not found.')
+      }
+      await userClient.signOut()
+      await expect(userClient.refreshTokens(refreshToken)).rejects.toThrowError(
+        AuthenticationError,
+      )
+    }, 30000)
+  })
+
   describe('globalSignOut()', () => {
     it('should complete successfully', async () => {
       await registerAndSignIn()

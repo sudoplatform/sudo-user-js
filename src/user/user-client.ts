@@ -3,6 +3,7 @@ import {
   DefaultLogger,
   DefaultSudoKeyManager,
   FatalError,
+  KeyNotFoundError,
   Logger,
   NotAuthorizedError,
   NotRegisteredError,
@@ -263,6 +264,24 @@ export class DefaultSudoUserClient implements SudoUserClient {
       // which would indicate that the client is likely not signed in.
       // Return an empty id token.
       return ''
+    }
+  }
+
+  public async signOut(): Promise<void> {
+    let refreshToken: string | undefined
+    try {
+      refreshToken = await this.getRefreshToken()
+    } catch (err) {
+      if (err instanceof KeyNotFoundError) {
+        throw new NotSignedInError()
+      } else {
+        throw err
+      }
+    }
+    if (refreshToken) {
+      await this.identityProvider.signOut(refreshToken)
+    } else {
+      throw new NotSignedInError()
     }
   }
 

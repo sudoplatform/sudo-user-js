@@ -303,6 +303,22 @@ describe('SudoUserClient', () => {
     })
   })
 
+  describe('signOut()', () => {
+    it('should complete successfully', async () => {
+      let isSignedOut = false
+      when(
+        sudoKeyManagerMock.getPassword(apiKeyNames.refreshToken),
+      ).thenResolve(toArrayBuffer('dummy_refresh_token'))
+      await userClient.signOut()
+      isSignedOut = true
+      expect(isSignedOut).toBeTruthy()
+    })
+
+    it('should fail if not signed in', async () => {
+      await expect(userClient.signOut()).rejects.toThrowError(NotSignedInError)
+    })
+  })
+
   describe('globalSignOut()', () => {
     it('should complete successfully', async () => {
       let isSignedOut = false

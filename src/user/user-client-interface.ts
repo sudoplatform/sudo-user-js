@@ -110,6 +110,10 @@ export interface SudoUserClient {
    */
   getUserClaim(name: string): Promise<any | undefined>
   /**
+   * Signs out the user from this device.
+   */
+  signOut(): Promise<void>
+  /**
    * Signs out the user from all devices.
    */
   globalSignOut(): Promise<void>
