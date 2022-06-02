@@ -5,6 +5,5 @@ config
 docs
 lib
 node_modules
-src/gen
 yarn-error.log
 build/
