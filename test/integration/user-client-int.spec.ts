@@ -16,7 +16,8 @@ import { Config } from '../../src/core/sdk-config'
 import { DefaultRefreshTokenLifetime } from '../../src/user/auth'
 
 const globalAny: any = global
-globalAny.crypto = require('isomorphic-webcrypto')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+global.crypto = require('crypto').webcrypto
 globalAny.WebSocket = require('ws')
 require('isomorphic-fetch')
 
