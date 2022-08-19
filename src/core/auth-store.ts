@@ -19,7 +19,6 @@ export interface Store {
  */
 export class AuthenticationStore implements Store, Publisher {
   /** Do not expose these directly */
-  // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
   #secrets: Record<string, Secret> = {}
   subscribers: Subscriber[] = []
 
