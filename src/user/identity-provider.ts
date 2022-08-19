@@ -106,23 +106,18 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
     return idpService
   }
 
-  public async globalSignOut(accessToken: string): Promise<void> {
-    return new Promise((resolve, reject) => {
+  async globalSignOut(accessToken: string): Promise<void> {
+    try {
       const params = {
         AccessToken: accessToken,
       }
-
       const globalSignOut = new GlobalSignOutCommand(params)
-      this.idpService.send(globalSignOut, (error, data) => {
-        if (error) {
-          this.logger.error(error.message)
-          reject(new SignOutError(error.message))
-        } else {
-          this.logger.info('User successfully signed out.', { data })
-          resolve()
-        }
-      })
-    })
+      const response = await this.idpService.send(globalSignOut)
+      this.logger.info('User successfully signed out.', { response })
+    } catch (err) {
+      const error = err as Error
+      throw new SignOutError(error.message)
+    }
   }
 
   async register(
@@ -166,7 +161,7 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
     userId: string,
     keyId: string,
   ): Promise<AuthenticationTokens> {
-    return new Promise(async (resolve, reject) => {
+    try {
       const initiateAuthCommand = new InitiateAuthCommand({
         ClientId: this.config.identityService.clientId,
         AuthFlow: 'CUSTOM_AUTH',
@@ -225,14 +220,17 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
             tokenExpiry: tokenExpiry,
           }
           await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
-          resolve(authTokens)
+          return authTokens
         } else {
-          reject(new AuthenticationError('Authentication tokens not found.'))
+          throw new AuthenticationError('Authentication tokens not found.')
         }
       } else {
-        reject(new AuthenticationError('Invalid initiate auth result.'))
+        throw new AuthenticationError('Invalid initiate auth result.')
       }
-    })
+    } catch (err) {
+      const error = err as Error
+      throw new AuthenticationError(error.message)
+    }
   }
 
   async signInWithToken(
@@ -240,7 +238,7 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
     token: string,
     type: string,
   ): Promise<AuthenticationTokens> {
-    return new Promise(async (resolve, reject) => {
+    try {
       const initiateAuth = new InitiateAuthCommand({
         ClientId: this.config.identityService.clientId,
         AuthFlow: 'CUSTOM_AUTH',
@@ -282,69 +280,66 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
             tokenExpiry: tokenExpiry,
           }
           await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
-          resolve(authTokens)
+          return authTokens
         } else {
-          reject(new AuthenticationError('Authentication tokens not found.'))
+          throw new AuthenticationError('Authentication tokens not found.')
         }
       } else {
-        reject(new AuthenticationError('Invalid initiate auth result.'))
+        throw new AuthenticationError('Invalid initiate auth result.')
       }
-    })
+    } catch (err) {
+      const error = err as Error
+      throw new AuthenticationError(error.message)
+    }
   }
 
   async refreshTokens(refreshToken: string): Promise<AuthenticationTokens> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const initiateAuth = new InitiateAuthCommand({
-          ClientId: this.config.identityService.clientId,
-          AuthFlow: 'REFRESH_TOKEN_AUTH',
-          AuthParameters: {
-            REFRESH_TOKEN: refreshToken,
-          },
-        })
-        const initiateAuthResult = await this.idpService.send(initiateAuth)
+    try {
+      const initiateAuth = new InitiateAuthCommand({
+        ClientId: this.config.identityService.clientId,
+        AuthFlow: 'REFRESH_TOKEN_AUTH',
+        AuthParameters: {
+          REFRESH_TOKEN: refreshToken,
+        },
+      })
+      const initiateAuthResult = await this.idpService.send(initiateAuth)
 
-        const idToken = initiateAuthResult.AuthenticationResult?.IdToken
-        const accessToken = initiateAuthResult.AuthenticationResult?.AccessToken
-        const tokenExpiry = initiateAuthResult.AuthenticationResult?.ExpiresIn
+      const idToken = initiateAuthResult.AuthenticationResult?.IdToken
+      const accessToken = initiateAuthResult.AuthenticationResult?.AccessToken
+      const tokenExpiry = initiateAuthResult.AuthenticationResult?.ExpiresIn
 
-        if (idToken && accessToken && tokenExpiry) {
-          const authTokens = {
-            idToken: idToken,
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            tokenExpiry: tokenExpiry,
-          }
-          await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
-          resolve(authTokens)
-        } else {
-          reject(new AuthenticationError('Authentication tokens not found.'))
+      if (idToken && accessToken && tokenExpiry) {
+        const authTokens = {
+          idToken: idToken,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          tokenExpiry: tokenExpiry,
         }
-      } catch (err) {
-        const error = err as Error
-        reject(new AuthenticationError(error.message))
+        await this.storeRefreshTokenLifetime(this.refreshTokenLifetime)
+        return authTokens
+      } else {
+        throw new AuthenticationError('Authentication tokens not found.')
       }
-    })
+    } catch (err) {
+      const error = err as Error
+      throw new AuthenticationError(error.message)
+    }
   }
 
   async signOut(refreshToken: string): Promise<void> {
-    return new Promise((resolve, reject) => {
+    try {
       const params = {
         Token: refreshToken,
         ClientId: this.config.identityService.clientId,
       }
-
       const revokeToken = new RevokeTokenCommand(params)
-      this.idpService.send(revokeToken, (error, data) => {
-        if (error) {
-          this.logger.error(error.message)
-          reject(new SignOutError(error.message))
-        } else {
-          this.logger.info('User successfully signed out.', { data })
-          resolve()
-        }
-      })
-    })
+      const response = await this.idpService.send(revokeToken)
+      this.logger.info('User successfully signed out.', { response })
+    } catch (err) {
+      const error = err as Error
+      this.logger.error(error.message)
+      throw new SignOutError(error.message)
+    }
   }
 
   private async storeRefreshTokenLifetime(

@@ -3,7 +3,8 @@
 yalc.lock
 config
 docs
-lib
+lib/
+cjs/
 node_modules
 yarn-error.log
 build/

@@ -472,4 +472,43 @@ describe('SudoUserClient', () => {
       expect(await userClient.getUserClaim('custom:identityId')).toBeTruthy()
     })
   })
+
+  describe('disabledUser()', () => {
+    it('signInWithToken should fail due to user being disabled', async () => {
+      const keyPair = await generateKeyPairAsync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: {
+          format: 'pem',
+          type: 'pkcs1',
+        },
+        privateKeyEncoding: {
+          format: 'pem',
+          type: 'pkcs1',
+        },
+      })
+
+      const authenticationProvider = new LocalAuthenticationProvider(
+        'client_system_test_iss',
+        keyPair.privateKey,
+        'dummy_key_id',
+        'disabled_username',
+      )
+
+      const authInfo = await authenticationProvider.getAuthenticationInfo()
+      expect(authInfo.isValid()).toBeTruthy()
+      expect(authInfo.getUsername()).toBe('disabled_username')
+
+      when(
+        identityProviderMock.signInWithToken(
+          'disabled_username',
+          anyString(),
+          anyString(),
+        ),
+      ).thenReject(new AuthenticationError('User disabled')) // reject due to user disabled error being returned from Cognito
+
+      await expect(
+        userClient.signInWithAuthenticationProvider(authenticationProvider),
+      ).rejects.toThrowError(AuthenticationError)
+    })
+  })
 })
