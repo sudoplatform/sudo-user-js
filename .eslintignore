@@ -3,4 +3,5 @@ lib
 document
 gen
 graphql
+cjs
 

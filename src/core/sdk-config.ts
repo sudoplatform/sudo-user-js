@@ -2,8 +2,10 @@ import { DefaultConfigurationManager } from '@sudoplatform/sudo-common'
 import * as t from 'io-ts'
 import { IdentityServiceConfigNotFoundError } from '../user/error'
 
+// eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
 export const IdentityServiceConfigCodec = t.intersection(
   [
+    // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
     t.type({
       region: t.string,
       poolId: t.string,
@@ -13,8 +15,10 @@ export const IdentityServiceConfigCodec = t.intersection(
       apiKey: t.string,
       bucket: t.string,
       transientBucket: t.string,
+      // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
       registrationMethods: t.array(t.string),
     }),
+    // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
     t.partial({
       refreshTokenLifetime: t.number,
     }),
@@ -22,14 +26,17 @@ export const IdentityServiceConfigCodec = t.intersection(
   'IdentityServiceConfig',
 )
 
+// eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
 export const FederatedSignInConfigCodec = t.intersection(
   [
+    // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
     t.type({
       appClientId: t.string,
       signInRedirectUri: t.string,
       signOutRedirectUri: t.string,
       webDomain: t.string,
     }),
+    // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
     t.partial({
       identityProvider: t.string,
       refreshTokenLifetime: t.number,
@@ -38,10 +45,13 @@ export const FederatedSignInConfigCodec = t.intersection(
   'FederatedSignInConfig',
 )
 
+// eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
 export const Config = t.intersection([
+  // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
   t.type({
     identityService: IdentityServiceConfigCodec,
   }),
+  // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
   t.partial({
     federatedSignIn: FederatedSignInConfigCodec,
   }),

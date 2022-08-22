@@ -2,17 +2,15 @@
   "preset": "ts-jest",
   "testEnvironment": "node",
   "testMatch": ["<rootDir>/test/**/*.spec.ts"],
-  "testPathIgnorePatterns": ["/node_modules/", "/lib/"],
+  "testPathIgnorePatterns": ["/node_modules/", "/lib/", "/cjs/"],
   "clearMocks": true,
   "collectCoverageFrom": ["src/**/*.ts", "!**/*.d.ts", "!node_modules/**"],
   "coverageReporters": ["text", "json-summary"],
   "coverageDirectory": "<rootDir>/build/coverage",
-  "coverageThreshold": {
-    "global": {
-      "statements": 34,
-      "branches": 0,
-      "functions": 37,
-      "lines": 34
+  "transformIgnorePatterns": ["/node_modules/(?!(\\@aws-sdk)/)"],
+  "globals": {
+    "ts-jest": {
+      "tsconfig": "tsconfig.test.json"
     }
   }
 }
