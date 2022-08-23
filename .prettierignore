@@ -3,6 +3,7 @@ coverage/
 node_modules/
 docs/
 lib/
+types/
 typings/
 .yarn/
 .vscode/

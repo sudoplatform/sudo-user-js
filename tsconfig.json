@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
+    "declaration": false,
     "downlevelIteration": true,
     "esModuleInterop": true,
     "importHelpers": true,
@@ -14,8 +14,8 @@
     "sourceMap": true,
     "strict": true,
     "target": "ES2020",
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "types"],
+  "exclude": ["node_modules", "typings"],
 }

@@ -1,10 +1,12 @@
 .cache
 .yalc
+.npmrc
 yalc.lock
 config
 docs
 lib/
 cjs/
+types/
 node_modules
 yarn-error.log
 build/
