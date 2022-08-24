@@ -8,3 +8,9 @@ export {
 } from './user/auth-provider'
 
 export * from './user/error'
+
+/*
+ * Private interfaces for support for other Sudo Platform
+ * SDKs.
+ */
+export * as internal from './core/sdk-config'
