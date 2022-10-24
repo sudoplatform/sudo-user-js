@@ -170,6 +170,12 @@ export interface SudoUserClient {
   reset(): void
 
   /**
+   * De-registers the user associated with this client. The user must
+   * be signed in.
+   */
+  deregister(): Promise<void>
+
+  /**
    * Getter to retrieve the SudoKeyManager
    */
   readonly sudoKeyManager: SudoKeyManager
