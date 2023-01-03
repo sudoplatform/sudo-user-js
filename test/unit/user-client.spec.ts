@@ -4,7 +4,11 @@ import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { Config } from '../../src/core/sdk-config'
 import { AuthenticationStore } from '../../src/core/auth-store'
 import { mock, instance, when, reset, anyString } from 'ts-mockito'
-import * as JWT from 'jsonwebtoken'
+import {
+  decode as jwtDecode,
+  sign as jwtSign,
+  verify as jwtVerify,
+} from 'jsonwebtoken'
 import { generateKeyPairSync } from 'crypto'
 import { apiKeyNames } from '../../src/core/api-key-names'
 import {
@@ -189,7 +193,7 @@ describe('SudoUserClient', () => {
   })
 
   describe('getSubject()', () => {
-    const token = JWT.sign({}, privateKey, {
+    const token = jwtSign({}, privateKey, {
       jwtid: '123',
       audience: 'testAudience',
       expiresIn: '10s',
@@ -425,10 +429,10 @@ describe('SudoUserClient', () => {
 
       const token = authInfo.encode()
 
-      const decoded: any = JWT.decode(token, { complete: true })
+      const decoded: any = jwtDecode(token, { complete: true })
       expect(decoded.header['kid']).toBe('dummy_key_id')
 
-      const verified: any = JWT.verify(token, keyPair.publicKey, {
+      const verified: any = jwtVerify(token, keyPair.publicKey, {
         issuer: 'client_system_test_iss',
         audience: 'identity-service',
         subject: 'dummy_username',

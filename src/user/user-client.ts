@@ -13,7 +13,7 @@ import {
   SudoKeyManager,
 } from '@sudoplatform/sudo-common'
 import { WebSudoCryptoProvider } from '@sudoplatform/sudo-web-crypto-provider'
-import * as JWT from 'jsonwebtoken'
+import { decode as jwtDecode } from 'jsonwebtoken'
 import { v4 } from 'uuid'
 import { AuthenticationProvider } from '..'
 import { ApiClient } from '../client/apiClient'
@@ -156,7 +156,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
   }
 
   public async getRefreshTokenExpiry(): Promise<Date | undefined> {
-    let expiry = undefined
+    let expiry: Date | undefined = undefined
     const timeSinceEpoch = await this.keyManager.getString(
       apiKeyNames.refreshTokenExpiry,
     )
@@ -309,7 +309,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
       }
 
       const token = authInfo.encode()
-      const jwt: any = JWT.decode(token, { complete: true })
+      const jwt: any = jwtDecode(token, { complete: true })
       let uid
       if (jwt && jwt.payload['sub']) {
         uid = jwt.payload['sub']
@@ -439,7 +439,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   private getTokenClaim(token: string, name: string): string | undefined {
     let claim = undefined
-    const decoded: any = JWT.decode(token, { complete: true })
+    const decoded: any = jwtDecode(token, { complete: true })
     if (decoded) {
       claim = decoded.payload[name]
     }
@@ -470,7 +470,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
       apiKeyNames.refreshToken,
       authTokens.refreshToken,
     )
-    const decoded: any = JWT.decode(authTokens.idToken, { complete: true })
+    const decoded: any = jwtDecode(authTokens.idToken, { complete: true })
     if (decoded) {
       const tokenExpiry = decoded.payload['exp']
       await this.keyManager.addString(apiKeyNames.tokenExpiry, tokenExpiry)

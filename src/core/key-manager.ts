@@ -4,8 +4,8 @@ import {
   PublicKeyFormat,
   SudoKeyManager,
 } from '@sudoplatform/sudo-common'
-import JWT from 'jsonwebtoken'
 import * as uuid from 'uuid'
+import { sign as jwtSign } from 'jsonwebtoken'
 import { cryptoProvider } from '../runtimes/node/node-crypto'
 
 export interface PublicKey {
@@ -103,7 +103,7 @@ export class KeyManager implements KeyManager {
     //PEM encode private key
     const signingKey = `-----BEGIN PRIVATE KEY-----\n${base64encoded}\n-----END PRIVATE KEY-----`
 
-    return JWT.sign(payload, signingKey, {
+    return jwtSign(payload, signingKey, {
       algorithm: 'RS256',
       keyid: keyId,
     })

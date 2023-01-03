@@ -1,5 +1,5 @@
-import * as JWT from 'jsonwebtoken'
 import { v4 } from 'uuid'
+import { sign as jwtSign } from 'jsonwebtoken'
 
 export interface AuthenticationInfo {
   /**
@@ -82,7 +82,7 @@ export class TESTAuthenticationProvider implements AuthenticationProvider {
   ) {}
 
   async getAuthenticationInfo(): Promise<AuthenticationInfo> {
-    const jwt = JWT.sign(
+    const jwt = jwtSign(
       this.attributes ? this.attributes : {},
       this.privateKey,
       {
@@ -144,7 +144,7 @@ export class LocalAuthenticationProvider implements AuthenticationProvider {
   ) {}
 
   async getAuthenticationInfo(): Promise<AuthenticationInfo> {
-    const jwt = JWT.sign(
+    const jwt = jwtSign(
       this.attributes ? this.attributes : {},
       this.privateKey,
       {

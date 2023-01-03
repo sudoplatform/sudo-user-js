@@ -10,7 +10,7 @@ import {
   ResolvablePromise,
 } from '../utils/resolvable-promise'
 import { AuthenticationTokens } from './user-client-interface'
-import * as JWT from 'jsonwebtoken'
+import { decode as jwtDecode } from 'jsonwebtoken'
 import { userKeyNames } from './user-key-names'
 
 export interface AuthenticationDetails {
@@ -202,7 +202,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
       authTokens.refreshToken,
     )
 
-    const decoded: any = JWT.decode(authTokens.idToken, { complete: true })
+    const decoded: any = jwtDecode(authTokens.idToken, { complete: true })
     if (decoded) {
       const tokenExpiry = decoded.payload['exp']
       await this.keyManager.addString(apiKeyNames.tokenExpiry, tokenExpiry)
