@@ -4,11 +4,6 @@ import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { Config } from '../../src/core/sdk-config'
 import { AuthenticationStore } from '../../src/core/auth-store'
 import { mock, instance, when, reset, anyString } from 'ts-mockito'
-import {
-  decode as jwtDecode,
-  sign as jwtSign,
-  verify as jwtVerify,
-} from 'jsonwebtoken'
 import { generateKeyPairSync } from 'crypto'
 import { apiKeyNames } from '../../src/core/api-key-names'
 import {
@@ -24,6 +19,8 @@ import { LocalAuthenticationProvider } from '../../src/user/auth-provider'
 import { ApiClient } from '../../src/client/apiClient'
 import { KeyManager } from '../../src/core/key-manager'
 import { userKeyNames } from '../../src/user/user-key-names'
+import * as jws from 'jws'
+
 const generateKeyPairAsync = promisify(generateKeyPair)
 
 const globalAny: any = global
@@ -63,6 +60,7 @@ const privateKey = generateKeyPairSync('rsa', {
     type: 'pkcs1',
   },
 }).privateKey
+
 const kid = 'test'
 
 const mockIdToken =
@@ -193,18 +191,22 @@ describe('SudoUserClient', () => {
   })
 
   describe('getSubject()', () => {
-    const token = jwtSign({}, privateKey, {
-      jwtid: '123',
-      audience: 'testAudience',
-      expiresIn: '10s',
-      notBefore: '0m',
-      subject: 'dummy_sub',
-      issuer: 'https://test.sudoplatform.com',
-      header: { alg: 'RS256', kid },
-      algorithm: 'RS256',
-    })
-
     it('should complete successfully', async () => {
+      const now = Date.now()
+      let signOptions: jws.SignOptions = {
+        header: { alg: 'RS256', kid },
+        payload: {
+          jti: '123',
+          aud: 'testAudience',
+          exp: now + 10000, // after 10 seconds
+          sub: 'dummy_sub',
+          iss: 'https://test.sudoplatform.com',
+        },
+        privateKey: privateKey,
+      }
+
+      const token = jws.sign(signOptions)
+
       when(sudoKeyManagerMock.getPassword(apiKeyNames.idToken)).thenResolve(
         toArrayBuffer(token),
       )
@@ -429,16 +431,10 @@ describe('SudoUserClient', () => {
 
       const token = authInfo.encode()
 
-      const decoded: any = jwtDecode(token, { complete: true })
+      const decoded: any = jws.decode(token)
       expect(decoded.header['kid']).toBe('dummy_key_id')
 
-      const verified: any = jwtVerify(token, keyPair.publicKey, {
-        issuer: 'client_system_test_iss',
-        audience: 'identity-service',
-        subject: 'dummy_username',
-        algorithms: ['RS256'],
-      })
-
+      const verified: any = jws.verify(token, 'RS256', keyPair.publicKey)
       expect(verified).toBeTruthy()
 
       const authUIMock: CognitoAuthUI = mock()

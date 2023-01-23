@@ -1,6 +1,7 @@
 import { Publisher } from './publisher'
 import { Subscriber } from './subscriber'
-import { decode as jwtDecode } from 'jsonwebtoken'
+import * as jws from 'jws'
+import { parseToken } from '../utils/parse-token'
 
 type Secret = {
   type: 'string'
@@ -36,9 +37,10 @@ export class AuthenticationStore implements Store, Publisher {
     const key = keyId.substr(keyId.lastIndexOf('.') + 1)
     if (key === 'idToken') {
       // Store the token expiry
-      const decoded: any = jwtDecode(value, { complete: true })
-      if (decoded) {
-        const tokenExpiry = decoded.payload['exp']
+      const decoded: any = jws.decode(value)
+      if (decoded && decoded.payload) {
+        const payload = parseToken(decoded.payload)
+        const tokenExpiry = payload['exp']
         await this.addSecret('tokenExpiry', {
           type: 'string',
           value: tokenExpiry,

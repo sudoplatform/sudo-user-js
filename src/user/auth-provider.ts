@@ -1,5 +1,6 @@
 import { v4 } from 'uuid'
-import { sign as jwtSign } from 'jsonwebtoken'
+import * as jws from 'jws'
+import { getSignOptions } from '../utils/sign-options-builder'
 
 export interface AuthenticationInfo {
   /**
@@ -82,20 +83,17 @@ export class TESTAuthenticationProvider implements AuthenticationProvider {
   ) {}
 
   async getAuthenticationInfo(): Promise<AuthenticationInfo> {
-    const jwt = jwtSign(
-      this.attributes ? this.attributes : {},
-      this.privateKey,
-      {
-        jwtid: v4(),
-        audience: this.testRegistrationAudience,
-        expiresIn: '60s',
-        notBefore: '0m',
-        subject: `${this.name}-${v4()}`,
-        issuer: this.testRegistrationIssuer,
-        header: { alg: 'RS256', kid: this.keyId },
-        algorithm: 'RS256',
-      },
-    )
+    const signOptions = getSignOptions({
+      aud: this.testRegistrationAudience,
+      sub: `${this.name}-${v4()}`,
+      iss: this.testRegistrationIssuer,
+      keyId: this.keyId,
+      privateKey: this.privateKey,
+      attributes: this.attributes,
+    })
+
+    const jwt = jws.sign(signOptions)
+
     return new TESTAuthenticationInfo(jwt)
   }
 
@@ -144,20 +142,17 @@ export class LocalAuthenticationProvider implements AuthenticationProvider {
   ) {}
 
   async getAuthenticationInfo(): Promise<AuthenticationInfo> {
-    const jwt = jwtSign(
-      this.attributes ? this.attributes : {},
-      this.privateKey,
-      {
-        jwtid: v4(),
-        audience: 'identity-service',
-        expiresIn: '60s',
-        notBefore: '0m',
-        subject: this.username,
-        issuer: this.name,
-        header: { alg: 'RS256', kid: this.keyId },
-        algorithm: 'RS256',
-      },
-    )
+    const signOptions = getSignOptions({
+      aud: 'identity-service',
+      sub: this.username,
+      iss: this.name,
+      keyId: this.keyId,
+      privateKey: this.privateKey,
+      attributes: this.attributes,
+    })
+
+    const jwt = jws.sign(signOptions)
+
     return new LocalAuthenticationInfo(jwt, this.username)
   }
 

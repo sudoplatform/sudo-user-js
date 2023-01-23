@@ -13,7 +13,6 @@ import {
   SudoKeyManager,
 } from '@sudoplatform/sudo-common'
 import { WebSudoCryptoProvider } from '@sudoplatform/sudo-web-crypto-provider'
-import { decode as jwtDecode } from 'jsonwebtoken'
 import { v4 } from 'uuid'
 import { AuthenticationProvider } from '..'
 import { ApiClient } from '../client/apiClient'
@@ -29,6 +28,8 @@ import {
 } from './identity-provider'
 import { AuthenticationTokens, SudoUserClient } from './user-client-interface'
 import { userKeyNames } from './user-key-names'
+import * as jws from 'jws'
+import { parseToken } from '../utils/parse-token'
 
 export interface SudoUserOptions {
   authenticationStore?: AuthenticationStore
@@ -309,11 +310,18 @@ export class DefaultSudoUserClient implements SudoUserClient {
       }
 
       const token = authInfo.encode()
-      const jwt: any = jwtDecode(token, { complete: true })
+      const jwt: any = jws.decode(token)
+
       let uid
-      if (jwt && jwt.payload['sub']) {
-        uid = jwt.payload['sub']
-      } else {
+
+      if (jwt && jwt.payload) {
+        const payload = parseToken(jwt.payload)
+        if (payload['sub']) {
+          uid = payload['sub']
+        }
+      }
+
+      if (!uid) {
         uid = v4()
       }
 
@@ -439,9 +447,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
 
   private getTokenClaim(token: string, name: string): string | undefined {
     let claim = undefined
-    const decoded: any = jwtDecode(token, { complete: true })
-    if (decoded) {
-      claim = decoded.payload[name]
+    const decoded: any = jws.decode(token)
+    if (decoded && decoded.payload) {
+      const payload = parseToken(decoded.payload)
+      claim = payload[name]
     }
     return claim
   }
@@ -470,9 +479,12 @@ export class DefaultSudoUserClient implements SudoUserClient {
       apiKeyNames.refreshToken,
       authTokens.refreshToken,
     )
-    const decoded: any = jwtDecode(authTokens.idToken, { complete: true })
-    if (decoded) {
-      const tokenExpiry = decoded.payload['exp']
+
+    const decoded: any = jws.decode(authTokens.idToken)
+
+    if (decoded && decoded.payload) {
+      const payload = parseToken(decoded.payload)
+      const tokenExpiry = payload['exp']
       await this.keyManager.addString(apiKeyNames.tokenExpiry, tokenExpiry)
     }
   }
@@ -484,6 +496,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
       authTokens.idToken,
       'custom:identityId',
     )
+
     if (identityId) {
       return authTokens
     } else {

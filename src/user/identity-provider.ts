@@ -131,6 +131,7 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
         Password: `@FF57&Z1)123!-${v4()}`,
         ClientId: this.config.identityService.clientId,
       })
+
       const response = await this.idpService.send(signUp)
 
       if (response.UserConfirmed) {
