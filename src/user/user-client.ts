@@ -310,20 +310,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
       }
 
       const token = authInfo.encode()
-      const jwt: any = jws.decode(token)
-
-      let uid
-
-      if (jwt && jwt.payload) {
-        const payload = parseToken(jwt.payload)
-        if (payload['sub']) {
-          uid = payload['sub']
-        }
-      }
-
-      if (!uid) {
-        uid = v4()
-      }
+      const uid = authInfo.getUsername()
 
       const publicKey = await this.generateRegistrationData()
 

@@ -1,6 +1,8 @@
 import { v4 } from 'uuid'
 import * as jws from 'jws'
 import { getSignOptions } from '../utils/sign-options-builder'
+import { FatalError } from '@sudoplatform/sudo-common'
+import { parseToken } from '../utils/parse-token'
 
 export interface AuthenticationInfo {
   /**
@@ -60,7 +62,18 @@ export class TESTAuthenticationInfo implements AuthenticationInfo {
   }
 
   getUsername(): string {
-    return ''
+    const jwt: any = jws.decode(this.jwt)
+    if (jwt.payload) {
+      const payload = parseToken(jwt.payload)
+      const sub = payload['sub']
+      if (sub) {
+        return sub
+      } else {
+        throw new FatalError('sub missing from TEST user JWT.')
+      }
+    } else {
+      throw new FatalError('payload missing from TEST user JWT.')
+    }
   }
 }
 
