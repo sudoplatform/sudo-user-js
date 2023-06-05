@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Anonyome Labs, Inc. All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { v4 } from 'uuid'
 import * as jws from 'jws'
 import { getSignOptions } from '../utils/sign-options-builder'

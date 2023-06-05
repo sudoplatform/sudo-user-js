@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Anonyome Labs, Inc. All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 type Resolver<T> = (value: T) => void
 
 export type ResolvablePromise<T> = Promise<T> & { resolve: Resolver<T> }

@@ -1,3 +1,9 @@
+/*
+ * Copyright © 2023 Anonyome Labs, Inc. All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { AuthenticationError, Logger } from '@sudoplatform/sudo-common'
 import { CognitoAuth } from 'amazon-cognito-auth-js'
 import { apiKeyNames } from '../core/api-key-names'

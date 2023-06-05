@@ -1,4 +1,10 @@
 /*
+ * Copyright © 2023 Anonyome Labs, Inc. All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * Private interfaces for support for other Sudo Platform
  * SDKs.
  */
