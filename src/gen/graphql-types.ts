@@ -12,37 +12,46 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>
 }
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never }
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never
+    }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string
-  String: string
-  Boolean: boolean
-  Int: number
-  Float: number
-  AWSDate: any
-  AWSDateTime: any
-  AWSEmail: any
-  AWSIPAddress: any
-  AWSJSON: unknown
-  AWSPhone: any
-  AWSTime: any
-  AWSTimestamp: any
-  AWSURL: any
+  ID: { input: string | number; output: string }
+  String: { input: string; output: string }
+  Boolean: { input: boolean; output: boolean }
+  Int: { input: number; output: number }
+  Float: { input: number; output: number }
+  AWSDate: { input: any; output: any }
+  AWSDateTime: { input: any; output: any }
+  AWSEmail: { input: any; output: any }
+  AWSIPAddress: { input: any; output: any }
+  AWSJSON: { input: unknown; output: unknown }
+  AWSPhone: { input: any; output: any }
+  AWSTime: { input: any; output: any }
+  AWSTimestamp: { input: any; output: any }
+  AWSURL: { input: any; output: any }
 }
 
 export type Deregister = {
   __typename?: 'Deregister'
-  success: Scalars['Boolean']
+  success: Scalars['Boolean']['output']
 }
 
 export type FederatedId = {
   __typename?: 'FederatedId'
-  identityId: Scalars['String']
+  identityId: Scalars['String']['output']
 }
 
 export type GlobalSignOut = {
   __typename?: 'GlobalSignOut'
-  success: Scalars['Boolean']
+  success: Scalars['Boolean']['output']
 }
 
 export type Mutation = {
@@ -58,15 +67,15 @@ export type MutationRegisterFederatedIdArgs = {
 
 export type Query = {
   __typename?: 'Query'
-  notImplemented?: Maybe<Scalars['Boolean']>
+  notImplemented?: Maybe<Scalars['Boolean']['output']>
 }
 
 export type QueryNotImplementedArgs = {
-  dummy: Scalars['String']
+  dummy: Scalars['String']['input']
 }
 
 export type RegisterFederatedIdInput = {
-  idToken: Scalars['String']
+  idToken: Scalars['String']['input']
 }
 
 export type DeregisterMutationVariables = Exact<{ [key: string]: never }>
