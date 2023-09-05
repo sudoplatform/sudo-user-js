@@ -3,7 +3,15 @@ import { IdentityProvider } from '../../src/user/identity-provider'
 import { DefaultSudoUserClient } from '../../src/user/user-client'
 import { Config } from '../../src/core/sdk-config'
 import { AuthenticationStore } from '../../src/core/auth-store'
-import { mock, instance, when, reset, anyString } from 'ts-mockito'
+import {
+  mock,
+  instance,
+  when,
+  reset,
+  anyString,
+  anything,
+  verify,
+} from 'ts-mockito'
 import { generateKeyPairSync } from 'crypto'
 import { apiKeyNames } from '../../src/core/api-key-names'
 import {
@@ -509,6 +517,27 @@ describe('SudoUserClient', () => {
       await expect(
         userClient.signInWithAuthenticationProvider(authenticationProvider),
       ).rejects.toThrowError(AuthenticationError)
+    })
+  })
+
+  describe('resetUserData()', () => {
+    it('throws NotSignedInError if no username', async () => {
+      when(keyManagerMock.getString(anything())).thenResolve(undefined)
+      await expect(userClient.resetUserData()).rejects.toThrow(NotSignedInError)
+    })
+
+    it('succeeds when signed in and adminAPiClient.restUser succeeds', async () => {
+      // has to be > 1 hr in the future, so use 2 hours
+      const expireInFuture = new Date().getTime() + 120 * 60 * 1000
+      when(sudoKeyManagerMock.getPassword(anything()))
+        .thenResolve(new TextEncoder().encode('dummy-idToken'))
+        .thenResolve(new TextEncoder().encode('dummy-accessToken'))
+        .thenResolve(new TextEncoder().encode('dummy-refreshToken'))
+        .thenResolve(new TextEncoder().encode(expireInFuture.toString()))
+        .thenResolve(new TextEncoder().encode(expireInFuture.toString()))
+      when(apiClientMock.reset()).thenResolve(undefined)
+
+      await expect(userClient.resetUserData()).resolves.toBe(undefined)
     })
   })
 })

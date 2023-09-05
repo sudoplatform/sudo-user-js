@@ -39,6 +39,11 @@ export type Scalars = {
   AWSURL: { input: any; output: any }
 }
 
+export type ApiResult = {
+  __typename?: 'ApiResult'
+  success: Scalars['Boolean']['output']
+}
+
 export type Deregister = {
   __typename?: 'Deregister'
   success: Scalars['Boolean']['output']
@@ -59,6 +64,7 @@ export type Mutation = {
   deregister?: Maybe<Deregister>
   globalSignOut?: Maybe<GlobalSignOut>
   registerFederatedId?: Maybe<FederatedId>
+  reset?: Maybe<ApiResult>
 }
 
 export type MutationRegisterFederatedIdArgs = {
@@ -101,6 +107,13 @@ export type RegisterFederatedIdMutation = {
   registerFederatedId?:
     | { __typename?: 'FederatedId'; identityId: string }
     | undefined
+}
+
+export type ResetMutationVariables = Exact<{ [key: string]: never }>
+
+export type ResetMutation = {
+  __typename?: 'Mutation'
+  reset?: { __typename?: 'ApiResult'; success: boolean } | undefined
 }
 
 export const DeregisterDocument = {
@@ -210,3 +223,28 @@ export const RegisterFederatedIdDocument = {
   RegisterFederatedIdMutation,
   RegisterFederatedIdMutationVariables
 >
+export const ResetDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'reset' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'reset' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'success' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ResetMutation, ResetMutationVariables>

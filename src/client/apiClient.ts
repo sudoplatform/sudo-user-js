@@ -14,18 +14,18 @@ import {
   RegisterFederatedIdInput,
   GlobalSignOutMutation,
   GlobalSignOutDocument,
+  ResetMutation,
+  ResetDocument,
 } from '../gen/graphql-types'
 import {
   NotSignedInError,
   FatalError,
-  ServiceError,
   UnknownGraphQLError,
-  AppSyncError,
   Logger,
-  NotAuthorizedError,
 } from '@sudoplatform/sudo-common'
 import { SudoUserClient } from '../user/user-client-interface'
 import { ApolloError } from 'apollo-client'
+import { graphQLErrorsToClientError } from './transformer/ErrorTransformer'
 
 /**
  * AppSync wrapper to use to invoke Identity Service APIs.
@@ -59,6 +59,39 @@ export class ApiClient {
     })
   }
 
+  public async resetUserData(): Promise<{ success: boolean }> {
+    if (!(await this.sudoUserClient.isSignedIn())) {
+      throw new NotSignedInError()
+    }
+
+    let result
+    try {
+      result = await this.client.mutate<ResetMutation>({
+        mutation: ResetDocument,
+        fetchPolicy: 'no-cache',
+      })
+    } catch (err) {
+      const apolloError = err as ApolloError
+      const error = apolloError.graphQLErrors?.[0]
+      if (error) {
+        throw graphQLErrorsToClientError(error, this.logger)
+      } else {
+        throw new UnknownGraphQLError(err)
+      }
+    }
+
+    const error = result.errors?.[0]
+    if (error) {
+      throw graphQLErrorsToClientError(error, this.logger)
+    }
+
+    if (result.data) {
+      return { success: result.data.reset?.success ? true : false }
+    } else {
+      throw new FatalError('reset did not return any result.')
+    }
+  }
+
   public async deregister(): Promise<{ success: boolean }> {
     if (!(await this.sudoUserClient.isSignedIn())) {
       throw new NotSignedInError()
@@ -74,7 +107,7 @@ export class ApiClient {
       const apolloError = err as ApolloError
       const error = apolloError.graphQLErrors?.[0]
       if (error) {
-        throw this.graphQLErrorsToClientError(error)
+        throw graphQLErrorsToClientError(error, this.logger)
       } else {
         throw new UnknownGraphQLError(err)
       }
@@ -82,7 +115,7 @@ export class ApiClient {
 
     const error = result.errors?.[0]
     if (error) {
-      throw this.graphQLErrorsToClientError(error)
+      throw graphQLErrorsToClientError(error, this.logger)
     }
 
     if (result.data) {
@@ -107,7 +140,7 @@ export class ApiClient {
       const apolloError = err as ApolloError
       const error = apolloError.graphQLErrors?.[0]
       if (error) {
-        throw this.graphQLErrorsToClientError(error)
+        throw graphQLErrorsToClientError(error, this.logger)
       } else {
         throw new UnknownGraphQLError(err)
       }
@@ -115,7 +148,7 @@ export class ApiClient {
 
     const error = result.errors?.[0]
     if (error) {
-      throw this.graphQLErrorsToClientError(error)
+      throw graphQLErrorsToClientError(error, this.logger)
     }
 
     if (result.data) {
@@ -139,7 +172,7 @@ export class ApiClient {
       const apolloError = err as ApolloError
       const error = apolloError.graphQLErrors?.[0]
       if (error) {
-        throw this.graphQLErrorsToClientError(error)
+        throw graphQLErrorsToClientError(error, this.logger)
       } else {
         throw new UnknownGraphQLError(err)
       }
@@ -147,7 +180,7 @@ export class ApiClient {
 
     const error = result.errors?.[0]
     if (error) {
-      throw this.graphQLErrorsToClientError(error)
+      throw graphQLErrorsToClientError(error, this.logger)
     }
 
     const identityId = result.data?.registerFederatedId?.identityId
@@ -173,19 +206,5 @@ export class ApiClient {
       },
       disableOffline: true,
     })
-  }
-
-  private graphQLErrorsToClientError(error: AppSyncError): Error {
-    this.logger.error('GraphQL call failed.', { error })
-
-    if (error.errorType === 'sudoplatform.ServiceError') {
-      return new ServiceError(error.message)
-    } else if (
-      error.errorType === 'sudoplatform.identity.TokenValidationError'
-    ) {
-      return new NotAuthorizedError()
-    } else {
-      return new UnknownGraphQLError(error)
-    }
   }
 }

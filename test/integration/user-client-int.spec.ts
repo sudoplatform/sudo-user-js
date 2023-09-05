@@ -2,6 +2,7 @@ import {
   AuthenticationError,
   DefaultConfigurationManager,
   NotAuthorizedError,
+  NotSignedInError,
 } from '@sudoplatform/sudo-common'
 import { existsSync, readFileSync } from 'fs'
 import { v4 } from 'uuid'
@@ -337,6 +338,24 @@ describe('SudoUserClient', () => {
     it('should complete successfully', async () => {
       await registerAndSignIn()
       await userClient.globalSignOut()
+    }, 30000)
+  })
+
+  describe('resetUserData()', () => {
+    it('should throw NotSignedInError', async () => {
+      await expect(userClient.resetUserData()).rejects.toThrowError(
+        NotSignedInError,
+      )
+    })
+
+    it('should complete successfully', async () => {
+      await registerAndSignIn()
+      const username = await userClient.getUserName()
+      await expect(userClient.resetUserData()).resolves.toBe(undefined)
+
+      await expect(userClient.isSignedIn()).resolves.toBe(true)
+      const resetUsername = await userClient.getUserName()
+      expect(resetUsername).toEqual(username)
     }, 30000)
   })
 })

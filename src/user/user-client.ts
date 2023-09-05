@@ -438,6 +438,14 @@ export class DefaultSudoUserClient implements SudoUserClient {
     this.clearAuthenticationTokens()
   }
 
+  public async resetUserData(): Promise<void> {
+    if (await this.isSignedIn()) {
+      await this.apiClient?.resetUserData()
+    } else {
+      throw new NotSignedInError()
+    }
+  }
+
   private getTokenClaim(token: string, name: string): string | undefined {
     let claim = undefined
     const decoded: any = jws.decode(token)

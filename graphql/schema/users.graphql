@@ -5,6 +5,9 @@ schema {
 type Deregister {
   success: Boolean!
 }
+type ApiResult @aws_cognito_user_pools {
+	success: Boolean!
+}
 type Query {
   notImplemented(dummy: String!): Boolean
 }
@@ -21,4 +24,5 @@ type Mutation {
   deregister: Deregister
   globalSignOut: GlobalSignOut
   registerFederatedId(input: RegisterFederatedIdInput): FederatedId
+  reset: ApiResult
 }

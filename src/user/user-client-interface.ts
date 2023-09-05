@@ -176,6 +176,12 @@ export interface SudoUserClient {
   reset(): void
 
   /**
+   * Removes all data owned by the signed-in user in Sudo Platform Services
+   * without deregistering the user
+   */
+  resetUserData(): Promise<void>
+
+  /**
    * De-registers the user associated with this client. The user must
    * be signed in.
    */

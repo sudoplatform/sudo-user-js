@@ -61,6 +61,7 @@ handling federated sign in, managing keys and performing cryptographic operation
 <a href="SudoUserClient.html#refreshTokens" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>refresh<wbr/>Tokens</span></a>
 <a href="SudoUserClient.html#registerWithAuthenticationProvider" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>register<wbr/>With<wbr/>Authentication<wbr/>Provider</span></a>
 <a href="SudoUserClient.html#reset" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset</span></a>
+<a href="SudoUserClient.html#resetUserData" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset<wbr/>User<wbr/>Data</span></a>
 <a href="SudoUserClient.html#setUserName" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>User<wbr/>Name</span></a>
 <a href="SudoUserClient.html#signInWithAuthenticationProvider" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>sign<wbr/>In<wbr/>With<wbr/>Authentication<wbr/>Provider</span></a>
 <a href="SudoUserClient.html#signInWithKey" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>sign<wbr/>In<wbr/>With<wbr/>Key</span></a>
@@ -75,7 +76,7 @@ handling federated sign in, managing keys and performing cryptographic operation
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/user/user-client-interface.ts:187</li></ul></aside></section></section>
+<li>Defined in src/user/user-client-interface.ts:193</li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="clearAuthenticationTokens" class="tsd-anchor"></a>
@@ -100,7 +101,7 @@ be signed in.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/user/user-client-interface.ts:182</li></ul></aside></li></ul></section>
+<li>Defined in src/user/user-client-interface.ts:188</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getAccessToken" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Access<wbr/>Token</span><a href="#getAccessToken" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -357,6 +358,18 @@ to authorize the registration request.</p>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
 <li>Defined in src/user/user-client-interface.ts:176</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="resetUserData" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>reset<wbr/>User<wbr/>Data</span><a href="#resetUserData" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="resetUserData.resetUserData-1"><span class="tsd-kind-call-signature">reset<wbr/>User<wbr/>Data</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#resetUserData.resetUserData-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Removes all data owned by the signed-in user in Sudo Platform Services
+without deregistering the user</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in src/user/user-client-interface.ts:182</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setUserName" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>User<wbr/>Name</span><a href="#setUserName" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -461,6 +474,7 @@ the <em>registerWithAuthenticationProvider</em> method.</p>
 <li><a href="#refreshTokens" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>refresh<wbr/>Tokens</span></a></li>
 <li><a href="#registerWithAuthenticationProvider" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>register<wbr/>With<wbr/>Authentication<wbr/>Provider</span></a></li>
 <li><a href="#reset" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset</span></a></li>
+<li><a href="#resetUserData" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset<wbr/>User<wbr/>Data</span></a></li>
 <li><a href="#setUserName" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>User<wbr/>Name</span></a></li>
 <li><a href="#signInWithAuthenticationProvider" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>sign<wbr/>In<wbr/>With<wbr/>Authentication<wbr/>Provider</span></a></li>
 <li><a href="#signInWithKey" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>sign<wbr/>In<wbr/>With<wbr/>Key</span></a></li>

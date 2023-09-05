@@ -65,6 +65,7 @@ handling federated sign in, managing keys and performing cryptographic operation
 <a href="DefaultSudoUserClient.html#refreshTokens" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>refresh<wbr/>Tokens</span></a>
 <a href="DefaultSudoUserClient.html#registerWithAuthenticationProvider" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>register<wbr/>With<wbr/>Authentication<wbr/>Provider</span></a>
 <a href="DefaultSudoUserClient.html#reset" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset</span></a>
+<a href="DefaultSudoUserClient.html#resetUserData" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset<wbr/>User<wbr/>Data</span></a>
 <a href="DefaultSudoUserClient.html#setAuthUI" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>AuthUI</span></a>
 <a href="DefaultSudoUserClient.html#setAuthenticationStore" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Authentication<wbr/>Store</span></a>
 <a href="DefaultSudoUserClient.html#setIdentityProvider" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Identity<wbr/>Provider</span></a>
@@ -404,6 +405,19 @@ to authorize the registration request.</p>
 <p>Implementation of <a href="../interfaces/SudoUserClient.html">SudoUserClient</a>.<a href="../interfaces/SudoUserClient.html#reset">reset</a></p>
 <ul>
 <li>Defined in src/user/user-client.ts:435</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="resetUserData" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>reset<wbr/>User<wbr/>Data</span><a href="#resetUserData" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="resetUserData.resetUserData-1"><span class="tsd-kind-call-signature">reset<wbr/>User<wbr/>Data</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#resetUserData.resetUserData-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Removes all data owned by the signed-in user in Sudo Platform Services
+without deregistering the user</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/SudoUserClient.html">SudoUserClient</a>.<a href="../interfaces/SudoUserClient.html#resetUserData">resetUserData</a></p>
+<ul>
+<li>Defined in src/user/user-client.ts:441</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setAuthUI" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>AuthUI</span><a href="#setAuthUI" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -419,7 +433,7 @@ to authorize the registration request.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/user/user-client.ts:534</li></ul></aside></li></ul></section>
+<li>Defined in src/user/user-client.ts:542</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setAuthenticationStore" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Authentication<wbr/>Store</span><a href="#setAuthenticationStore" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -436,7 +450,7 @@ This is mainly used for unit testing (optional).</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/user/user-client.ts:557</li></ul></aside></li></ul></section>
+<li>Defined in src/user/user-client.ts:565</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setIdentityProvider" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Identity<wbr/>Provider</span><a href="#setIdentityProvider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -452,7 +466,7 @@ This is mainly used for unit testing (optional).</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/user/user-client.ts:541</li></ul></aside></li></ul></section>
+<li>Defined in src/user/user-client.ts:549</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setLaunchUriFn" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Launch<wbr/>Uri<wbr/>Fn</span><a href="#setLaunchUriFn" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -480,7 +494,7 @@ This is mainly used for unit testing (optional).</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in src/user/user-client.ts:549</li></ul></aside></li></ul></section>
+<li>Defined in src/user/user-client.ts:557</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setUserName" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>User<wbr/>Name</span><a href="#setUserName" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -590,6 +604,7 @@ the <em>registerWithAuthenticationProvider</em> method.</p>
 <li><a href="#refreshTokens" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>refresh<wbr/>Tokens</span></a></li>
 <li><a href="#registerWithAuthenticationProvider" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>register<wbr/>With<wbr/>Authentication<wbr/>Provider</span></a></li>
 <li><a href="#reset" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset</span></a></li>
+<li><a href="#resetUserData" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>reset<wbr/>User<wbr/>Data</span></a></li>
 <li><a href="#setAuthUI" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>AuthUI</span></a></li>
 <li><a href="#setAuthenticationStore" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Authentication<wbr/>Store</span></a></li>
 <li><a href="#setIdentityProvider" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Identity<wbr/>Provider</span></a></li>
