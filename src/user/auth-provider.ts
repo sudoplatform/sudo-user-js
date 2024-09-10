@@ -127,7 +127,10 @@ export class TESTAuthenticationProvider implements AuthenticationProvider {
 export class LocalAuthenticationInfo implements AuthenticationInfo {
   readonly type: string = 'FSSO'
 
-  constructor(private jwt: string, private username: string) {}
+  constructor(
+    private jwt: string,
+    private username: string,
+  ) {}
 
   isValid(): boolean {
     return true

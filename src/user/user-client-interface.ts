@@ -170,14 +170,16 @@ export interface SudoUserClient {
    * will be invalidated, but the user is not logged out of Cognito.
    */
   presentSignOutUI(): void
+
   /**
    * Resets internal state and clears any cached data.
    */
-  reset(): void
+  reset(): Promise<void>
 
   /**
    * Removes all data owned by the signed-in user in Sudo Platform Services
-   * without deregistering the user
+   * without deregistering the user.
+   * Should only be used in tests.
    */
   resetUserData(): Promise<void>
 

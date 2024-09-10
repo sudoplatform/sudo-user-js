@@ -158,7 +158,7 @@ describe('SudoUserClient', () => {
       expect(await userClient.isRegistered()).toBeFalsy()
 
       // Reset the client internal state
-      userClient.reset()
+      await userClient.reset()
       expect(await userClient.isSignedIn()).toBeFalsy()
     }, 30000)
   })
@@ -199,7 +199,7 @@ describe('SudoUserClient', () => {
       expect(await userClient.isRegistered()).toBeFalsy()
 
       // Reset the client internal state
-      userClient.reset()
+      await userClient.reset()
       expect(await userClient.isSignedIn()).toBeFalsy()
     }, 30000)
   })
@@ -221,7 +221,7 @@ describe('SudoUserClient', () => {
       ).rejects.toThrow(NotAuthorizedError)
 
       // Reset the client internal state
-      userClient.reset()
+      await userClient.reset()
     }, 30000)
   })
 
@@ -243,7 +243,7 @@ describe('SudoUserClient', () => {
       expect(await userClient.isRegistered()).toBeFalsy()
 
       // Reset the client internal state
-      userClient.reset()
+      await userClient.reset()
       expect(await userClient.isSignedIn()).toBeFalsy()
     }, 30000)
 
@@ -251,16 +251,16 @@ describe('SudoUserClient', () => {
       await registerAndSignIn()
 
       // Refresh the tokens
-      await expect(
-        userClient.refreshTokens('invalid_token'),
-      ).rejects.toThrowError(AuthenticationError)
+      await expect(userClient.refreshTokens('invalid_token')).rejects.toThrow(
+        AuthenticationError,
+      )
 
       // Deregister
       await userClient.deregister()
       expect(await userClient.isRegistered()).toBeFalsy()
 
       // Reset the client internal state
-      userClient.reset()
+      await userClient.reset()
       expect(await userClient.isSignedIn()).toBeFalsy()
     }, 30000)
   })
@@ -295,7 +295,7 @@ describe('SudoUserClient', () => {
             authenticationProvider,
             'dummy_rid',
           ),
-        ).rejects.toThrowError(AlreadyRegisteredError)
+        ).rejects.toThrow(AlreadyRegisteredError)
 
         await userClient.signInWithAuthenticationProvider(
           authenticationProvider,
@@ -328,7 +328,7 @@ describe('SudoUserClient', () => {
         fail('Refresh token not found.')
       }
       await userClient.signOut()
-      await expect(userClient.refreshTokens(refreshToken)).rejects.toThrowError(
+      await expect(userClient.refreshTokens(refreshToken)).rejects.toThrow(
         AuthenticationError,
       )
     }, 30000)
@@ -343,9 +343,7 @@ describe('SudoUserClient', () => {
 
   describe('resetUserData()', () => {
     it('should throw NotSignedInError', async () => {
-      await expect(userClient.resetUserData()).rejects.toThrowError(
-        NotSignedInError,
-      )
+      await expect(userClient.resetUserData()).rejects.toThrow(NotSignedInError)
     })
 
     it('should complete successfully', async () => {

@@ -195,8 +195,8 @@ export class ApiClient {
     }
   }
 
-  public reset(): void {
-    this.client.clearStore()
+  public async reset(): Promise<void> {
+    await this.client.clearStore()
     this.client = new AWSAppSyncClient({
       url: this.graphqlUrl,
       region: this.region,

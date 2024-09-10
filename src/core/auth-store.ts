@@ -86,7 +86,7 @@ export class AuthenticationStore implements Store, Publisher {
    *
    * @param subscriber a subscriber to be notified when items are added
    */
-  public async subscribe(subscriber: Subscriber): Promise<void> {
+  public subscribe(subscriber: Subscriber): void {
     this.subscribers.push(subscriber)
   }
 

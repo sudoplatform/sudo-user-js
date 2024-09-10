@@ -226,9 +226,8 @@ export class DefaultSudoUserClient implements SudoUserClient {
     try {
       const uid = await this.getUserName()
       if (uid) {
-        const authTokens = await this.identityProvider.refreshTokens(
-          refreshToken,
-        )
+        const authTokens =
+          await this.identityProvider.refreshTokens(refreshToken)
         await this.storeTokens(uid, authTokens)
         return authTokens
       } else {
@@ -297,7 +296,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
       throw new NotSignedInError()
     }
     await this.apiClient.globalSignOut()
-    this.clearAuthenticationTokens()
+    await this.clearAuthenticationTokens()
   }
 
   public async registerWithAuthenticationProvider(
@@ -412,7 +411,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
   public async deregister(): Promise<void> {
     await this.apiClient.deregister()
     await this.keyManager.reset()
-    this.clearAuthenticationTokens()
+    await this.clearAuthenticationTokens()
   }
 
   public async clearAuthenticationTokens(): Promise<void> {
@@ -432,10 +431,10 @@ export class DefaultSudoUserClient implements SudoUserClient {
     this.authUI?.presentSignOutUI()
   }
 
-  public reset(): void {
-    this.keyManager.reset()
-    this.apiClient.reset()
-    this.clearAuthenticationTokens()
+  public async reset(): Promise<void> {
+    await this.keyManager.reset()
+    await this.apiClient.reset()
+    await this.clearAuthenticationTokens()
   }
 
   public async resetUserData(): Promise<void> {

@@ -8,15 +8,17 @@ module.exports = {
       env: { node: true },
     },
     {
+      files: ['src/**/*.ts'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
         project: './tsconfig.json',
+        projectService: true,
       },
-      files: ['src/**/*.ts'],
       excludedFiles: ['test/**/*.spec.ts'],
       plugins: ['@typescript-eslint', 'prettier', 'tree-shaking'],
       extends: ['plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
       rules: {
+        "@typescript-eslint/no-floating-promises": "error",
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/array-type': 'off',
@@ -47,6 +49,7 @@ module.exports = {
         project: './tsconfig.test.json',
       },
       rules: {
+        "@typescript-eslint/no-floating-promises": "error",
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
       },

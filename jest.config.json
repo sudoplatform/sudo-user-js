@@ -8,9 +8,7 @@
   "coverageReporters": ["text", "json-summary"],
   "coverageDirectory": "<rootDir>/build/coverage",
   "transformIgnorePatterns": ["/node_modules/(?!(\\@aws-sdk)/)"],
-  "globals": {
-    "ts-jest": {
-      "tsconfig": "tsconfig.test.json"
-    }
+  "transform": {
+    ".*\\.ts$": ["ts-jest", {"tsconfig": "tsconfig.test.json"}]
   }
 }

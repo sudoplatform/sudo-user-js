@@ -179,9 +179,8 @@ describe('SudoUserClient', () => {
         tokenExpiry: 12345,
       })
 
-      const authTokens = await userClient.processFederatedSignInTokens(
-        'dummy_url',
-      )
+      const authTokens =
+        await userClient.processFederatedSignInTokens('dummy_url')
 
       expect(authTokens.idToken).toBe(mockIdToken)
       expect(authTokens.accessToken).toBe('dummy_access_token')
