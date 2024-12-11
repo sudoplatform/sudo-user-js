@@ -15,7 +15,7 @@ import {
 import { Config } from '../core/sdk-config'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationTokens } from './user-client-interface'
-import { KeyManager } from '../core/key-manager'
+import { DefaultKeyManager } from '../core/key-manager'
 import { v4 } from 'uuid'
 import {
   AuthenticationError,
@@ -92,7 +92,7 @@ export class CognitoUserPoolIdentityProvider implements IdentityProvider {
   private logger: Logger
 
   constructor(
-    private keyManager: KeyManager,
+    private keyManager: DefaultKeyManager,
     private config: Config,
     logger: Logger,
   ) {

@@ -25,7 +25,7 @@ import { generateKeyPair } from 'crypto'
 import { promisify } from 'util'
 import { LocalAuthenticationProvider } from '../../src/user/auth-provider'
 import { ApiClient } from '../../src/client/apiClient'
-import { KeyManager } from '../../src/core/key-manager'
+import { DefaultKeyManager } from '../../src/core/key-manager'
 import { userKeyNames } from '../../src/user/user-key-names'
 import * as jws from 'jws'
 
@@ -88,7 +88,7 @@ const identityProviderMock: IdentityProvider = mock()
 const identityProvider = instance(identityProviderMock)
 const authenticationStoreMock: AuthenticationStore = mock()
 const authenticationStore = instance(authenticationStoreMock)
-const keyManagerMock: KeyManager = mock()
+const keyManagerMock: DefaultKeyManager = mock()
 const keyManager = instance(keyManagerMock)
 const sudoKeyManagerMock: SudoKeyManager = mock()
 const sudoKeyManager = instance(sudoKeyManagerMock)

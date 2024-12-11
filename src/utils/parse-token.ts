@@ -12,7 +12,7 @@ export function parseToken(token: string): any {
     if (object && typeof object === 'object') {
       parsed = object
     }
-  } catch (err) {}
+  } catch {}
 
   return parsed
 }

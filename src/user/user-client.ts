@@ -24,7 +24,7 @@ import { AuthenticationProvider } from '..'
 import { ApiClient } from '../client/apiClient'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationStore } from '../core/auth-store'
-import { KeyManager, PublicKey } from '../core/key-manager'
+import { DefaultKeyManager, PublicKey } from '../core/key-manager'
 import { Config, getIdentityServiceConfig } from '../core/sdk-config'
 import { AuthUI, CognitoAuthUI } from './auth'
 import { AlreadyRegisteredError } from './error'
@@ -50,7 +50,7 @@ export interface SudoUserOptions {
 
 export class DefaultSudoUserClient implements SudoUserClient {
   private config: Config
-  private keyManager: KeyManager
+  private keyManager: DefaultKeyManager
   private sudoUserKeyManager: SudoKeyManager
   private authenticationStore: AuthenticationStore
   private identityProvider: IdentityProvider
@@ -76,7 +76,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
       )
       this.sudoUserKeyManager = new DefaultSudoKeyManager(cryptoProvider)
     }
-    this.keyManager = new KeyManager(this.sudoUserKeyManager)
+    this.keyManager = new DefaultKeyManager(this.sudoUserKeyManager)
 
     this.launchUriFn = options?.launchUriFn
 
@@ -213,7 +213,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
       } else {
         return false
       }
-    } catch (err) {
+    } catch {
       // The key manager throws a KeyNotFoundError if an item is not found
       // in which case we want to indicate that the user is not signed in.
       return false
@@ -265,7 +265,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
         // Return an empty id token.
         return ''
       }
-    } catch (err) {
+    } catch {
       // The key manager throws a KeyNotFoundError if an item is not found
       // which would indicate that the client is likely not signed in.
       // Return an empty id token.
@@ -384,7 +384,7 @@ export class DefaultSudoUserClient implements SudoUserClient {
     try {
       const uid = await this.getUserName()
       return uid ? true : false
-    } catch (err) {
+    } catch {
       return false
     }
   }

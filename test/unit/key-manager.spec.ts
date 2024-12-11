@@ -1,14 +1,14 @@
 import { SudoKeyManager } from '@sudoplatform/sudo-common'
 import { anything, capture, instance, mock, reset, verify } from 'ts-mockito'
-import { KeyManager } from '../../src/core/key-manager'
+import { DefaultKeyManager } from '../../src/core/key-manager'
 
 const commonKeyManagerMock = mock<SudoKeyManager>()
 
 describe('KeyManager Test Suite', () => {
-  let instanceUnderTest: KeyManager
+  let instanceUnderTest: DefaultKeyManager
   beforeEach(() => {
     reset(commonKeyManagerMock)
-    instanceUnderTest = new KeyManager(instance(commonKeyManagerMock))
+    instanceUnderTest = new DefaultKeyManager(instance(commonKeyManagerMock))
   })
   describe('addString', () => {
     it('passes a buffer to the sudo key manager instance', async () => {

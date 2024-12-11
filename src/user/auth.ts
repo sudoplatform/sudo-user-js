@@ -8,7 +8,7 @@ import { AuthenticationError, Logger } from '@sudoplatform/sudo-common'
 import { CognitoAuth } from 'amazon-cognito-auth-js'
 import { apiKeyNames } from '../core/api-key-names'
 import { AuthenticationStore } from '../core/auth-store'
-import { KeyManager } from '../core/key-manager'
+import { DefaultKeyManager } from '../core/key-manager'
 import { FederatedSignInConfig } from '../core/sdk-config'
 import { Subscriber } from '../core/subscriber'
 import {
@@ -61,7 +61,7 @@ export class CognitoAuthUI implements AuthUI, Subscriber {
   constructor(
     private authenticationStore: AuthenticationStore,
     private federatedSignInConfig: FederatedSignInConfig,
-    private keyManager: KeyManager,
+    private keyManager: DefaultKeyManager,
     logger: Logger,
     private launchUriFn?: (url: string) => void,
   ) {

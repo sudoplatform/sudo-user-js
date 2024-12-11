@@ -41,7 +41,7 @@ export interface KeyManager {
 /**
  * Key Manager
  */
-export class KeyManager implements KeyManager {
+export class DefaultKeyManager implements KeyManager {
   private static Constants = {
     publicKeyAlgorithm: 'RSA',
     symmetricAlgorithm: 'AES/256',
@@ -131,8 +131,8 @@ export class KeyManager implements KeyManager {
 
     return {
       keyId,
-      algorithm: KeyManager.Constants.publicKeyAlgorithm,
-      symmetricAlgorithm: KeyManager.Constants.symmetricAlgorithm,
+      algorithm: DefaultKeyManager.Constants.publicKeyAlgorithm,
+      symmetricAlgorithm: DefaultKeyManager.Constants.symmetricAlgorithm,
       publicKey: base64encoded,
       keyFormat: publicKey.keyFormat,
     }
