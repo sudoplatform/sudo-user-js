@@ -10,3 +10,5 @@ types/
 node_modules
 yarn-error.log
 build/
+.node-version
+.nvmrc
