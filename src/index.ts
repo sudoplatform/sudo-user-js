@@ -19,4 +19,4 @@ export * from './user/error'
  * Private interfaces for support for other Sudo Platform
  * SDKs.
  */
-export * as internal from './core/sdk-config'
+export * as internal from './sdk'
