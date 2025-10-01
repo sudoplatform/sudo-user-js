@@ -13,11 +13,12 @@
     "lint:eslint": "eslint \"{bin,test,src}/**/*.{ts,tsx}\"",
     "lint:prettier": "prettier -l \"{bin,test,src}/**/*.{js,json,jsx,ts,tsx}\"",
     "codegen": "graphql-codegen -c codegen.yml",
-    "verify": "yarn audit-with-suppressions && yarn lint",
+    "verify": "./node_modules/.bin/audit-with-suppressions && yarn lint",
     "unit-test": "yarn jest test/unit --verbose --coverage",
     "integration-test": "/bin/bash -c 'jest test/integration'",
     "test": "yarn unit-test",
     "build": "yarn codegen && yarn verify && yarn build:transpile && yarn build:docs",
+    "build:report-dependencies": "report-dependencies",
     "build:transpile": "concurrently \"yarn build:transpile:declarations\" \"yarn build:transpile:cjs\" \"yarn build:transpile:esm\"",
     "build:transpile:cjs": "tsc --project tsconfig.commonjs.json",
     "build:transpile:esm": "tsc",
@@ -47,7 +48,7 @@
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "<3.633.0",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "@sudoplatform/sudo-web-crypto-provider": "^10.0.0",
+    "@sudoplatform/sudo-web-crypto-provider": "^11.0.1",
     "amazon-cognito-auth-js": "^1.3.3",
     "apollo-cache-inmemory": "^1.6.6",
     "aws-appsync": "^4.1.10",
@@ -107,5 +108,6 @@
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
 }

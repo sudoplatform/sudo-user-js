@@ -12,3 +12,4 @@ yarn-error.log
 build/
 .node-version
 .nvmrc
+.yarn/install-state.gz
