@@ -15,7 +15,6 @@ const testIdentityServiceConfig = {
   identityPoolId: 'us-east-1:8fe6d8ed-cd77-4622-b1bb-3f0c147638ad',
   apiUrl:
     'https://mqn7cjrzcrd75jpsma3xw4744a.appsync-api.us-east-1.amazonaws.com/graphql',
-  apiKey: 'da2-xejsa343urfifmzkycmz3rqdom',
   bucket: 'ids-userdata-id-dev-fsso-userdatabucket2d841c35-j9x47k5042fk',
   transientBucket:
     'ids-userdata-id-dev-fsso-transientuserdatabucket0-1enoeyoho1sjl',

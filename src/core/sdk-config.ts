@@ -18,7 +18,6 @@ export const IdentityServiceConfigCodec = t.intersection(
       clientId: t.string,
       identityPoolId: t.string,
       apiUrl: t.string,
-      apiKey: t.string,
       bucket: t.string,
       transientBucket: t.string,
       // eslint-disable-next-line tree-shaking/no-side-effects-in-initialization
