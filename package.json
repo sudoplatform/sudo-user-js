@@ -16,6 +16,7 @@
     "verify": "true",
     "unit-test": "yarn jest test/unit --verbose --coverage",
     "integration-test": "/bin/bash -c 'jest test/integration'",
+    "smoketest": "yarn unit-test && yarn integration-test",
     "test": "yarn unit-test",
     "build": "yarn codegen && yarn verify && yarn build:transpile && yarn build:docs",
     "build:report-dependencies": "true",
