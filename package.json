@@ -18,7 +18,7 @@
     "integration-test": "/bin/bash -c 'jest test/integration'",
     "test": "yarn unit-test",
     "build": "yarn codegen && yarn verify && yarn build:transpile && yarn build:docs",
-    "build:report-dependencies": "report-dependencies",
+    "build:report-dependencies": "true",
     "build:transpile": "concurrently \"yarn build:transpile:declarations\" \"yarn build:transpile:cjs\" \"yarn build:transpile:esm\"",
     "build:transpile:cjs": "tsc --project tsconfig.commonjs.json",
     "build:transpile:esm": "tsc",
