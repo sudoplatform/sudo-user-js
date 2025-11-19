@@ -6,6 +6,14 @@
 
 /* Everything exported here is considered public API and is documented by typedoc. */
 export { DefaultSudoUserClient } from './user/user-client'
+export {
+  GraphQLClient,
+  GraphQLClientAuthMode,
+  GraphQLClientOptions,
+  TokenProvider,
+  IAMCredentials,
+} from './client/graphqlClient'
+
 export * from './user/user-client-interface'
 export {
   TESTAuthenticationProvider,

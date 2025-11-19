@@ -10,3 +10,5 @@
  */
 export * from './core/sdk-config'
 export { SudoUserOptions } from './user/user-client'
+
+export { AmplifyClient } from './client/amplifyClient'

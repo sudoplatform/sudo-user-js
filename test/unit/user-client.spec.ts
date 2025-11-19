@@ -529,11 +529,11 @@ describe('SudoUserClient', () => {
       // has to be > 1 hr in the future, so use 2 hours
       const expireInFuture = new Date().getTime() + 120 * 60 * 1000
       when(sudoKeyManagerMock.getPassword(anything()))
-        .thenResolve(new TextEncoder().encode('dummy-idToken'))
-        .thenResolve(new TextEncoder().encode('dummy-accessToken'))
-        .thenResolve(new TextEncoder().encode('dummy-refreshToken'))
-        .thenResolve(new TextEncoder().encode(expireInFuture.toString()))
-        .thenResolve(new TextEncoder().encode(expireInFuture.toString()))
+        .thenResolve(new TextEncoder().encode('dummy-idToken').buffer)
+        .thenResolve(new TextEncoder().encode('dummy-accessToken').buffer)
+        .thenResolve(new TextEncoder().encode('dummy-refreshToken').buffer)
+        .thenResolve(new TextEncoder().encode(expireInFuture.toString()).buffer)
+        .thenResolve(new TextEncoder().encode(expireInFuture.toString()).buffer)
       when(apiClientMock.reset()).thenResolve(undefined)
 
       await expect(userClient.resetUserData()).resolves.toBe(undefined)
