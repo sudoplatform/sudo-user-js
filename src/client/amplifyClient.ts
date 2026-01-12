@@ -73,10 +73,7 @@ export class AmplifyClient implements GraphQLClient {
     this.amplify = new AmplifyClassV6()
     this.configure(options)
 
-    // @ts-expect-error complex typings not manageable by tsc
-    this.client = generateClient({
-      amplify: this.amplify,
-    })
+    this.client = this.createClient()
   }
 
   private configure(options: GraphQLClientOptions) {
@@ -160,6 +157,16 @@ export class AmplifyClient implements GraphQLClient {
     variables?: any
     authToken?: string
   }): Promise<GraphQLResult<T>> {
+    return this.queryInternal(options, 0)
+  }
+  private async queryInternal<T>(
+    options: {
+      query: string | DocumentNode
+      variables?: any
+      authToken?: string
+    },
+    retryCount: number,
+  ): Promise<GraphQLResult<T>> {
     const authOptions = await this.resolveAuthOptions(options.authToken)
     try {
       return (await this.client.graphql<T>({
@@ -168,7 +175,16 @@ export class AmplifyClient implements GraphQLClient {
         ...authOptions,
       })) as GraphQLResult<T>
     } catch (err: any) {
-      throw err.errors?.pop() ?? err
+      const actual = err.errors?.pop() ?? err
+      if (
+        (actual.code === 'ECONNRESET' ||
+          actual.message?.includes('ECONNRESET')) &&
+        retryCount < 1
+      ) {
+        this.createClient()
+        return this.queryInternal(options, retryCount + 1)
+      }
+      throw actual
     }
   }
 
@@ -185,6 +201,17 @@ export class AmplifyClient implements GraphQLClient {
     variables?: any
     authToken?: string
   }): Promise<GraphQLResult<T>> {
+    return this.mutateInternal(options, 0)
+  }
+
+  private async mutateInternal<T>(
+    options: {
+      mutation: string | DocumentNode
+      variables?: any
+      authToken?: string
+    },
+    retryCount: number,
+  ): Promise<GraphQLResult<T>> {
     const authOptions = await this.resolveAuthOptions(options.authToken)
 
     try {
@@ -194,7 +221,16 @@ export class AmplifyClient implements GraphQLClient {
         ...authOptions,
       })) as GraphQLResult<T>
     } catch (err: any) {
-      throw err.errors?.pop() ?? err
+      const actual = err.errors?.pop() ?? err
+      if (
+        (actual.code === 'ECONNRESET' ||
+          actual.message?.includes('ECONNRESET')) &&
+        retryCount < 1
+      ) {
+        this.createClient()
+        return this.mutateInternal(options, retryCount + 1)
+      }
+      throw actual
     }
   }
 
@@ -211,6 +247,17 @@ export class AmplifyClient implements GraphQLClient {
     variables?: any
     authToken?: string
   }): Promise<Observable<GraphQLResult<T>>> {
+    return this.subscribeInternal(options, 0)
+  }
+
+  private async subscribeInternal<T>(
+    options: {
+      subscription: string | DocumentNode
+      variables?: any
+      authToken?: string
+    },
+    retryCount: number,
+  ): Promise<Observable<GraphQLResult<T>>> {
     if (this.options.authMode === GraphQLClientAuthMode.IAM) {
       throw new Error(
         'Subscriptions are not supported with IAM authentication mode',
@@ -227,7 +274,16 @@ export class AmplifyClient implements GraphQLClient {
       })
       return result as unknown as Observable<GraphQLResult<T>>
     } catch (err: any) {
-      throw err.errors?.pop() ?? err
+      const actual = err.errors?.pop() ?? err
+      if (
+        (actual.code === 'ECONNRESET' ||
+          actual.message?.includes('ECONNRESET')) &&
+        retryCount < 1
+      ) {
+        this.createClient()
+        return this.subscribeInternal(options, retryCount + 1)
+      }
+      throw actual
     }
   }
 
@@ -253,6 +309,13 @@ export class AmplifyClient implements GraphQLClient {
       case GraphQLClientAuthMode.ApiKey:
         return GraphQLAuthMode.ApiKey
     }
+  }
+
+  private createClient(): V6Client {
+    // @ts-expect-error complex typings not manageable by tsc
+    return generateClient({
+      amplify: this.amplify,
+    })
   }
 
   private async resolveAuthOptions(token?: string) {

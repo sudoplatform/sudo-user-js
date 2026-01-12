@@ -11,7 +11,6 @@ module.exports = {
       files: ['src/**/*.ts'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
-        project: './tsconfig.json',
         projectService: true,
       },
       excludedFiles: ['test/**/*.spec.ts'],
